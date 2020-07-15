@@ -55,3 +55,16 @@ AB_03_Bin_78    Bacteria        Acidobacteria   Acidobacteria bacterium AB_03_Bi
 AB_03_Bin_79    Bacteria        Acidobacteria   Acidobacteria bacterium AB_03_Bin_79    Acidobacteria   Taxonomy Confirmed with Phylogeny
 AB_1215_Bin_144 Bacteria        Acidobacteria   Acidobacteria bacterium AB_1215_Bin_144 Acidobacteria   Taxonomy Confirmed with Phylogeny
 ```
+
+# Analyzing the outputs 
+
+## Bin abundance
+
+```bash
+python3 bin_abundance.py -l lenghtpersample.tab -m scaffolds2sample.tab -t Taxonomy.tsv
+```
+Get the taxonomy of the bins from the output file 
+
+```bash
+ cut -f 4,17 Taxonomy.tsv_abundance.tsv   | sort | uniq | grep -v "NoBin" > Taxonomy.tsv_abundance_bins.tsv 
+ ```
