@@ -1,6 +1,75 @@
-# IMG_annotation protocol
+# IMG_annotation protocol Baker Lab
+
+This protocol assumes the following:
+
+1. You have an account at the Integrated Microbial Genomes with Microbiome Samples system [IMG](https://img.jgi.doe.gov/cgi-bin/mer/main.cgi) 
+2. You submitted your sequencing data  at the IMG system and waited for the annotation to be complete in all your samples
+3. You have Metagenome Reconstructed Genomes (MAGs) and their corresponding taxonomic affiliations (This step can be done with automatic methods such as [checkM](https://ecogenomics.github.io/CheckM/)or phylogenies using a set of conserved marker genes (i.e [Phylosift](https://github.com/gjospin/PhyloSift)) or 16S rRNA phylogenies. We use a combination of the previosly mentioned methods to assign taxonomy of MAGs. 
 
 
+
+## Download
+
+Replace X with your actual data 
+
+1. Log onto IMG on server
+
+```bash
+curl 'https://signon.jgi.doe.gov/signon/create' --data-urlencode 'login=youraccount@gmail.com' --data-urlencode 'password=yourpassword!' -c cookies > /dev/null
+```
+2. Download tar.gz (link in XML file at <https://genome.jgi.doe.gov/portal/X.info.html>)
+
+```bash
+curl 'https://genome.jgi.doe.gov/portal/ext-api/downloads/get_tape_file?blocking=true&url=/X/XXXXXXXXXX.tar.gz' -b cookies > XXXXXXXXXX.tar.gz
+```
+3. Uncompress file
+
+```bash
+tar xvzf XXXXXXXXXX.tar.gz
+```
+
+4. Download Assemblies
+
+```bash 
+curl 'https://genome.jgi.doe.gov/portal/ext-api/downloads/get_tape_file?blocking=true&url=/X.contigs.fasta' -b cookies > XXXXX.contigs.fasta
+```
+
+
+
+
+
+
+
+## Useful commands 
+
+Download from IMG <https://genome.jgi.doe.gov/portal/SpaChaFrBayDelta/SpaChaFrBayDelta.info.html>.
+
+Follow instructions for IMG downloads, "Download with API": <https://genome.jgi.doe.gov/portal/help/download.jsf#/api>.
+
+1. Log in to IMG account on server (enter password):
+
+```{bash, eval = FALSE}
+curl 'https://signon.jgi.doe.gov/signon/create' --data-urlencode 'login=x@email.com' --data-urlencode 'password=x' -c cookies > /dev/null
+```
+
+2. Download a list of files available for the portal that you are interested in. Fill in your unique organism after "organism="
+
+An example portal:
+```{bash, eval = FALSE}
+curl 'https://genome.jgi.doe.gov/portal/ext-api/downloads/get-directory?organism=X' -b cookies > files.xml
+```
+
+3. Find the fastq in the XML doc under "Filtered Raw Data". Paste the provided url into the command below, starting at "/portal/" for file "XXX-filter-METAGENOME.fastq.gz". **In my experience the url provided on the XML doc online works, while the url in the XML doc downloaded to the server does not provide the correct link.
+
+```{bash, eval = FALSE}
+curl 'https://genome.jgi.doe.gov/portal/ext-api/downloads/get_tape_file?blocking=true&url=/SF_Jan12_sed_USG_8/download/_JAMO/5a2b1f727ded5e35e94ee187/12042.6.235396.CCAAGCA-TTGCTTG.filter-METAGENOME.fastq.gz' -b cookies > X-METAGENOME.fastq.gz
+```
+
+Use Sickle to trim fastqs: If you have one file with interleaved reads as input and you want ONLY one interleaved file as output:
+
+```{bash, eval = FALSE}
+sickle pe -g -c X-METAGENOME.fastq.gz -t sanger -M X.fastq.gz
+```
 
 
 ---
