@@ -1,2 +1,1 @@
-# IMG_annotation
-# IMG_annotation
+# IMG_annotation protocol
