@@ -5,7 +5,8 @@
 
 ---
 
-#### Required files for bin_abundace.py  script
+# Required Files
+## Bin abundance in metagenomic samples
 
 1. **Total lenght of the metagenomic assemblies in bp**
 
