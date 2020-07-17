@@ -5,7 +5,7 @@
 # Name:     mapping_scaffolds.py
 # Purpose:  use the IMG derived annotation file and map to the original scaffold names
 #
-# @uthors:      vda - valdeanda@ciencias.unam.mx, acph  dragopoot@gmail.com
+# @uthors:      vda - valdeanda@utexas.edu, acph  dragopoot@gmail.com
 #
 # Created:     2019
 # Licence:     GNU GENERAL PUBLIC LICENSE, Version 3, 29 June 2007
@@ -21,7 +21,7 @@ import pandas as pd
 # options
 epilog = """Example:
 
-$ python3 mapping_scaffolds.py  -i 3300033141.tsv  -s bin2scaffold7.tab"""
+$ python3 mapping_scaffolds.py  -i 3300033141.tsv  -s mappingFile2.tab"""
 
 parser = argparse.ArgumentParser(description=__doc__, epilog=epilog)
 parser.add_argument('-i', '--filename', required=True,
@@ -46,7 +46,7 @@ df_scaff    = pd.read_csv(scaffold,sep="\t")
 
 # Map scaffolds 
 
-df2=pd.merge(df,df_scaff[['Original_Contig_Name','Bin']],
+df2=pd.merge(df,df_scaff[['Original_Contig_Name', 'Bin', 'GC', 'Length', 'Depth']],
                                         on='Original_Contig_Name')
 
 #df2=pd.merge(df,df_scaff, right_on='Original_Contig_Name',
@@ -76,7 +76,7 @@ df3.to_csv(outfile_stats, sep="\t",header=True)
 
 outfile_taxonomy  = args.filename + "_dropna.tsv"
 
-taxonomy=df2[['Original_Contig_Name', 'Gene_Type','Gene_Length','Lineage','COG_ID','Cog %ID','PFAM_ID','KO_Term','Bin']]
+taxonomy=df2[['Original_Contig_Name', 'Gene_Type','Gene_Length','Lineage','COG_ID','Cog_%ID','PFAM_ID','KO_Term','Bin']]
 taxonomy=taxonomy.dropna()
 taxonomy.to_csv(outfile_taxonomy, sep ="\t",header=True)
 
