@@ -21,7 +21,7 @@ import pandas as pd
 # options
 epilog = """Example:
 
-$ python3 bin_abundance.py  -l lenghtpersample.tab  -m scaffolds2sample.tab  -t Taxonomy.tsv"""
+$ python3 bin_abundance.py  -l lenghtpersample.tab  -m MappingFileAll.tab  -t Taxonomy.tsv"""
 
 parser = argparse.ArgumentParser(description=__doc__, epilog=epilog)
 parser.add_argument('-l', '--length', required=True,
@@ -48,7 +48,7 @@ mapping_file = args.mappingfile
 taxonomy     = args.taxonomy
 
 df_length   = pd.read_csv(length,sep="\t")
-df_mapping  = pd.read_csv(mapping_file,sep="\t")
+df_mapping  = pd.read_csv(mapping_file,sep="\t",index_col=False)
 df_taxonomy = pd.read_csv(taxonomy, sep ="\t")
 
 
