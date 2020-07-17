@@ -4,7 +4,7 @@ This protocol assumes the following:
 
 1. You have an account at the Integrated Microbial Genomes with Microbiome Samples system [IMG](https://img.jgi.doe.gov/cgi-bin/mer/main.cgi) 
 2. You submitted your sequencing data  at the IMG system and waited for the annotation to be complete in all your samples
-3. You have Metagenome Reconstructed Genomes (MAGs) and their corresponding taxonomic affiliations (This step can be done with automatic methods such as [checkM](https://ecogenomics.github.io/CheckM/)or phylogenies using a set of conserved marker genes (i.e [Phylosift](https://github.com/gjospin/PhyloSift)) or 16S rRNA phylogenies. We use a combination of the previosly mentioned methods to assign taxonomy of MAGs. 
+3. You have Metagenome Reconstructed Genomes (MAGs) and their corresponding taxonomic affiliations (this step can be done with automatic methods such as [checkM](https://ecogenomics.github.io/CheckM/) or phylogenies using a set of conserved marker genes (i.e [Phylosift](https://github.com/gjospin/PhyloSift)) or 16S rRNA phylogenies. At the Baker Lab, we use a combination of the previosly mentioned methods to assign taxonomy of MAGs. 
 
 
 
@@ -77,6 +77,7 @@ If everything goes right,  a tsv  file will be created.  That file contains the 
 ---
 
 # Required Files
+
 ## Bin abundance in metagenomic samples
 
 1. **Total lenght of the metagenomic assemblies in bp**
@@ -107,7 +108,7 @@ AB_1215 700752333
 ```
 2. **Tabular file containing original contig name Bin, GC, length and Depth in columns**
 
-Extensive details of how to create this file soon
+Extensive details of how to create this file below, section: Creating mapping Files
 
 ```
 ID	Original_Contig_Name	Bin	GC	Length	Depth	Sample
@@ -128,7 +129,6 @@ AB_03_Bin_79    Bacteria        Acidobacteria   Acidobacteria bacterium AB_03_Bi
 AB_1215_Bin_144 Bacteria        Acidobacteria   Acidobacteria bacterium AB_1215_Bin_144 Acidobacteria   Taxonomy Confirmed with Phylogeny
 ```
 
-# Analyzing the outputs 
 
 ## Bin abundance
 
@@ -142,9 +142,150 @@ Get the taxonomy of the bins from the output file
  ```
  
  
- 
- 
- 
+# Creating Mapping Files 
+
+1. You need a file containing the list of all the scaffolds of all your samples. For purpuses of this example this file will be named *all_scaffolds.tab*, you can give it the name that you want. You can create this file 
+
+```bash
+less all_scaffolds.tab
+
+sample0_scaffold_0
+sample1_scaffold_1
+sample2_scaffold_10
+sample3_scaffold_100
+sample4_scaffold_1000
+```
+To create this file, there are several options, one way to do it, is to pull of the scaffolds from the TSV consolidate file from IMG but you need to change the name first to make sure that  matches the name of the sample at the beggining of each scaffold name. Here is one way to do it.  
+
+1.1. Delete white spaces:
+```bash
+for i in *.tsv; do sed -i 's/ /_/g'  $i ;done 
+```
+
+
+1.2. Add the name of the sample in the scaffold name. This need to be done for all samples individually.
+
+```bash
+sed -i '/s/scaffold/(Sample_name)_scaffold/g' the_mapping_file.tsv
+
+```
+
+
+1.3. Sort file so the first column are the scaffolds  and delete white columns 
+
+```bash
+for i in *.tsv ; do  awk -F "\t"  '{ print $3, $2,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$21,$22,$23 }' $i > $i.sorted.tsv ; done
+```
+
+
+1.4. Substitute spaces by tab  
+
+```{bash, highlight=TRUE, eval=FALSE}
+for i in *.sorted.tsv; do sed -i 's/ /\t/g' $i ; done
+```
+
+
+1.5. Get the scaffolds for the mapping file. 
+
+```bash
+for i in *.sorted.tsv; do cut -f 1 $i  | sort | uniq   | sed 's/Original_Contig_Name//g' > $i.unique.scaffolds.tab ; done 
+
+cat *.unique.scaffolds.tab > all.scaffolds.tab
+```
+
+
+2. Then, you need to create a file  file with the scaffold that are binned, in this example *scaffolds2bins.tab*
+Note that scaffold name and the bin have to contain the name of the sample of the scaffold name
+
+```bash
+less scaffolds2bins.tab
+sample1_scaffold_1 sample1_Bin_7
+sample2_scaffold_10 sample2_Bin_14
+sample3_scaffold_10003 sample3_Bin_27
+sample4_scaffold_10005 sample4_Bin_9
+```
+
+3. Create a file that contains the scaffolds that are not binned. Combine  *all_scaffolds.tab* and *scaffolds2bins.tab* 
+
+```bash
+
+bash scripts/mapping_awk.sh all_scaffolds.tab scaffolds2bins.tab
+```
+
+3.1 The above awk script will  create concatenate both files file all_scaffolds.tab.mapping.tsv 
+
+```bash
+less all_scaffolds.tab.mapping.tsv 
+
+sample1_scaffold_0
+sample1_scaffold_1
+sample1_scaffold_1 sample1_Bin_7
+sample2_scaffold_10
+sample2_scaffold_10 sample2_Bin_14
+sample2_scaffold_100
+WB1_scaffold_1000
+```
+3.2 Now we need to specify which ones are not binned, in this case are the ones with empty spaces, and we are going to create *mappingFile1.tab*
+
+```bash
+cut -f 1,2 all_scaffolds.tab.mapping.tsv  | awk '{if (!$2) {print $1, "NoBin"} else {print $1, $2}}' > mappingFile1.tab 
+sed -i -e "s/\r//g" mappingFile1.tab 
+sed -i 's/ /\t/g' mappingFile1.tab 
+
+less mappingFile1.tab
+
+sample1_scaffold_0 NoBin
+sample1_scaffold_1 NoBin
+sample1_scaffold_1 sample1_Bin_7
+sample2_scaffold_10 NoBin
+sample2_scaffold_10 sample2_Bin_14
+sample2_scaffold_100 NoBin
+WB1_scaffold_1000 NoBin
+```
+
+3. Now we need to compute the %GC and lenght(bp) of each scaffold and create a mapping file *scaffold2gclength.tab*
+
+```bash
+less scaffold2_gc_length.tab
+
+sample1_scaffold_0  0.346   344315
+sample1_scaffold_1  0.652   402571
+sample1_scaffold_2  0.624   298614
+sample2_scaffold_3  0.332   365716
+sample2_scaffold_4  0.649   305259
+sample2_scaffold_5  0.642   212965
+
+```
+3.1 This file is created with the [length+GC.pl](https://github.com/valdeanda/IMG_annotation/blob/master/JGI_tools/length%2BGC.pl) script provided in the JGI_tools directory 
+
+The input is the metagenomic data that was submitted to JGI, and you have to do it for all the samples with a simple bash loop 
+
+```bash
+#For one sample
+perl JGI_tools/length+GC.pl sample_assemlie.fa > scaffold2gclength.tab
+
+#For all your assemblies located in a specific directory 
+
+for sample in directory/*.fa do perl JGI_tools/length+GC.pl $sample > $sample.scaffold2length.tab ; done
+cat *.scaffold2length.tab >  scaffold2gclength.tab 
+
+```
+
+4. Create the final mapping file *mappingFile1.tab.mapping.tsv*  that will contain scaffold information of bins, %GC and lenght. Use again the awk script to concatenate both files *mappingFile1.tab* and *scaffold2gclength.tab* 
+
+```bash
+./mapping_awk.sh mappingFile1.tab and scaffold2gclength.tab 
+
+#The above command will create the mappingFile1.tab.mapping.tsv 
+
+sample1_scaffold_0  NoBin   0.346   344315
+sample1_scaffold_1  NoBin   sample1_Bin_7       0.652   402571
+sample1_scaffold_10 NoBin   sample1_Bin_14      0.328   189441
+sample1_scaffold_100        NoBin   0.384   96095
+
+
+
+
 
 # Useful commands 
 
