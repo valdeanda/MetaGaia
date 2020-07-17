@@ -77,6 +77,7 @@ If everything goes right,  a tsv  file will be created.  That file contains the 
 ---
 
 # Required Files
+
 ## Bin abundance in metagenomic samples
 
 1. **Total lenght of the metagenomic assemblies in bp**
@@ -128,7 +129,6 @@ AB_03_Bin_79    Bacteria        Acidobacteria   Acidobacteria bacterium AB_03_Bi
 AB_1215_Bin_144 Bacteria        Acidobacteria   Acidobacteria bacterium AB_1215_Bin_144 Acidobacteria   Taxonomy Confirmed with Phylogeny
 ```
 
-# Analyzing the outputs 
 
 ## Bin abundance
 
@@ -258,7 +258,7 @@ sample2_scaffold_5  0.642   212965
 ```
 3.1 This file is created with the [length+GC.pl](https://github.com/valdeanda/IMG_annotation/blob/master/JGI_tools/length%2BGC.pl) script provided in the JGI_tools directory 
 
-The input is the metagenomic data that was submitted to JGI, and you have to do it for all the samples with a simple loop 
+The input is the metagenomic data that was submitted to JGI, and you have to do it for all the samples with a simple bash loop 
 
 ```bash
 #For one sample
@@ -270,6 +270,19 @@ for sample in directory/*.fa do perl JGI_tools/length+GC.pl $sample > $sample.sc
 cat *.scaffold2length.tab >  scaffold2gclength.tab 
 
 ```
+
+4. Create the final mapping file *mappingFile1.tab.mapping.tsv*  that will contain scaffold information of bins, %GC and lenght. Use again the awk script to concatenate both files *mappingFile1.tab* and *scaffold2gclength.tab* 
+
+```bash
+./mapping_awk.sh mappingFile1.tab and scaffold2gclength.tab 
+
+#The above command will create the mappingFile1.tab.mapping.tsv 
+
+sample1_scaffold_0  NoBin   0.346   344315
+sample1_scaffold_1  NoBin   sample1_Bin_7       0.652   402571
+sample1_scaffold_10 NoBin   sample1_Bin_14      0.328   189441
+sample1_scaffold_100        NoBin   0.384   96095
+
 
 
 
