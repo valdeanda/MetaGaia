@@ -21,7 +21,7 @@ import pandas as pd
 # options
 epilog = """Example:
 
-$ python3 bin_abundance.py  -l lenghtpersample.tab  -m MappingFileAll.tab  -t Taxonomy.tsv"""
+$ python3 bin_abundance.py  -l lenghtpersample.tab  -m GB_CP_MappingFile4.tab  -t Taxonomy.tsv"""
 
 parser = argparse.ArgumentParser(description=__doc__, epilog=epilog)
 parser.add_argument('-l', '--length', required=True,
