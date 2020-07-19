@@ -29,8 +29,9 @@ parser.add_argument('-l', '--length', required=True,
                     "column is length ."))
 
 parser.add_argument('-m', '--mappingfile', required=True,
-                    help=("Tabular file containing  original contig name "
-		   "Bin, GC, length and Depth in columns"))
+                    help=("Tabular file containing the following columns "
+                          "Original_Contig_Name    Bin GC  Length  Depth   Sample "
+                          "Make sure that you have those exact columns"))
 
 
 parser.add_argument('-t', '--taxonomy', required=True,
