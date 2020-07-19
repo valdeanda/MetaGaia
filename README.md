@@ -4,7 +4,7 @@ This protocol assumes the following:
 
 1. You have an account at the Integrated Microbial Genomes with Microbiome Samples system [IMG](https://img.jgi.doe.gov/cgi-bin/mer/main.cgi) 
 2. You submitted your sequencing data  at the IMG system and waited for the annotation to be complete in all your samples
-3. You have Metagenome Reconstructed Genomes (MAGs) and their corresponding taxonomic affiliations (this step can be done with automatic methods such as [checkM](https://ecogenomics.github.io/CheckM/) or phylogenies using a set of conserved marker genes (i.e [Phylosift](https://github.com/gjospin/PhyloSift)) or 16S rRNA phylogenies. At the Baker Lab, we use a combination of the previosly mentioned methods to assign taxonomy of MAGs. 
+3. You have Metagenome Reconstructed Genomes (MAGs) and their corresponding taxonomic affiliations (this step can be done with automatic methods such as [GTDBk](https://github.com/Ecogenomics/GTDBTk) or phylogenies using a set of conserved marker genes (i.e [Phylosift](https://github.com/gjospin/PhyloSift)) or 16S rRNA phylogenies. At the Baker Lab, we use a combination of the previosly mentioned methods to assign taxonomy of MAGs. 
 
 
 
