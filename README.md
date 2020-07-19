@@ -138,7 +138,7 @@ python3 bin_abundance.py -l lenghtpersample.tab -m scaffolds2sample.tab -t Taxon
 Get the taxonomy of the bins from the output file 
 
 ```bash
- cut -f 4,17 Taxonomy.tsv_abundance.tsv   | sort | uniq | grep -v "NoBin" > Taxonomy.tsv_abundance_bins.tsv 
+ cut -f 3,16 Taxonomy.tsv_abundance.tsv   | sort | uniq | grep -v "NoBin" > Taxonomy.tsv_abundance_bins.tsv 
  ```
  
  
@@ -210,12 +210,14 @@ sample4_scaffold_10005 sample4_Bin_9
 ```bash
 
 bash scripts/mapping_awk.sh all_scaffolds.tab scaffolds2bins.tab
+#After using the mapping_awk.sh script remove ALWAYS remove matching characters and change spaces by tabs 
+sed  -e "s/\r//g"  all_scaffolds.tab.mapping.tsv |  sed 's/ /\t/g' >  all_scaffolds.tab.mapping_sorted.tsv 
 ```
 
-3.1 The above awk script will  create concatenate both files file all_scaffolds.tab.mapping.tsv 
+3.1 The above awk script will  create concatenate both files file all_scaffolds.tab.mapping_sorted.tsv 
 
 ```bash
-less all_scaffolds.tab.mapping.tsv 
+less all_scaffolds.tab.mapping_sorted.tsv 
 
 sample1_scaffold_0
 sample1_scaffold_1
@@ -228,7 +230,9 @@ WB1_scaffold_1000
 3.2 Now we need to specify which ones are not binned, in this case are the ones with empty spaces, and we are going to create *mappingFile1.tab*
 
 ```bash
-cut -f 1,2 all_scaffolds.tab.mapping.tsv  | awk '{if (!$2) {print $1, "NoBin"} else {print $1, $2}}' > mappingFile1.tab 
+cut -f 1,2 all_scaffolds.tab.mapping_sorted.tsv  | awk '{if (!$2) {print $1, "NoBin"} else {print $1, $2}}' > mappingFile1.tab 
+#again, remove matching characters and replace by tabs
+
 sed -i -e "s/\r//g" mappingFile1.tab 
 sed -i 's/ /\t/g' mappingFile1.tab 
 
@@ -283,8 +287,43 @@ sample1_scaffold_1  NoBin   sample1_Bin_7       0.652   402571
 sample1_scaffold_10 NoBin   sample1_Bin_14      0.328   189441
 sample1_scaffold_100        NoBin   0.384   96095
 
+#again, remove matching characters and replace by tabs
+
+sed -i -e "s/\r//g" mappingFile1.tab.mapping.tsv 
+sed -i 's/ /\t/g' mappingFile1.tab.mapping.tsv  
+
+```
+5. The next File contains the Depth information of each scaffold
+
+**More details of how to create the Depth information soon**
+
+```
+Original_Contig_Name	Depth
+sample1_scaffold_0	20.3781
+sample1_scaffold_100000	10.585
+sammple1_scaffold_100001	49.4958
+sample1_scaffold_100002	11.9636
+```
+5.1 Use the script joinFile.sh to add the depth information to the mappingFile
+
+```bash
+./joinFile.sh MappingFile4col.tab GBdepth.tab  > MappingFile5col.tab
+```
+
+5. Create the last mapping file that contains the name of your sample and the following 7 column headers. 
+Please make sure that you have the exact name and no space after the name of the column.! 
 
 
+```bash
+sed 's/_scaffold/\t/g' MappingFile5col.tab | cut -f 1 | sed 's/Original_Contig_Name/Sample/g' > MappingSamples.txt
+ paste MappingFile5col.tab MappingSamples.txt > MappingFile6col.tab
+
+ID	Original_Contig_Name	Bin	GC	Length	Depth	Sample
+0	AB_1215_scaffold_0	NoBin	0.315	219188	27.6207	AB_1215
+1	AB_1215_scaffold_1	NoBin	0.348	203294	36.76	AB_1215
+2	AB_1215_scaffold_10	NoBin	0.379	119163	50.7298	AB_1215
+3	AB_1215_scaffold_100	NoBin	0.4	54468	31.3466	AB_1215
+```
 
 
 # Useful commands 
@@ -292,7 +331,7 @@ sample1_scaffold_100        NoBin   0.384   96095
 ### Download fastq data from IMG 
 
 
-Download from IMG <https://genome.jgi.doe.gov/portal/SpaChaFrBayDelta/SpaChaFrBayDelta.info.html>.
+Download from IMG <https://genome.jgi.doe.gov/portal/Sample.info.html>.
 
 Follow instructions for IMG downloads, "Download with API": <https://genome.jgi.doe.gov/portal/help/download.jsf#/api>.
 
