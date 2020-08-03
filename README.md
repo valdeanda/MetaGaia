@@ -1,4 +1,5 @@
-# IMG_annotation protocol Baker Lab
+# IMGap
+IMG **a**nnotation **p**rotocol Baker Lab
 
 This protocol assumes the following:
 
