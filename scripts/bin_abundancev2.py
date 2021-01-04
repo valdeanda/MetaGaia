@@ -21,7 +21,7 @@ import pandas as pd
 # options
 epilog = """Example:
 
-$ python3 bin_abundancev2.py -r 20210104__reads.tab -m 20210104__mapping.tab -d 20210104__depth.tsv -s 20210104__size.tab"""
+$ python3 bin_abundancev2.py -r example__reads.tab -m example__mapping.tab -d example__depth.tsv -s example__size.tab"""
 
 parser = argparse.ArgumentParser(description=__doc__, epilog=epilog)
 parser.add_argument('-r','--reads', required=True,
@@ -52,6 +52,8 @@ df_mapping  = pd.read_csv(mapping, sep="\t",index_col=False)
 df_size     = pd.read_csv(size, sep ="\t")
 df_depth    = pd.read_csv(depth, sep ="\t")
 
+readablenum = 100000000
+
 # Map the total reads of each sample  in the mapping file
 merged1=pd.merge(df_mapping,df_reads[['Sample', 'Reads']], on='Sample')
 # Map the Bin size to the mapping file
@@ -81,7 +83,7 @@ df['NormalizedCov'] = df['Sum_cov']/df['Size']
 df['RelativeAbundance'] = df['NormalizedCov']/df['Reads']
 
 #Multiply by a big number to make the abundance readable
-df['RelativeAbundanceReadable'] = df['RelativeAbundance']*100000000
+df['RelativeAbundanceReadable'] = df['RelativeAbundance']*readablenum
 
 #Drop duplicates
 
@@ -92,16 +94,20 @@ finaldf=finaldf.drop_duplicates()
 #Output files
 
 
-mappingfile = args.mapping + "_intermediate_abundance_values.tsv"
-abundance = args.mapping + "_abundanceby_bin.tsv"
+mappingfile = args.mapping + "_IMGap_OUT_intermediate_abundance_values.tsv"
+abundance = args.mapping + "_IMGap_OUT_abundanceby_bin.tsv"
 
 df.to_csv(mappingfile,sep='\t')
 finaldf.to_csv(abundance,sep='\t')
 
 
-print("[END] Done computing abundance....................\n"
-      "Please check the output files:\n",
-      "Mapping File with intermediate values to compute abundance:", args.mapping + "_intermediate_abundance_values.tsv\n"
-      "File containing relative abundance normalized by genome size and total read counts per sample:", args.mapping + "_abundanceby_bin.tsv\n"
-      "Have a nice day :D")
+print("\n"
+      "[END] Done computing abundance..........................................................................:\n"
+      "Please check the output files:..........................................................................:\n\n"
+
+      "1. Mapping File with intermediate values:", args.mapping + "__IMGap_OUT_intermediate_abundance_values.tsv\n"
+
+      "2. File containing relative abundance normalized by bin:", args.mapping + "_IMGap_OUT_abundanceby_bin.tsv\n\n"
+
+      "Have a nice day :D\n")
 
