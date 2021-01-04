@@ -77,9 +77,112 @@ If everything goes right,  a tsv  file will be created.  That file contains the 
 
 ---
 
-# Required Files
+# Compute bin abundance in metagenomic samples 
+Last updated  January 2021
 
-## Bin abundance in metagenomic samples
+Use the bin_abundancev2.py to compute bin relative bin abundance considering genome size and total read counts 
+Example of the input files are found in  [example_input_files directory](https://github.com/valdeanda/IMGap/tree/master/scripts/example_input_files)
+
+```
+python3 bin_abundancev2.py -h
+
+usage: bin_abundancev2.py [-h] -r READS -m MAPPING -d DEPTH -s BINSIZE
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -r READS, --reads READS
+                        Total number of reads. Rows are samples column are
+                        reads
+  -m MAPPING, --mapping MAPPING
+                        Tabular file containingOriginal_Contig_Name Bin Sample
+  -d DEPTH, --depth DEPTH
+                        Tabular file depth infoOriginal_Contig_Name contigLen
+                        Saple_Depth Depth
+  -s BINSIZE, --binsize BINSIZE
+                        Tabular file with Bin and corresponding Genome size
+                        (bp) as columns
+
+Example: 
+
+python3 bin_abundancev2.py -r example_input_files/example__reads.tsv -m example_input_files/example__mapping.tsv -d example_input_files/example__depth.tsv -s example_input_files/example__size.tsv
+
+[END] Done computing abundance..........................................................................:
+Please check the output files:..........................................................................:
+
+1. Mapping File with intermediate values: example_input_files/example__mapping.tsv__IMGap_OUT_intermediate_abundance_values.tsv
+2. File containing relative abundance normalized by bin: example_input_files/example__mapping.tsv_IMGap_OUT_abundanceby_bin.tsv
+
+Have a nice day :D
+
+```
+
+
+# Useful commands 
+
+### Download fastq data from IMG 
+
+
+Download from IMG <https://genome.jgi.doe.gov/portal/Sample.info.html>.
+
+Follow instructions for IMG downloads, "Download with API": <https://genome.jgi.doe.gov/portal/help/download.jsf#/api>.
+
+1. Log in to IMG account on server (enter password):
+
+```{bash, eval = FALSE}
+curl 'https://signon.jgi.doe.gov/signon/create' --data-urlencode 'login=x@email.com' --data-urlencode 'password=x' -c cookies > /dev/null
+```
+
+2. Download a list of files available for the portal that you are interested in. Fill in your unique organism after "organism="
+
+An example portal:
+```{bash, eval = FALSE}
+curl 'https://genome.jgi.doe.gov/portal/ext-api/downloads/get-directory?organism=X' -b cookies > files.xml
+```
+
+3. Find the fastq in the XML doc under "Filtered Raw Data". Paste the provided url into the command below, starting at "/portal/" for file "XXX-filter-METAGENOME.fastq.gz". ** In my experience the url provided on the XML doc online works, while the url in the XML doc downloaded to the server does not provide the correct link.
+
+```{bash, eval = FALSE}
+curl 'https://genome.jgi.doe.gov/portal/ext-api/downloads/get_tape_file?blocking=true&url=/X.CCAAGCA-TTGCTTG.filter-METAGENOME.fastq.gz' -b cookies > X-METAGENOME.fastq.gz
+```
+
+Use Sickle to trim fastqs: If you have one file with interleaved reads as input and you want ONLY one interleaved file as output:
+
+```{bash, eval = FALSE}
+sickle pe -g -c X-METAGENOME.fastq.gz -t sanger -M X.fastq.gz
+```
+----
+
+### Download assemblies data from IMG 
+
+
+Replace X with your actual data 
+
+1. Log onto IMG on server
+
+```bash
+curl 'https://signon.jgi.doe.gov/signon/create' --data-urlencode 'login=youraccount@gmail.com' --data-urlencode 'password=yourpassword!' -c cookies > /dev/null
+```
+2. Download tar.gz (link in XML file at <https://genome.jgi.doe.gov/portal/X.info.html>)
+
+```bash
+curl 'https://genome.jgi.doe.gov/portal/ext-api/downloads/get_tape_file?blocking=true&url=/X/XXXXXXXXXX.tar.gz' -b cookies > XXXXXXXXXX.tar.gz
+```
+3. Uncompress file
+
+```bash
+tar xvzf XXXXXXXXXX.tar.gz
+```
+
+4. Download Assemblies
+
+```bash 
+curl 'https://genome.jgi.doe.gov/portal/ext-api/downloads/get_tape_file?blocking=true&url=/X.contigs.fasta' -b cookies > XXXXX.contigs.fasta
+```
+
+
+
+## Bin abundance in metagenomic samples version 1 
+Last updated September 2020. Please use version 2 of the script 
 
 1. **Total lenght of the metagenomic assemblies in bp**
 
@@ -324,69 +427,6 @@ ID	Original_Contig_Name	Bin	GC	Length	Depth	Sample
 1	AB_1215_scaffold_1	NoBin	0.348	203294	36.76	AB_1215
 2	AB_1215_scaffold_10	NoBin	0.379	119163	50.7298	AB_1215
 3	AB_1215_scaffold_100	NoBin	0.4	54468	31.3466	AB_1215
-```
-
-
-# Useful commands 
-
-### Download fastq data from IMG 
-
-
-Download from IMG <https://genome.jgi.doe.gov/portal/Sample.info.html>.
-
-Follow instructions for IMG downloads, "Download with API": <https://genome.jgi.doe.gov/portal/help/download.jsf#/api>.
-
-1. Log in to IMG account on server (enter password):
-
-```{bash, eval = FALSE}
-curl 'https://signon.jgi.doe.gov/signon/create' --data-urlencode 'login=x@email.com' --data-urlencode 'password=x' -c cookies > /dev/null
-```
-
-2. Download a list of files available for the portal that you are interested in. Fill in your unique organism after "organism="
-
-An example portal:
-```{bash, eval = FALSE}
-curl 'https://genome.jgi.doe.gov/portal/ext-api/downloads/get-directory?organism=X' -b cookies > files.xml
-```
-
-3. Find the fastq in the XML doc under "Filtered Raw Data". Paste the provided url into the command below, starting at "/portal/" for file "XXX-filter-METAGENOME.fastq.gz". ** In my experience the url provided on the XML doc online works, while the url in the XML doc downloaded to the server does not provide the correct link.
-
-```{bash, eval = FALSE}
-curl 'https://genome.jgi.doe.gov/portal/ext-api/downloads/get_tape_file?blocking=true&url=/X.CCAAGCA-TTGCTTG.filter-METAGENOME.fastq.gz' -b cookies > X-METAGENOME.fastq.gz
-```
-
-Use Sickle to trim fastqs: If you have one file with interleaved reads as input and you want ONLY one interleaved file as output:
-
-```{bash, eval = FALSE}
-sickle pe -g -c X-METAGENOME.fastq.gz -t sanger -M X.fastq.gz
-```
-----
-
-### Download assemblies data from IMG 
-
-
-Replace X with your actual data 
-
-1. Log onto IMG on server
-
-```bash
-curl 'https://signon.jgi.doe.gov/signon/create' --data-urlencode 'login=youraccount@gmail.com' --data-urlencode 'password=yourpassword!' -c cookies > /dev/null
-```
-2. Download tar.gz (link in XML file at <https://genome.jgi.doe.gov/portal/X.info.html>)
-
-```bash
-curl 'https://genome.jgi.doe.gov/portal/ext-api/downloads/get_tape_file?blocking=true&url=/X/XXXXXXXXXX.tar.gz' -b cookies > XXXXXXXXXX.tar.gz
-```
-3. Uncompress file
-
-```bash
-tar xvzf XXXXXXXXXX.tar.gz
-```
-
-4. Download Assemblies
-
-```bash 
-curl 'https://genome.jgi.doe.gov/portal/ext-api/downloads/get_tape_file?blocking=true&url=/X.contigs.fasta' -b cookies > XXXXX.contigs.fasta
 ```
 
 
