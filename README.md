@@ -77,7 +77,7 @@ If everything goes right,  a tsv  file will be created.  That file contains the 
 
 ---
 
-# Compute bin abundance in metagenomic samples 
+# Compute bin relative abundance
 Last updated  January 2021
 
 Use the bin_abundancev2.py to compute bin relative bin abundance considering genome size and total read counts 
