@@ -80,11 +80,11 @@ If everything goes right,  a tsv  file will be created.  That file contains the 
 # Compute bin relative abundance
 Last updated  January 2021
 
-Use the bin_abundancev2.py to compute bin relative bin abundance considering genome size and total read counts 
+Use the bin_abundancev4.py to compute bin relative bin abundance considering genome size and total read counts 
 Example of the input files are found in  [example_input_files directory](https://github.com/valdeanda/IMGap/tree/master/scripts/example_input_files)
 
 ```
-python3 bin_abundancev2.py -h
+python3 bin_abundancev4.py -h
 
 usage: bin_abundancev2.py [-h] -r READS -m MAPPING -d DEPTH -s BINSIZE
 
