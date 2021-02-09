@@ -78,20 +78,20 @@ mapping_size_depth_new_reads=pd.merge(mapping_size_depth_new,df_reads[['Sample',
 # Calculate coverage
 
 
-mapping_size_depth_new_reads['cov']=mapping_size_depth_new_reads['contigLen'] *mapping_size_depth_new_reads['Depth']
+mapping_size_depth_new_reads['cov']=mapping_size_depth_new_reads['contigLen'].astype(float) * mapping_size_depth_new_reads['Depth'].astype(float)
 
 # Sum the coverage values by Bin
 
 mapping_size_depth_new_reads['Sum_cov'] = mapping_size_depth_new_reads.groupby(by=['Bin',"Sample"])['cov'].transform('sum')
 
 # Normalize coverage values by Bin size
-mapping_size_depth_new_reads['NormalizedCov'] = mapping_size_depth_new_reads['Sum_cov']/mapping_size_depth_new_reads['Size']
+mapping_size_depth_new_reads['NormalizedCov'] = mapping_size_depth_new_reads['Sum_cov'].astype(float) / mapping_size_depth_new_reads['Size'].astype(float)
 
 #Normalize by total number of reads of the mapped sample
-mapping_size_depth_new_reads['RelativeAbundance'] = mapping_size_depth_new_reads['NormalizedCov']/mapping_size_depth_new_reads['Reads']
+mapping_size_depth_new_reads['RelativeAbundance'] = mapping_size_depth_new_reads['NormalizedCov'].astype(float) / mapping_size_depth_new_reads['Reads'].astype(float)
 
 #Multiply by a big number to make the abundance readable
-mapping_size_depth_new_reads['RelativeAbundanceReadable'] = mapping_size_depth_new_reads['RelativeAbundance']*readablenum
+mapping_size_depth_new_reads['RelativeAbundanceReadable'] = mapping_size_depth_new_reads['RelativeAbundance'].astype(float) * readablenum
 
 #Drop duplicates
 
@@ -104,7 +104,7 @@ finaldf=finaldf.drop_duplicates()
 mappingfile = args.mapping + "_IMGap_OUT_intermediate_abundance_values.tsv"
 abundance = args.mapping + "_IMGap_OUT_abundanceby_bin.tsv"
 
-mapping_size_depth_new_reads.to_csv(mappingfile,sep='\t')
+mapping_size_depth_new_reads.to_csv(mappingfile, sep = '\t', index = False)
 finaldf.to_csv(abundance,sep='\t')
 
 
