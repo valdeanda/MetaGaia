@@ -7,10 +7,11 @@
 # Name:     bin_abundance.py
 # Purpose:  calculate the abundance of bins based of scaffold depth,
 #           bin size (bp)
-# @uthors:      vda - valdeanda@utexas.edu
-# @ modif:      xgong xianzhe.gong@gmail.com
+# @uthors:     vda  valdeanda@utexas.edu
+# @ modif:     bshah sahil2699@gmail.com 
+#              xgong xianzhe.gong@gmail.com
 # Created:     December 2020
-# Last updated January  2021
+# Last updated Feb  2021
 # Licence:     GNU GENERAL PUBLIC LICENSE, Version 3, 29 June 2007
 # ------------------------------
 
