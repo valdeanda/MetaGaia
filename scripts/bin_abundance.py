@@ -4,7 +4,7 @@
 # -*- coding: utf-8 -*-
 #
 # ------------------------------
-# Name:     bin_abundancev2.py
+# Name:     bin_abundance.py
 # Purpose:  calculate the abundance of bins based of scaffold depth,
 #           bin size (bp)
 # @uthors:      vda - valdeanda@utexas.edu
