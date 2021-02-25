@@ -1,5 +1,52 @@
-# IMGap
-IMG **a**nnotation **p**rotocol Baker Lab
+# MetaGaia
+
+MetaGaia will  allow to do integrative analysis of both metagenomes and bins to better understand the microbial communities.
+
+ The Gaia hypothesis, also known as Gaia theory or Gaia principle, proposes that all organisms and their inorganic surroundings on Earth are closely integrated to form a single and self-regulating complex system, maintaining the conditions for life on the planet
+ 
+[Lovelock, J.E and Margulis, L. (1974). “Atmospheric homeostasis by and for the biosphere- The Gaia hypothesis”. Tellus 26 (1): 2–10](https://onlinelibrary.wiley.com/doi/abs/10.1111/j.2153-3490.1974.tb01946.x)
+
+
+
+# Compute bin relative abundance
+Last updated  January 2021
+
+Use the bin_abundancev4.py to compute bin relative bin abundance considering genome size and total read counts 
+Example of the input files are found in  [example_input_files directory](https://github.com/valdeanda/IMGap/tree/master/scripts/example_input_files)
+
+```
+python3 bin_abundancev4.py -h
+
+usage: bin_abundancev2.py [-h] -r READS -m MAPPING -d DEPTH -s BINSIZE
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -r READS, --reads READS
+                        Total number of reads. Rows are samples column are
+                        reads
+  -m MAPPING, --mapping MAPPING
+                        Tabular file containingOriginal_Contig_Name Bin Sample
+  -d DEPTH, --depth DEPTH
+                        Tabular file depth infoOriginal_Contig_Name contigLen
+                        Saple_Depth Depth
+  -s BINSIZE, --binsize BINSIZE
+                        Tabular file with Bin and corresponding Genome size
+                        (bp) as columns
+
+Example: 
+
+python3 bin_abundancev2.py -r example_input_files/example__reads.tsv -m example_input_files/example__mapping.tsv -d example_input_files/example__depth.tsv -s example_input_files/example__size.tsv
+
+[END] Done computing abundance..........................................................................:
+Please check the output files:..........................................................................:
+
+1. Mapping File with intermediate values: example_input_files/example__mapping.tsv__IMGap_OUT_intermediate_abundance_values.tsv
+2. File containing relative abundance normalized by bin: example_input_files/example__mapping.tsv_IMGap_OUT_abundanceby_bin.tsv
+
+Have a nice day :D
+
+```
+
 
 This protocol assumes the following:
 
@@ -76,45 +123,6 @@ If everything goes right,  a tsv  file will be created.  That file contains the 
 
 
 ---
-
-# Compute bin relative abundance
-Last updated  January 2021
-
-Use the bin_abundancev4.py to compute bin relative bin abundance considering genome size and total read counts 
-Example of the input files are found in  [example_input_files directory](https://github.com/valdeanda/IMGap/tree/master/scripts/example_input_files)
-
-```
-python3 bin_abundancev4.py -h
-
-usage: bin_abundancev2.py [-h] -r READS -m MAPPING -d DEPTH -s BINSIZE
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -r READS, --reads READS
-                        Total number of reads. Rows are samples column are
-                        reads
-  -m MAPPING, --mapping MAPPING
-                        Tabular file containingOriginal_Contig_Name Bin Sample
-  -d DEPTH, --depth DEPTH
-                        Tabular file depth infoOriginal_Contig_Name contigLen
-                        Saple_Depth Depth
-  -s BINSIZE, --binsize BINSIZE
-                        Tabular file with Bin and corresponding Genome size
-                        (bp) as columns
-
-Example: 
-
-python3 bin_abundancev2.py -r example_input_files/example__reads.tsv -m example_input_files/example__mapping.tsv -d example_input_files/example__depth.tsv -s example_input_files/example__size.tsv
-
-[END] Done computing abundance..........................................................................:
-Please check the output files:..........................................................................:
-
-1. Mapping File with intermediate values: example_input_files/example__mapping.tsv__IMGap_OUT_intermediate_abundance_values.tsv
-2. File containing relative abundance normalized by bin: example_input_files/example__mapping.tsv_IMGap_OUT_abundanceby_bin.tsv
-
-Have a nice day :D
-
-```
 
 
 # Useful commands 
