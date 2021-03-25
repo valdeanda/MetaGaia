@@ -49,10 +49,10 @@ mapping      = args.mapping
 depth        = args.depth
 size         = args.binsize
 
-df_reads    = pd.read_csv(reads,sep="\t")
-df_mapping  = pd.read_csv(mapping, sep="\t",index_col=False)
-df_size     = pd.read_csv(size, sep ="\t")
-df_depth    = pd.read_csv(depth, sep ="\t")
+df_reads    = pd.read_csv("../../data/" + reads,sep="\t")
+df_mapping  = pd.read_csv("../../data/" + mapping, sep="\t",index_col=False)
+df_size     = pd.read_csv("../../data/" + size, sep ="\t")
+df_depth    = pd.read_csv("../../data/" + depth, sep ="\t")
 
 
 #The user can change this number
@@ -105,8 +105,8 @@ finaldf=finaldf.drop_duplicates()
 mappingfile = args.mapping + "_IMGap_OUT_intermediate_abundance_values.tsv"
 abundance = args.mapping + "_IMGap_OUT_abundanceby_bin.tsv"
 
-mapping_size_depth_new_reads.to_csv(mappingfile, sep = '\t', index = False)
-finaldf.to_csv(abundance,sep='\t')
+mapping_size_depth_new_reads.to_csv("../../output/" + mappingfile, sep = '\t', index = False)
+finaldf.to_csv("../../output/" + abundance, sep = '\t', index = False)
 
 
 print("\n"
