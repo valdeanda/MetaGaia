@@ -34,14 +34,14 @@ class Command_line_args():
 
 		#Command line arguments
 		self.parser = argparse.ArgumentParser()
-		self.parser.add_argument('bin_abundance', type=str, help='Input file path outputted from IMGap with bin abundances (with extension).')
+		self.parser.add_argument('bin_abundance', type=str, help='Input file path outputted from MetaGaia with bin abundances with extension (str).')
 		self.parser.add_argument('taxonomy_info', type=str, help='Input file path containing taxonomy information (with extension).')
-		self.parser.add_argument('percent', type=float, nargs='?', default=10, help='Percent of highest sample in each bin (float).')
-		self.parser.add_argument('width', type=int, nargs='?', default=4, help='Width of outputted clustermap figure.')
-		self.parser.add_argument('height', type=int, nargs='?', default=5, help='Height of outputted clustermap figure.')
-		self.parser.add_argument('dpi', type=int, nargs='?', default=300, help='Resolution for output figure file [300].')
-		self.parser.add_argument('out_fig', type=str, nargs='?', help='Stores the figure in the specified file path (and format).')
-		self.parser.add_argument('taxa_color', type=str, default="", nargs='?', help='Input file path containing the color code for each taxa (with extension).')
+		self.parser.add_argument('percent', type=float, nargs='?', default=10, help='Percent of highest sample in each bin [10] (float).')
+		self.parser.add_argument('width', type=int, nargs='?', default=4, help='Width of outputted clustermap figure [4] (int).')
+		self.parser.add_argument('height', type=int, nargs='?', default=5, help='Height of outputted clustermap figure [5] (int).')
+		self.parser.add_argument('dpi', type=int, nargs='?', default=300, help='Resolution for output figure file [300] (int).')
+		self.parser.add_argument('out_fig', type=str, nargs='?', default="test.png", help='Stores the figure in the specified file path and format [test.png] (str).')
+		self.parser.add_argument('taxa_color', type=str, default="", nargs='?', help='Input file path containing the color code for each taxa with extension [""] (str).')
 		self.args = self.parser.parse_args()
 
 

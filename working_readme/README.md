@@ -1,15 +1,6 @@
 Bin_abun_prep.py
 
-Use grep > to get all info from fna for mapping
-
-User provides file mapping Bin to sample
-
 Depth file derived from jgi_summarize_bam_contig_depths.pl script
-
-----------------------------------------------------------------------
-
-Add warning to count fastq script - Sample and Reads
-Bin name matches bin name provided in bin-sample file (input)
 
 
 
@@ -43,6 +34,30 @@ All bin abundance input files should be within the `data` directory.
 
 # Compute and visualize relative bin abundances
 
+## Creating bin abundance input files
+
+To create all the input files necessary, run the `bin_abundance_prep.py` script. Two input files are necessary and the directories where the `fastq` and `fna ` files are needed to run this script. These are the arguments necessary to run this script:
+
+```
+usage: bin_abundance_prep.py [-h] bin_samples depth fastq_dir fna_dir
+
+positional arguments:
+  bin_samples  Input file path containing each bin mapped to each sample with
+               extension. Only tsv or csv files allowed. (str)
+  depth        Input file path containing depth information (with extension).
+               Only tsv or csv files allowed. (str)
+  fastq_dir    Input directory path containing all the fasta files. (str)
+  fna_dir      Input directory path containing all the fna files. (str)
+```
+
+To create the `bin_sample` file, read the "Mapping taxa" section below. To create the `depth` file, read the "Format depth file" section below as well.
+
+Here is an example of how to run this script:
+
+```
+python3 bin_abundance_prep.py bin2sample.tsv depth.tsv ~/fastq_files/ ~/fna_files/
+```
+
 ## Calculate relative bin abundance
 
 1. Obtain and prepare data files from IMG (see "Obtaining IMG data" section).
@@ -72,7 +87,7 @@ optional arguments:
 Here is an example of how to run the script (using example data provided in the `data` folder):
 
 ```
-python3 bin_abundance.py -r ../data/example_input_files/example__reads.tsv -m ../data/example_input_files/example__mapping.tsv -d ../data/example_input_files/example__depth.tsv -s ../data/example_input_files/example__size.tsv
+python3 bin_abundance.py -r ../../data/example_input_files/example__reads.tsv -m ../../data/example_input_files/example__mapping.tsv -d ../../data/example_input_files/example__depth.tsv -s ../../data/example_input_files/example__size.tsv
 ```
 
 2. Outputs will be saved in the `output` directory. Two files will be produced: an intermediate and a final (most important).
@@ -82,130 +97,32 @@ python3 bin_abundance.py -r ../data/example_input_files/example__reads.tsv -m ..
 1. With the `metagaia_viz.py` script, the files outputted from `bin_abundance.py` can be used to visualize the relative bin abundances in addition to a file mapping each bin to their respective taxa (see "Mapping taxa" section). Place all input files in the `data` directory. Here is an example of how to run the visualization script:
 
 ```
-python3 [bin abundance output file with extension (string)] [bin taxonomy file with extension (string)] [top percent of samples within each bin (float)] [width of the outputted figures (int)] [height of the outputted figures (int)] [figure dpi (int)] [name of the outputted figures with extenstion (string)] [file with each taxa mapped to colors for visualization with extension (string)]
+usage: metagaia_viz.py [-h]
+                       bin_abundance taxonomy_info [percent] [width] [height]
+                       [dpi] [out_fig] [taxa_color]
+
+positional arguments:
+  bin_abundance  Input file path outputted from MetaGaia with bin abundances
+                 with extension (str).
+  taxonomy_info  Input file path containing taxonomy information (with
+                 extension).
+  percent        Percent of highest sample in each bin [10] (float).
+  width          Width of outputted clustermap figure [4] (int).
+  height         Height of outputted clustermap figure [5] (int).
+  dpi            Resolution for output figure file [300] (int).
+  out_fig        Stores the figure in the specified file path and format
+                 [test.png] (str).
+  taxa_color     Input file path containing the color code for each taxa with
+                 extension [""] (str).
+```
+
+Here is an example of how to run this script:
+
+```
+python3 metagaia_viz.py bin_abundance_output.tsv tax2bin.tsv 10 8 5 500 figure1.jpg tax2color.tsv
 ```
 
 2. Outputs will be saved in the `output` directory containing the user-specified name.
-                                                                                                                    
-# Creating input files
-
-To create all the input files necessary, run the `bin_abundance_prep.py` script.
-
-
-
-Before creating the input files, complete the "Create file containing all the information" section first.
-
-## Reads
-
-To create the reads file, make sure all `.fastq files` are placed in the `fastq` directory and then run the `count_fastq_reads.sh` script like such:
-
-```
-sh count_fastq_reads.sh
-```
-
-Show example of file output.
-
-Since the "Sample" names are paths, we need to edit them down to contain only the sample name. To do this, manually edit the name using the text editor of your choice (script is currently being developed).
-
-## Mapping
-
-To create the mapping file, run the `create_mapping.sh` script.
-
-```
-sh create_mapping.sh
-```
-
-Show example of file output.
-
-## Depth
-
-1. To create the depth file, run the `create_depth_file.sh` script.
-
-```
-sh create_depth_file.sh
-```
-
-Show example of file output.
-
-2. Run the `modify_depth_file.py` script to format the file needed for calculating the relatvie bin abundance.
-
-```
-python3 modify_depth_file.py
-```
-
-Show example of file output.
-
-## Binsize
-
-To create the genome size file, make sure all `.fna files` are placed in the `fna` directory and then run the `calc_genome_size.sh` script like such:
-
-```
-sh calc_genome_size.sh
-```
-
-Show example of file output.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Create file containing all the information
-
-This file contains all the columns needed for both the mapping and depth input files. This method consists of pulling the scaffolds from the `.tsv` consolidated file from IMG. Note, the names of the files must be changed to match the name of the sample for this method to work. To create this file, it involves a series of steps that results in:
-
-Show example of file.
-
-After changing the names of each of the IMG files, the steps needed to create this file are as follows:
-
-1. Edit the `mapping_scaffolds.sh` script by adding the sample in the scaffold name. Thus, this needs to be done individually by copying and pasting this line with differing sample names:
-
-```
-sed -i '/s/scaffold/(Sample_name)_scaffold/g' the_mapping_file.tsv
-```
-
-2. Run the `mapping_scaffolds.sh` script to create a list of all the scaffolds of all your samples. The general name format within the list is `sample_name_scaffold_name`.
-
-3. Create a file with the scaffolds that are binned by running the `xyz.sh` script.
-
-4. Run the `mapping_scaffolds2.sh` script to concatenate the two scaffold files and map scaffolds without a bin.
-
-Example:
-
-```
-sh mapping_scaffolds2.sh all_scaffolds.tab scaffold2bins.tab
-```
-
-5. Run the `get_len_gc.sh` script to obtain the length and GC content from each sample assembly file `.fa`. `scaffold2gclength.tab` will be outputted.
-
-6. Run the `mapping_awk.sh` script to concatenate the `mappingFile1.tab` and `scaffold2gclength.tab ` files. The command should look like this:
-
-```
-sh mapping_awk.sh mappingFile1.tab scaffold2gclength.tab
-```
-
-7. Need help with getting depth info.
-
-To be continued...
 
 # Additional commands possibly needed
 
@@ -216,6 +133,8 @@ Need help with this section since I have not gone through the process myself.
 ## Mapping taxa
 
 Should I include these steps?
+
+## Format depth file
 
 
 
