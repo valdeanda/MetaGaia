@@ -10,10 +10,10 @@ The Gaia hypothesis, also known as Gaia theory or Gaia principle, proposes that 
 
 This protocol assumes the following:
   
-1. You have an account at the Integrated Microbial Genomes with Microbiome Samples system [IMG](https://img.jgi.doe.gov/cgi-bin/mer/main.cgi) 
-2. You submitted your sequencing data  at the IMG system and waited for the annotation to be complete in all your samples
-3. You have Metagenome Reconstructed Genomes (MAGs) and their corresponding genome size.
-4. You will also need each MAG's taxonomic affiliation (this step can be done with automatic methods such as [GTDBk](https://github.com/Ecogenomics/GTDBTk), phylogeny using a set of conserved marker genes (i.e [Phylosift](https://github.com/gjospin/PhyloSift)), or 16S rRNA phylogenies. At the Baker Lab, we use a combination of the previously mentioned methods to assign taxonomy of MAGs. 
+1. All necessary fastq files have been downloaded and placed within the same directory.
+2. All necessary fna files have been downloaded and placed within the same directory.
+3. A file has been created that maps each bin to its respective sample name (see "Mapping bins to samples" for more information).
+4. The GTDBTK tool has been downloaded to map each bin to its repective taxa (see "Mapping taxa" for more information).
                                                                                                                     
 # Usage notes
 
