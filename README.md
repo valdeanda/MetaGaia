@@ -81,7 +81,7 @@ The user must manually map each bin to its respective sample.
 
 ## Create initial depth file
 
-The script, `jgi_summarize_bam_contig_depths.pl`, to create the depth file needed in preparing the input files can be found here along with its usage notes: https://bitbucket.org/berkeleylab/metabat/src/master/.
+The script, `jgi_summarize_bam_contig_depths.pl`, must be used to create the depth file needed in `files_prep.py` and can be found here along with its usage notes: https://bitbucket.org/berkeleylab/metabat/src/master/.
 
 ## Mapping taxa
 
