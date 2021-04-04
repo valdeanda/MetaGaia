@@ -27,7 +27,9 @@ All output files will be saved in the `output` directory within the repository.
 
 To create all the input files necessary, run the `files_prep.py` script. Two input files are necessary and the directories where the `fastq` and `fna ` files are located are needed to run this script. These are the arguments necessary to run this script:
 
-`python3 files_prep.py [a tsv or csv file mapping bins to their respective sample names (str)] [a tsv or csv file containing the depth information (str)] [the directory containing all the fastq files (str)] [the directory containing all the fna files (str)]`
+```
+python3 files_prep.py [a tsv or csv file mapping bins to their respective sample names (str)] [a tsv or csv file containing the depth information (str)] [the directory containing all the fastq files (str)] [the directory containing all the fna files (str)]
+```
 
 To create the `bin_sample` file, read the "Mapping bins to samples" section below. To create the `depth` file, read the "Create initial depth file" section below as well.
 
@@ -43,7 +45,9 @@ python3 bin_abundance_prep.py bin2sample.tsv depth.tsv ~/fastq_files/ ~/fna_file
 
 2. The `bin_abundance.py` script then takes in a list of input files (processed from by running the `files_prep.py` script) that need to be created beforehand. All input files should be placed in the `data` directory. Here are the descriptions of each of the input files:
 
-`python3 bin_abundance.py [a tsv file containing the total number of reads in each sample (str)] [a tsv file mapping the contig name to its respective bin and sample names (str)] [a tsv file containing the depth information in a long tabular format (str)] [a tsv file mapping each bin with its corresponding genome size (str)]`
+```
+python3 bin_abundance.py [a tsv file containing the total number of reads in each sample (str)] [a tsv file mapping the contig name to its respective bin and sample names (str)] [a tsv file containing the depth information in a long tabular format (str)] [a tsv file mapping each bin with its corresponding genome size (str)]
+```
 
 Here is an example of how to run the script (using example data provided in the `data` folder):
 
@@ -57,7 +61,9 @@ python3 bin_abundance.py -r ../../data/example_input_files/example__reads.tsv -m
 
 1. With the `metagaia_viz.py` script, the files outputted from `bin_abundance.py` can be used to visualize the relative bin abundances in addition to a file mapping each bin to their respective taxa (see "Mapping taxa" section). Place all input files in the `data` directory. Here is an example of how to run the visualization script:
 
-`python3 bin_abundance_viz.py [the final output file from the bin_abundance.py script (str)] [a tsv or csv file mapping each bin with its respective taxa (str)] [percent of the highest sample in each bin [10] (float)] [width of outputted clustermap [4] (int)] [height of outputted clustermap [5] (int)] [resolution of output figure [300] (int)] [desired name of the outputted figure with the extension [test.png] (str)] [a tsv or csv file containing the color code for each taxa [""] (str)]`
+```
+python3 bin_abundance_viz.py [the final output file from the bin_abundance.py script (str)] [a tsv or csv file mapping each bin with its respective taxa (str)] [percent of the highest sample in each bin [10] (float)] [width of outputted clustermap [4] (int)] [height of outputted clustermap [5] (int)] [resolution of output figure [300] (int)] [desired name of the outputted figure with the extension [test.png] (str)] [a tsv or csv file containing the color code for each taxa [""] (str)]
+```
 
 Here is an example of how to run this script:
 
@@ -68,10 +74,6 @@ python3 metagaia_viz.py bin_abundance_output.tsv tax2bin.tsv 10 8 5 500 figure1.
 2. Outputs will be saved in the `output` directory containing the user-specified name.
 
 # Additional commands possibly needed
-
-## Obtaining IMG data
-
-Need help with this section since I have not gone through the process myself.
 
 ## Mapping bins to samples
 
