@@ -1,4 +1,8 @@
-# MetaGaia overview
+# MetaGaia
+
+*Sahil B. Shah - sbs2756@utexas.com, Valerie de Anda - valdeanda@utexas.edu*
+
+# Project overview
 
 MetaGaia will allow for the integrative analysis of both metagenomes and bins to better understand microbial communities. (vague)
 
@@ -41,9 +45,7 @@ python3 bin_abundance_prep.py bin2sample.tsv depth.tsv ~/fastq_files/ ~/fna_file
 
 ## 2. Calculate relative bin abundance
 
-1. Obtain and prepare data files from IMG (see "Obtaining IMG data" section).
-
-2. The `bin_abundance.py` script then takes in a list of input files (processed from by running the `files_prep.py` script) that need to be created beforehand. All input files should be placed in the `data` directory. Here are the descriptions of each of the input files:
+1. The `bin_abundance.py` script then takes in a list of input files (processed from by running the `files_prep.py` script) that need to be created beforehand. All input files should be placed in the `data` directory. Here are the descriptions of each of the input files:
 
 ```
 python3 bin_abundance.py [a tsv file containing the total number of reads in each sample (str)] [a tsv file mapping the contig name to its respective bin and sample names (str)] [a tsv file containing the depth information in a long tabular format (str)] [a tsv file mapping each bin with its corresponding genome size (str)]
@@ -59,7 +61,7 @@ python3 bin_abundance.py -r ../../data/example_input_files/example__reads.tsv -m
 
 ## 3. Visualize relative bin abundance
 
-1. With the `metagaia_viz.py` script, the files outputted from `bin_abundance.py` can be used to visualize the relative bin abundances in addition to a file mapping each bin to their respective taxa (see "Mapping taxa" section). Place all input files in the `data` directory. Here is an example of how to run the visualization script:
+1. With the `bin_abundance_viz.py` script, the files outputted from `bin_abundance.py` can be used to visualize the relative bin abundances in addition to a file mapping each bin to their respective taxa (see "Mapping taxa" section). Place all input files in the `data` directory. Here is an example of how to run the visualization script:
 
 ```
 python3 bin_abundance_viz.py [the final output file from the bin_abundance.py script (str)] [a tsv or csv file mapping each bin with its respective taxa (str)] [percent of the highest sample in each bin [10] (float)] [width of outputted clustermap [4] (int)] [height of outputted clustermap [5] (int)] [resolution of output figure [300] (int)] [desired name of the outputted figure with the extension [test.png] (str)] [a tsv or csv file containing the color code for each taxa [""] (str)]
@@ -68,7 +70,7 @@ python3 bin_abundance_viz.py [the final output file from the bin_abundance.py sc
 Here is an example of how to run this script:
 
 ```
-python3 metagaia_viz.py bin_abundance_output.tsv tax2bin.tsv 10 8 5 500 figure1.jpg tax2color.tsv
+python3 bin_abundance_viz.py ../output/bin_abundance_output.tsv ~/tax2bin.tsv 10 8 5 500 figure1.jpg ~/tax2color.tsv
 ```
 
 2. Outputs will be saved in the `output` directory containing the user-specified name.
