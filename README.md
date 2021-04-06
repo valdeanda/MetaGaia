@@ -48,13 +48,13 @@ python3 bin_abundance_prep.py bin2sample.tsv depth.tsv ~/fastq_files/ ~/fna_file
 1. The `bin_abundance.py` script then takes in a list of input files (processed from by running the `files_prep.py` script) that need to be created beforehand. All input files should be placed in the `data` directory. Here are the descriptions of each of the input files:
 
 ```
-python3 bin_abundance.py [a tsv file containing the total number of reads in each sample (str)] [a tsv file mapping the contig name to its respective bin and sample names (str)] [a tsv file containing the depth information in a long tabular format (str)] [a tsv file mapping each bin with its corresponding genome size (str)]
+python3 bin_abundance.py [a tsv file containing the total number of reads in each sample (str)] [a tsv file mapping the contig name to its respective bin and sample names (str)] [a tsv file containing the depth information in a long tabular format (str)] [a tsv file mapping each bin with its corresponding genome size (str)] [a large number to multiply the relative abundances to make it human readable [10000] (int)]
 ```
 
 Here is an example of how to run the script (using example data provided in the `data` folder):
 
 ```
-python3 bin_abundance.py -r ../../data/example_input_files/example__reads.tsv -m ../../data/example_input_files/example__mapping.tsv -d ../../data/example_input_files/example__depth.tsv -s ../../data/example_input_files/example__size.tsv
+python3 bin_abundance.py -r ../../data/example_input_files/example__reads.tsv -m ../../data/example_input_files/example__mapping.tsv -d ../../data/example_input_files/example__depth.tsv -s ../../data/example_input_files/example__size.tsv 1000000
 ```
 
 2. Outputs will be saved in the `output` directory. Two files will be produced: an intermediate and a final (most important).

@@ -42,6 +42,9 @@ def main()
   parser.add_argument('-s', '--binsize', required=True,
                       help=("Tabular file with Bin and corresponding Genome size (bp) as columns"))
 
+  parser.add_argument('-n', '--readablenum', required=False, default=10000,
+                      help=("A large number to multiply the relative abundances so that it is human readable."))
+
   args = parser.parse_args()
 
 
@@ -49,15 +52,13 @@ def main()
   mapping      = args.mapping
   depth        = args.depth
   size         = args.binsize
+  readablenum  = args.readablenum
 
   df_reads    = pd.read_csv(reads,sep="\t")
   df_mapping  = pd.read_csv(mapping, sep="\t",index_col=False)
   df_size     = pd.read_csv(size, sep ="\t")
   df_depth    = pd.read_csv(depth, sep ="\t")
 
-
-  #The user can change this number
-  readablenum = 100000000
 
   # Map the total reads of each sample  in the mapping file
 
