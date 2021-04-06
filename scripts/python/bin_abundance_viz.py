@@ -62,7 +62,7 @@ def format_dataframe(arguments, bin_abundances, taxonomy_info):
 		bin_abundances['Sample'] = bin_abundances.Sample.str.replace(sample, sample[digit_index.start()+1:])
 
     #Drop unneeded columns
-	bin_abundances = bin_abundances.drop(columns=['NormalizedCov', 'RelativeAbundance'])
+	bin_abundances = bin_abundances.drop(columns=['RelativeAbundance'])
 	#Log abundances
 	bin_abundances['RelativeAbundanceReadable'] = np.log10(bin_abundances['RelativeAbundanceReadable'])
     #Pivot table wider so that each bin is mapped to its respective site
@@ -70,8 +70,9 @@ def format_dataframe(arguments, bin_abundances, taxonomy_info):
     #Replace NaN with 0 and set the index to the Bin
 	bin_abundances = bin_abundances.replace(np.nan, 0)
 
-	#Rename headers
-	taxonomy_info = taxonomy_info.rename(columns={0: 'Bin', 1: 'Taxa'})
+	if taxonomy_info.columns.tolist() != ['Bin', 'Taxa']:
+		#Rename headers
+		taxonomy_info.columns = ['Bin', 'Taxa']
 	#Left join bin abundance file with taxanomy information
 	bin_abundances = bin_abundances.merge(taxonomy_info, on='Bin', how='left').set_index('Bin')
 	#Order dataframe by Taxa

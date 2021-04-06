@@ -98,8 +98,7 @@ def main()
 
   #Drop duplicates
 
-  finaldf=mapping_size_depth_new_reads[['Bin', 'Sample',
-         'NormalizedCov', 'RelativeAbundance', 'RelativeAbundanceReadable']]
+  finaldf=mapping_size_depth_new_reads[['Bin', 'Sample', 'RelativeAbundance', 'RelativeAbundanceReadable']]
   finaldf=finaldf.drop_duplicates()
 
   #Output files
