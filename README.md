@@ -4,7 +4,7 @@
 
 # Project overview
 
-MetaGaia will allow for the integrative analysis of both metagenomes and bins to better understand microbial communities. (vague)
+MetaGaia will allow for the integrative analysis of both metagenomes and bins to better understand microbial communities.
 
 The Gaia hypothesis, also known as Gaia theory or Gaia principle, proposes that all organisms and their inorganic surroundings on Earth are closely integrated to form a single and self-regulating complex system, maintaining the conditions for life on the planet
 
