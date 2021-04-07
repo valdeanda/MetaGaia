@@ -29,7 +29,7 @@ All output files will be saved in the `output` directory within the repository.
 
 ## 1. Creating bin abundance input files
 
-To create all the input files necessary, run the `files_prep.py` script. Two input files are necessary and the directories where the `fastq` and `fna ` files are located are needed to run this script. These are the arguments necessary to run this script:
+1. To create all the input files necessary, run the `files_prep.py` script. Two input files are necessary and the directories where the `fastq` and `fna ` files are located are needed to run this script. These are the arguments necessary to run this script:
 
 ```
 python3 files_prep.py [a tsv or csv file mapping bins to their respective sample names (str)] [a tsv or csv file containing the depth information (str)] [the directory containing all the fastq files (str)] [the directory containing all the fna files (str)]
@@ -42,6 +42,8 @@ Here is an example of how to run this script:
 ```
 python3 bin_abundance_prep.py bin2sample.tsv depth.tsv ~/fastq_files/ ~/fna_files/
 ```
+
+2. There should be four files named "reads_file.tsv", "mapping_file.tsv", "depth_file", and "binsize_file.tsv" saved in the `output` folder.
 
 ## 2. Calculate relative bin abundance
 
@@ -57,7 +59,7 @@ Here is an example of how to run the script (using example data provided in the 
 python3 bin_abundance.py -r ../../data/example_input_files/example__reads.tsv -m ../../data/example_input_files/example__mapping.tsv -d ../../data/example_input_files/example__depth.tsv -s ../../data/example_input_files/example__size.tsv 1000000
 ```
 
-2. Outputs will be saved in the `output` directory. Two files will be produced: an intermediate and a final (most important).
+2. The output will be a file saved in the `output` directory. This file can then be used in the next script: `bin_abundance_viz.py` to visualize the data.
 
 ## 3. Visualize relative bin abundance
 

@@ -97,16 +97,12 @@ def main()
   mapping_size_depth_new_reads['RelativeAbundanceReadable'] = mapping_size_depth_new_reads['RelativeAbundance'].astype(float) * readablenum
 
   #Drop duplicates
-
   finaldf=mapping_size_depth_new_reads[['Bin', 'Sample', 'RelativeAbundance', 'RelativeAbundanceReadable']]
   finaldf=finaldf.drop_duplicates()
 
   #Output files
-
-  mappingfile = args.mapping + "_IMGap_OUT_intermediate_abundance_values.tsv"
   abundance = args.mapping + "_IMGap_OUT_abundanceby_bin.tsv"
 
-  mapping_size_depth_new_reads.to_csv("../../output/" + mappingfile, sep = '\t', index = False)
   finaldf.to_csv("../../output/" + abundance, sep = '\t', index = False)
 
 
