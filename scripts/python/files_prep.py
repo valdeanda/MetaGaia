@@ -29,10 +29,10 @@ class Command_line_args():
 
 		#Command line arguments
 		self.parser = argparse.ArgumentParser()
-		self.parser.add_argument('bin_samples', type=str, help='Input file path containing each bin mapped to each sample with extension. Only tsv or csv files allowed. (str)')
-		self.parser.add_argument('depth', type=str, help='Input file path containing depth information (with extension). Only tsv or csv files allowed. (str)')
-		self.parser.add_argument('fastq_dir', type=str, help='Input directory path containing all the fasta files. (str)')
-		self.parser.add_argument('fna_dir', type=str, help='Input directory path containing all the fna files. (str)')
+		self.parser.add_argument('-b', '--bin_samples', required=True, type=str, help='Input file path containing each bin mapped to each sample with extension. Only tsv or csv files allowed (str).')
+		self.parser.add_argument('-d', '--depth', required=True, type=str, help='Input file path containing depth information (with extension). Only tsv or csv files allowed (str).')
+		self.parser.add_argument('-q', '--fastq_dir', required=True, type=str, help='Input directory path containing all the fasta files (str).')
+		self.parser.add_argument('-a', '--fna_dir', required=True, type=str, help='Input directory path containing all the fna files (str).')
 		self.args = self.parser.parse_args()
 
 

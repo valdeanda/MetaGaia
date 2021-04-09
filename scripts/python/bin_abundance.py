@@ -19,12 +19,12 @@
 import argparse
 import pandas as pd
 
-def main()
+def main():
 
   # options
   epilog = """Example:
 
-  $ python3 bin_abundancev3.py -r example__reads.tab -m example__mapping.tab -d example__depth.tsv -s example__size.tab"""
+  $ python3 bin_abundancev3.py -r example__reads.tsv -m example__mapping.tsv -d example__depth.tsv -s example__size.tsv"""
 
   parser = argparse.ArgumentParser(description=__doc__, epilog=epilog)
   parser.add_argument('-r','--reads', required=True,
@@ -42,7 +42,7 @@ def main()
   parser.add_argument('-s', '--binsize', required=True,
                       help=("Tabular file with Bin and corresponding Genome size (bp) as columns"))
 
-  parser.add_argument('-n', '--readablenum', required=False, default=10000,
+  parser.add_argument('-n', '--readablenum', required=False, default=100000000,
                       help=("A large number to multiply the relative abundances so that it is human readable."))
 
   args = parser.parse_args()
@@ -101,7 +101,7 @@ def main()
   finaldf=finaldf.drop_duplicates()
 
   #Output files
-  abundance = args.mapping + "_IMGap_OUT_abundanceby_bin.tsv"
+  abundance = args.mapping + "_MetaGaia_OUT_abundanceby_bin.tsv"
 
   finaldf.to_csv("../../output/" + abundance, sep = '\t', index = False)
 

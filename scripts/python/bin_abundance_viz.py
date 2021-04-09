@@ -34,14 +34,14 @@ class Command_line_args():
 
 		#Command line arguments
 		self.parser = argparse.ArgumentParser()
-		self.parser.add_argument('bin_abundance', type=str, help='Input file path outputted from MetaGaia with bin abundances with extension (str).')
-		self.parser.add_argument('taxonomy_info', type=str, help='Input file path containing taxonomy information (with extension).')
-		self.parser.add_argument('percent', type=float, nargs='?', default=10, help='Percent of highest sample in each bin [10] (float).')
-		self.parser.add_argument('width', type=int, nargs='?', default=4, help='Width of outputted clustermap figure [4] (int).')
-		self.parser.add_argument('height', type=int, nargs='?', default=5, help='Height of outputted clustermap figure [5] (int).')
-		self.parser.add_argument('dpi', type=int, nargs='?', default=300, help='Resolution for output figure file [300] (int).')
-		self.parser.add_argument('out_fig', type=str, nargs='?', default="test.png", help='Stores the figure in the specified file path and format [test.png] (str).')
-		self.parser.add_argument('taxa_color', type=str, default="", nargs='?', help='Input file path containing the color code for each taxa with extension [""] (str).')
+		self.parser.add_argument('-b', '--bin_abundance', required=True, type=str, help='Input file path outputted from MetaGaia with bin abundances with extension (str).')
+		self.parser.add_argument('-t', '--taxonomy_info', required=True, type=str, help='Input file path mapping taxonomy to each bin (with extension).')
+		self.parser.add_argument('-p', '--percent', required=False, type=float, default=10, help='Percent of highest sample in each bin [10] (float).')
+		self.parser.add_argument('-w', '--width', required=False, type=int, default=4, help='Width of outputted clustermap figure [4] (int).')
+		self.parser.add_argument('-l', '--height', required=False, type=int, default=5, help='Height of outputted clustermap figure [5] (int).')
+		self.parser.add_argument('-d', '--dpi', required=False, type=int, default=300, help='Resolution for output figure file [300] (int).')
+		self.parser.add_argument('-o', '--out_fig', required=False, type=str, default="test.png", help='Stores the figure in the specified file path and format [test.png] (str).')
+		self.parser.add_argument('-c', '--taxa_color', required=False, type=str, default="", help='Input file path containing the RGB color code for each taxa with extension [""] (str).')
 		self.args = self.parser.parse_args()
 
 
@@ -197,15 +197,15 @@ def main():
 
 	#Read in bin abundance file
 	if "tsv" in arguments.args.bin_abundance:
-		bin_abundance_df = pd.read_csv("../../data/" + arguments.args.bin_abundance, sep = "\t")
+		bin_abundance_df = pd.read_csv(arguments.args.bin_abundance, sep = "\t")
 	else:
-		bin_abundance_df = pd.read_csv("../../data/" + arguments.args.bin_abundance)
+		bin_abundance_df = pd.read_csv(arguments.args.bin_abundance)
 
 	#Read in taxanomy file
 	if "tsv" in arguments.args.taxonomy_info:
-		taxonomy_df = pd.read_csv("../../data/" + arguments.args.taxonomy_info, sep = "\t", header = None)
+		taxonomy_df = pd.read_csv(arguments.args.taxonomy_info, sep = "\t", header = None)
 	else:
-		taxonomy_df = pd.read_csv("../../data/" + arguments.args.taxonomy_info, header = None)
+		taxonomy_df = pd.read_csv(arguments.args.taxonomy_info, header = None)
 	
 	#Format dataframe to desired layout
 	bin_abundance_df = format_dataframe(arguments, bin_abundance_df, taxonomy_df)
@@ -215,9 +215,9 @@ def main():
 		final_colors = get_color_palette(bin_abundance_df)
 	else:
 		if "tsv" in arguments.args.taxa_color:
-			colors_df = pd.read_csv("../../data/" + arguments.args.taxa_color, sep = "\t", header = None)
+			colors_df = pd.read_csv(arguments.args.taxa_color, sep = "\t", header = None)
 		else:
-			colors_df = pd.read_csv("../../data/" + arguments.args.taxa_color, header = None)
+			colors_df = pd.read_csv(arguments.args.taxa_color, header = None)
 		final_colors = colors_df[0].tolist()
 
    	#Set color palette

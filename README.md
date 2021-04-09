@@ -32,7 +32,23 @@ All output files will be saved in the `output` directory within the repository.
 1. To create all the input files necessary, run the `files_prep.py` script. Two input files are necessary and the directories where the `fastq` and `fna ` files are located are needed to run this script. These are the arguments necessary to run this script:
 
 ```
-python3 files_prep.py [a tsv or csv file mapping bins to their respective sample names (str)] [a tsv or csv file containing the depth information (str)] [the directory containing all the fastq files (str)] [the directory containing all the fna files (str)]
+usage: files_prep.py [-h] -b BIN_SAMPLES -d DEPTH -q FASTQ_DIR -a FNA_DIR
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -b BIN_SAMPLES, --bin_samples BIN_SAMPLES
+                        Input file path containing each bin mapped to each
+                        sample with extension. Only tsv or csv files allowed
+                        (str).
+  -d DEPTH, --depth DEPTH
+                        Input file path containing depth information (with
+                        extension). Only tsv or csv files allowed (str).
+  -q FASTQ_DIR, --fastq_dir FASTQ_DIR
+                        Input directory path containing all the fasta files
+                        (str).
+  -a FNA_DIR, --fna_dir FNA_DIR
+                        Input directory path containing all the fna files
+                        (str).
 ```
 
 To create the `bin_sample` file, read the "Mapping bins to samples" section below. To create the `depth` file, read the "Create initial depth file" section below as well.
@@ -40,7 +56,7 @@ To create the `bin_sample` file, read the "Mapping bins to samples" section belo
 Here is an example of how to run this script:
 
 ```
-python3 bin_abundance_prep.py bin2sample.tsv depth.tsv ~/fastq_files/ ~/fna_files/
+python3 files_prep.py -b bin2sample.tsv -d depth.tsv -q ~/fastq_files/ -a ~/fna_files/
 ```
 
 2. There should be four files named "reads_file.tsv", "mapping_file.tsv", "depth_file", and "binsize_file.tsv" saved in the `output` folder.
@@ -50,7 +66,25 @@ python3 bin_abundance_prep.py bin2sample.tsv depth.tsv ~/fastq_files/ ~/fna_file
 1. The `bin_abundance.py` script then takes in a list of input files (processed from by running the `files_prep.py` script) that need to be created beforehand. All input files should be placed in the `data` directory. Here are the descriptions of each of the input files:
 
 ```
-python3 bin_abundance.py [a tsv file containing the total number of reads in each sample (str)] [a tsv file mapping the contig name to its respective bin and sample names (str)] [a tsv file containing the depth information in a long tabular format (str)] [a tsv file mapping each bin with its corresponding genome size (str)] [a large number to multiply the relative abundances to make it human readable [10000] (int)]
+usage: bin_abundance.py [-h] -r READS -m MAPPING -d DEPTH -s BINSIZE
+                        [-n READABLENUM]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -r READS, --reads READS
+                        Total number of reads. Rows are samples column are
+                        reads
+  -m MAPPING, --mapping MAPPING
+                        Tabular file containingOriginal_Contig_Name Bin Sample
+  -d DEPTH, --depth DEPTH
+                        Tabular file depth infoOriginal_Contig_Name contigLen
+                        Saple_Depth Depth
+  -s BINSIZE, --binsize BINSIZE
+                        Tabular file with Bin and corresponding Genome size
+                        (bp) as columns
+  -n READABLENUM, --readablenum READABLENUM
+                        A large number to multiply the relative abundances so
+                        that it is human readable.
 ```
 
 Here is an example of how to run the script (using example data provided in the `data` folder):
@@ -66,13 +100,37 @@ python3 bin_abundance.py -r ../../data/example_input_files/example__reads.tsv -m
 1. With the `bin_abundance_viz.py` script, the files outputted from `bin_abundance.py` can be used to visualize the relative bin abundances in addition to a file mapping each bin to their respective taxa (see "Mapping taxa" section). Place all input files in the `data` directory. Here is an example of how to run the visualization script:
 
 ```
-python3 bin_abundance_viz.py [the final output file from the bin_abundance.py script (str)] [a tsv or csv file mapping each bin with its respective taxa (str)] [percent of the highest sample in each bin [10] (float)] [width of outputted clustermap [4] (int)] [height of outputted clustermap [5] (int)] [resolution of output figure [300] (int)] [desired name of the outputted figure with the extension [test.png] (str)] [a tsv or csv file containing the color code for each taxa [""] (str)]
+usage: bin_abundance_viz.py [-h] -b BIN_ABUNDANCE -t TAXONOMY_INFO
+                            [-p PERCENT] [-w WIDTH] [-l HEIGHT] [-d DPI]
+                            [-o OUT_FIG] [-c TAXA_COLOR]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -b BIN_ABUNDANCE, --bin_abundance BIN_ABUNDANCE
+                        Input file path outputted from MetaGaia with bin
+                        abundances with extension (str).
+  -t TAXONOMY_INFO, --taxonomy_info TAXONOMY_INFO
+                        Input file path mapping taxonomy to each bin (with
+                        extension).
+  -p PERCENT, --percent PERCENT
+                        Percent of highest sample in each bin [10] (float).
+  -w WIDTH, --width WIDTH
+                        Width of outputted clustermap figure [4] (int).
+  -l HEIGHT, --height HEIGHT
+                        Height of outputted clustermap figure [5] (int).
+  -d DPI, --dpi DPI     Resolution for output figure file [300] (int).
+  -o OUT_FIG, --out_fig OUT_FIG
+                        Stores the figure in the specified file path and
+                        format [test.png] (str).
+  -c TAXA_COLOR, --taxa_color TAXA_COLOR
+                        Input file path containing the RGB color code for each
+                        taxa with extension [""] (str).
 ```
 
 Here is an example of how to run this script:
 
 ```
-python3 bin_abundance_viz.py ../output/bin_abundance_output.tsv ~/tax2bin.tsv 10 8 5 500 figure1.jpg ~/tax2color.tsv
+python3 bin_abundance_viz.py -b ../output/bin_abundance_output.tsv -t ~/tax2bin.tsv -p 10 -w 8 -l 5 -d 500 -o figure1.jpg -c ~/tax2color.tsv
 ```
 
 2. Outputs will be saved in the `output` directory containing the user-specified name.
