@@ -7,8 +7,8 @@
 # Name:     bin_abundance.py
 # Purpose:  calculate the abundance of bins based of scaffold depth,
 #           bin size (bp)
-# @uthors:     vda  valdeanda@utexas.edu
-# @ modif:     sbs sahil2699@gmail.com 
+# @uthors:     vda - valdeanda@utexas.edu
+# @ modif:     sbs - sahil2699@gmail.com 
 #              xgong xianzhe.gong@gmail.com
 # Created:     December 2020
 # Last updated Feb  2021
@@ -103,7 +103,7 @@ def main():
   #Output files
   abundance = args.mapping + "_MetaGaia_OUT_abundanceby_bin.tsv"
 
-  finaldf.to_csv("../../output/" + abundance, sep = '\t', index = False)
+  finaldf.to_csv("../../../output/" + abundance, sep = '\t', index = False)
 
 
   print("\n"

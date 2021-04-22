@@ -1,0 +1,319 @@
+---
+title: "Readme MetaGaia"
+ate: '`r format(Sys.Date(),"%d/%b/%Y")`'
+output:
+  html_document:
+    fig_caption: yes
+    highlight: zenburn
+    number_sections: yes
+    theme: journal
+    toc: yes
+    toc_float: yes
+  ioslides_presentation:
+    css: ./comm/bkgr.css
+    fig_caption: yes
+    incremental: yes
+    logo: ./comm/quantBiotech.png
+    smaller: yes
+    toc: yes
+    toc_depth: 3
+  pdf_document:
+    fig_caption: yes
+    highlight: zenburn
+    toc: yes
+    toc_depth: 3
+  slidy_presentation:
+    incremental: yes
+  word_document: default
+  html_notebook: 
+    toc: yes
+geometry: margin=1cm
+fontsize: 11pt
+---
+
+```{r knitr setup, include=FALSE,  eval=TRUE, echo=FALSE, warning=FALSE}
+library(knitr)
+knitr::opts_chunk$set(eval=TRUE, cache=FALSE, message=FALSE, warning=FALSE, 
+                      comment = "", results="markup")
+```
+
+# About MetaGaia
+
+MetaGaia is a pipeline that streamlines the process of calculating bin abundances, identifying the metabolic pathways present in each bin, and the metabolic pathways found in both phages and their hosts. The importance of performing each of these functions is to better understand microbial communities and the dominant microbes present within a community. This pipeline is divinding into three sections that perform different functions: 1) Calculating bin abundances (bin_abundance), 2) Identyfing metabolic pathways present in each bin (metabolism), and 3) Finding commonalities between phages and their hosts (phage-host_analysis). Multiple requirements are needed and are specified in the "Requirements" section of this protocol.
+
+# MetaGaia installation 
+
+The MetaGaia software is available as an open-source package distributed from a GitHub repository. Thus,
+the natural way of installing it is by cloning the repository via the following commands:
+```{basH, highlight=TRUE, eval=FALSE}
+git clone https://github.com/valdeanda/MetaGaia
+```
+
+# Requirements
+
+## Calculating bin abundances (bin_abundance)
+
+1. All necessary fastq files have been downloaded and placed within the same directory.
+2. All necessary fna files have been downloaded and placed within the same directory.
+3. A file has been created that maps each bin to its respective sample name (see "Mapping bins to samples" for more information).
+4. The GTDBTK tool has been downloaded to map each bin to its repective taxa (see "Mapping taxa" for more information).
+
+## Identifying metabolic pathways (metabolism)
+
+1. The `mapping_file.tsv` file created from the "bin_abundance" section of the pipeline.
+2. An account at the Integrated Microbial Genomes with Microbiome Samples system [IMG](https://img.jgi.doe.gov/) is needed with the IMG annotation of all of the samples being analyzed.
+3. File to combine annotation files. (What is this file?)
+3. A user created file that contains the KEGG, COG, PFAM, and/or EC_NUMBER pathways of interest.
+
+## Finding commonalities between phages and their hosts (phage-host_analysis)
+
+1. To be updated.
+
+# Running bin_abundance
+
+## Creating bin abundance input files
+
+1. To create all the input files necessary, run the `files_prep.py` script. Two input files are necessary and the directories where the `fastq` and `fna ` files are located are needed to run this script. These are the arguments necessary to run this script:
+
+```{bash, highlight=TRUE, eval=FALSE}
+usage: files_prep.py [-h] -b BIN_SAMPLES -d DEPTH -q FASTQ_DIR -a FNA_DIR
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -b BIN_SAMPLES, --bin_samples BIN_SAMPLES
+                        Input file path containing each bin mapped to each
+                        sample with extension. Only tsv or csv files allowed
+                        (str).
+  -d DEPTH, --depth DEPTH
+                        Input file path containing depth information (with
+                        extension). Only tsv or csv files allowed (str).
+  -q FASTQ_DIR, --fastq_dir FASTQ_DIR
+                        Input directory path containing all the fasta files
+                        (str).
+  -a FNA_DIR, --fna_dir FNA_DIR
+                        Input directory path containing all the fna files
+                        (str).
+  
+```
+
+To create the `bin_sample` file, read the "Mapping bins to samples" section below. To create the `depth` file, read the "Create initial depth file" section below as well.
+
+Here is an example of how to run this script:
+
+```{bash, highlight=TRUE, eval=FALSE}
+python3 files_prep.py -b bin2sample.tsv -d depth.tsv -q ~/fastq_files/ -a ~/fna_files/
+```
+
+2. There should be four files named "reads_file.tsv", "mapping_file.tsv", "depth_file", and "binsize_file.tsv" saved in the `output` folder.
+
+## Calculate relative bin abundance
+
+1. The `bin_abundance.py` script then takes in a list of input files (processed from by running the `files_prep.py` script) that need to be created beforehand. Here are the descriptions of each of the input files:
+
+```{bash, highlight=TRUE, eval=FALSE}
+usage: bin_abundance.py [-h] -r READS -m MAPPING -d DEPTH -s BINSIZE
+                        [-n READABLENUM]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -r READS, --reads READS
+                        Total number of reads. Rows are samples column are
+                        reads
+  -m MAPPING, --mapping MAPPING
+                        Tabular file containingOriginal_Contig_Name Bin Sample
+  -d DEPTH, --depth DEPTH
+                        Tabular file depth infoOriginal_Contig_Name contigLen
+                        Saple_Depth Depth
+  -s BINSIZE, --binsize BINSIZE
+                        Tabular file with Bin and corresponding Genome size
+                        (bp) as columns
+  -n READABLENUM, --readablenum READABLENUM
+                        A large number to multiply the relative abundances so
+                        that it is human readable.
+```
+
+Here is an example of how to run the script (using example data provided in the `data` folder): 
+```{bash, highlight=TRUE, eval=FALSE}
+python3 bin_abundance.py -r ../../data/example_input_files/example__reads.tsv -m ../../data/example_input_files/example__mapping.tsv -d ../../data/example_input_files/example__depth.tsv -s ../../data/example_input_files/example__size.tsv -n 1000000
+```
+
+2. The output will be a file saved in the `output` directory. This file can then be used in the next script: `bin_abundance_viz.py` to visualize the data.
+
+## Visualize relative bin abundance
+
+1. With the `bin_abundance_viz.py` script, the files outputted from `bin_abundance.py` can be used to visualize the relative bin abundances in addition to a file mapping each bin to their respective taxa (see "Mapping taxa" for more information). These are the arguments needed for the visualization script:
+
+```{bash, highlight=TRUE, eval=FALSE}
+usage: bin_abundance_viz.py [-h] -b BIN_ABUNDANCE -t TAXONOMY_INFO
+                            [-p PERCENT] [-w WIDTH] [-l HEIGHT] [-d DPI]
+                            [-o OUT_FIG] [-c TAXA_COLOR]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -b BIN_ABUNDANCE, --bin_abundance BIN_ABUNDANCE
+                        Input file path outputted from MetaGaia with bin
+                        abundances with extension (str).
+  -t TAXONOMY_INFO, --taxonomy_info TAXONOMY_INFO
+                        Input file path mapping taxonomy to each bin (with
+                        extension).
+  -p PERCENT, --percent PERCENT
+                        Percent of highest sample in each bin [10] (float).
+  -w WIDTH, --width WIDTH
+                        Width of outputted clustermap figure [4] (int).
+  -l HEIGHT, --height HEIGHT
+                        Height of outputted clustermap figure [5] (int).
+  -d DPI, --dpi DPI     Resolution for output figure file [300] (int).
+  -o OUT_FIG, --out_fig OUT_FIG
+                        Stores the figure in the specified file path and
+                        format [test.png] (str).
+  -c TAXA_COLOR, --taxa_color TAXA_COLOR
+                        Input file path containing the RGB color code for each
+                        taxa with extension [""] (str).
+```  
+
+Here is an example of how to run this script:
+
+```{bash, highlight=TRUE, eval=FALSE}
+python3 bin_abundance_viz.py -b ../output/bin_abundance_output.tsv -t ~/tax2bin.tsv -p 10 -w 8 -l 5 -d 500 -o figure1.jpg -c ~/tax2color.tsv
+```
+
+2. Outputs will be saved in the `output` directory containing the user-specified name.
+
+# Running metabolism
+
+*NOTE: The only metabolic pathways that are available to analyze are in the KEGG, COG, PFAM, and EC_NUMBER databases.*
+
+## Map metabolic pathways to the scaffold containing them and get the counts of each pathway per bin
+
+1. One requirement must be met before running the `metabolic_profile.py` script, which is that the IMG annotation files must be combined into one (see "Creating IMG annotation" for more information).
+
+2. To get the pathways mapped to each scaffold and the number of times each pathway is found within a bin, run the `metabolic_profile.py` script. These are the arguments for this script:
+
+```{bash, highlight=TRUE, eval=FALSE}
+usage: metabolic_profile.py [-h] -i IMGANNO -m MAPPING -d DATABASE
+                            [-c CONSISTENCY]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -i IMGANNO, --imganno IMGANNO
+                        Input file in tsv format. Rows are genes columns are
+                        IMG annotations.
+  -m MAPPING, --mapping MAPPING
+                        A tsv file containing original contig name, sample,
+                        and bin columns
+  -d DATABASE, --database DATABASE
+                        Database(s) of interest to merge together. Input as a
+                        list.
+  -c CONSISTENCY, --consistency CONSISTENCY
+                        Boolean value that determines if scaffolds not
+                        containing a value for each database should be kept.
+                        Leave blank if consistency check is not needed.
+```
+
+Here is an example of how to run this script:
+
+```{bash, highlight=TRUE, eval=FALSE}
+python3 metabolic_profile.py -i imgannotation.tsv -m ../../../output/mapping_file.tsv -d [KEGG, COG, PFAM, EC_NUMBER] -c True
+```
+
+2. Outputs will be saved in the `output` directory containing name formats: "mapped_scaffolds.tsv" and the database name followed by "metabolic_profile.tsv".
+
+## Optional step: Merge databases into one file
+
+*This step is optional if the user has multiple databases that they need to merge into one file for the next step.*
+
+1. To merge each of the databases, run the `merge_database.py` script. These are the arguments for the script:
+
+```{bash, eval=FALSE}
+usage: merge_databases.py [-h] -p DATABASES_PATH -d DATABASE
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -p DATABASES_PATH, --databases_path DATABASES_PATH
+                        Path for directory containing all the database files.
+  -d DATABASE, --database DATABASE
+                        Database(s) of interest to merge together. Input as a
+                        list.
+```
+
+Here is an example of how to run this script:
+
+```{bash,eval=FALSE}
+python3 merge_database.py -p ../../../output/ -d [KEGG, COG, PFAM, EC_NUMBER]
+```
+
+2. Outputs will be places in the `output` directory containing the name formats: "merged_" database name "_metabolic_profile.tsv" and "final_merged_metabolic_profile.tsv".
+
+## Extract specific pathways to analyze
+
+1. One requirement must be met to run the `pathway_extraction.py` script, which is that the user-defined database must be created (see "Defining metabolic database" for more information).
+
+2. To extract and analyze specific metabolic pathways, run the `pathway_extraction.py` script. These are the arguments for the script:
+
+```{bash,eval=FALSE}
+usage: pathway_extraction.py [-h] -c CUSTOMDATA -p PATHWAY_DATABASE -d
+                             DATABASE
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -c CUSTOMDATA, --customdata CUSTOMDATA
+                        Input file in tsv format with at least one column with
+                        the header containing the pathways of interest.
+  -p PATHWAY_DATABASE, --pathway_database PATHWAY_DATABASE
+                        Input file in tsv format that contains the counts of
+                        each pathways per bin.
+  -d DATABASE, --database DATABASE
+                        Database(s) of interest to merge together. Input as a
+                        list.
+```
+
+Here is an example of how to run this script:
+
+```{bash, eval=FALSE}
+python3 pathway_extraction.py -c user-defined_database.tsv -p ../../../output/final_merged_metabolic_profile.tsv -d [KEGG, COG, PFAM, EC_NUMBER]
+```
+
+3. Outputs will be places in the `output` directory containing the name "extracted_pathways.tsv".
+
+# Running phage-host analysis
+
+## To be updated
+
+# Additional commands possibly needed
+
+## Mapping bins to samples
+
+The user must manually map each bin to its respective sample.
+
+## Create initial depth file
+
+The script, `jgi_summarize_bam_contig_depths.pl`, must be used to create the depth file needed in `files_prep.py` and can be found here along with its usage notes: https://bitbucket.org/berkeleylab/metabat/src/master/.
+
+## Mapping taxa
+
+One way to map each the taxa to each bin is to use the GTDBTK tool found here: https://github.com/Ecogenomics/GTDBTk.
+
+## Creating IMG annotation
+
+I need help with this.
+
+## Defining metabolic database
+
+When creating a user-defined database, there are multiple format requirements. The metabolic databases of interest should contain one or multiple headers (KEGG, COG, PFAM, EC_NUMBER) depending on which database the user wants to analyze. All other auxiliary columns will be mapped to the bins and added to the final outputted file. Lastly, in each of the database columns, please format each pathway name as it is in the IMG annotation file:
+
+```{bash,eval=FALSE}
+KEGG - KO:K12345
+COG - COG12345
+PFAM - pfam12345
+EC_NUMBER - EC:EC12345
+```
+
+# Support and Development
+
+This pipeline has been developed by the Baker lab at UT Austin. If there are any questions, comments, or concerns, please email us at either sbs2756@utexas.edu or valdeanda@utexas.edu.
+ 
+# Cite 
+If you find this software useful please cite us as: 
+
+Coming soon!
+

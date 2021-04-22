@@ -5,7 +5,7 @@
 # Name:     metagaia_viz.py
 # Purpose:  use the output file after calculating bin abundacnces to visualize the data.
 #
-# @uthors:      vda - valdeanda@utexas.edu, acph  dragopoot@gmail.com
+# @uthors:     sbs - sbs2756@utexas.edu
 #
 # Created:     2021
 # Licence:     GNU GENERAL PUBLIC LICENSE, Version 3, 29 June 2007
@@ -184,9 +184,9 @@ def create_clustermap(arguments, bin_abundances, palette, row_colors, heatmp = F
 	#Save or show plot
 	if arguments.args.out_fig:
 		if heatmp:
-			plt.savefig("../../output/heatmap_top_" + arguments.args.out_fig, dpi=arguments.args.dpi, bbox_inches="tight")
+			plt.savefig("../../../output/heatmap_top_" + arguments.args.out_fig, dpi=arguments.args.dpi, bbox_inches="tight")
 		else:
-			plt.savefig("../../output/clustermap_" + arguments.args.out_fig, dpi=arguments.args.dpi, bbox_inches="tight")
+			plt.savefig("../../../output/clustermap_" + arguments.args.out_fig, dpi=arguments.args.dpi, bbox_inches="tight")
 	else:
 		plt.show()
 
@@ -229,7 +229,7 @@ def main():
 
 	#Get dataframe with highest abundances in each column
 	merged_df = filter_top_sites(arguments, bin_abundance_df)
-	merged_df.to_csv('../../output/top_sample_abundances.tsv', sep='\t')
+	merged_df.to_csv('../../../output/top_sample_abundances.tsv', sep='\t')
 
 	#Set color palette
 	my_palette = dict(zip(merged_df.Taxa.unique(), final_colors))
