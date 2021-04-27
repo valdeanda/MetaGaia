@@ -6,9 +6,9 @@ MetaGaia is a pipeline that streamlines the process of calculating Metagenome-As
 The importance of performing each of these functions is to better understand microbial communities and the dominant microbes present within a community.
 
 This pipeline is divinding into three sections that perform different functions: 
-1. Calculating bin abundances (bin_abundance)
+1. Calculating bin abundances (abundance)
 2. Identyfing metabolic pathways present in each bin (metabolism)
-3. Finding commonalities between phages and their hosts (phage-host_analysis).
+3. Finding commonalities between phages and their hosts (host-virus).
 
 The Gaia hypothesis, also known as Gaia theory or Gaia principle, proposes that all organisms and their inorganic surroundings on Earth are closely integrated to form a single and self-regulating complex system, maintaining the conditions for life on the planet
 
