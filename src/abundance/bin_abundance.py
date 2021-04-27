@@ -61,7 +61,6 @@ def main():
 
   # Map the total reads of each sample  in the mapping file
 
-  #merged1=pd.merge(df_mapping,df_reads[['Sample', 'Reads']], on='Sample')
   # Map the Bin size to the mapping file
   mapping_size=pd.merge(df_mapping,df_size[['Bin','Size']],on ='Bin')
   # Map the coverage of each scaffold in different samples to the mapping file
@@ -100,7 +99,7 @@ def main():
   finaldf=finaldf.drop_duplicates()
 
   #Output files
-  abundance = args.mapping + "_MetaGaia_OUT_abundanceby_bin.tsv"
+  abundance = "MetaGaia_OUT_abundanceby_bin.tsv"
 
   finaldf.to_csv("../../output/" + abundance, sep = '\t', index = False)
 
