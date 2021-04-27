@@ -582,7 +582,7 @@ div.tocify {
 </div>
 <div id="create-initial-depth-file" class="section level2" number="7.3">
 <h2 number="7.3"><span class="header-section-number">7.3</span> Create initial depth file</h2>
-<p>The script, <code>jgi_summarize_bam_contig_depths.pl</code>, must be used to create the depth file needed in <code>files_prep.py</code> and can be found here along with its usage notes: <a href="https://bitbucket.org/berkeleylab/metabat/src/master/" class="uri">https://bitbucket.org/berkeleylab/metabat/src/master/</a>.</p>
+<p>The script, <code>jgi_summarize_bam_contig_depths.pl</code>, must be used to create the depth file needed in <code>files_prep.py</code> and can be found <a href="https://bitbucket.org/berkeleylab/metabat/src/master/">here</a> along with its usage notes.</p>
 </div>
 <div id="mapping-taxa" class="section level2" number="7.4">
 <h2 number="7.4"><span class="header-section-number">7.4</span> Mapping taxa</h2>
@@ -590,19 +590,19 @@ div.tocify {
 </div>
 <div id="creating-img-annotation" class="section level2" number="7.5">
 <h2 number="7.5"><span class="header-section-number">7.5</span> Creating IMG annotation</h2>
-<p>First, log on to the IMG server found <a href="https://genome.jgi.doe.gov/portal/help/download.jsf#/api">here</a>. Then, download and unzip the tar.gz file.</p>
+<p>First, log on to the IMG server found <a href="https://genome.jgi.doe.gov/portal/help/download.jsf#/api">here</a>. Then, download and unzip the tar.gz file. Once you have the IMG annotation files, run the <code>consolidateJGIdata.pl</code> script to consolidate the data obtained from JGI IMG into one file. The script can be found <a href="https://github.com/Geo-omics/scripts">here</a>.</p>
 </div>
 <div id="defining-metabolic-database" class="section level2" number="7.6">
 <h2 number="7.6"><span class="header-section-number">7.6</span> Defining metabolic database</h2>
 <p>When creating a user-defined database, there are multiple format requirements. The metabolic databases of interest should contain one or multiple headers (KEGG, COG, PFAM, EC_NUMBER) depending on which database the user wants to analyze. All other auxiliary columns will be mapped to the bins and added to the final outputted file. Lastly, in each of the database columns, please format each pathway name as it is in the IMG annotation file:</p>
-</div>
-<div id="creating-vibrant-mapping" class="section level2" number="7.7">
-<h2 number="7.7"><span class="header-section-number">7.7</span> Creating Vibrant mapping</h2>
-<p>I need help with this.</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ex">KEGG</span> <span class="at">-</span> KO:K12345</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="ex">COG</span> <span class="at">-</span> COG12345</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="ex">PFAM</span> <span class="at">-</span> pfam12345</span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="ex">EC_NUMBER</span> <span class="at">-</span> EC:EC12345</span></code></pre></div>
+</div>
+<div id="creating-vibrant-mapping" class="section level2" number="7.7">
+<h2 number="7.7"><span class="header-section-number">7.7</span> Creating Vibrant mapping</h2>
+<p>I need help with this.</p>
 </div>
 </div>
 <div id="support-and-development" class="section level1" number="8">

@@ -298,10 +298,13 @@ optional arguments:
                         user is interested in analyzing: KEGG, COG, PFAM, or
                         EC_NUMBER.
 ```
+
 Here is an example of how to run this script:
+
 ```{bash,eval=FALSE}
 python3 id_common_metabolism.py -p ../../output/KEGG_database_counts.tsv -v ~/vibrant_output.tsv KEGG
 ```
+
 3. Outputs will be places in the `output` directory containing the names "phage_host_metabolism.tsv" and "phage_host_mapping.tsv".
 
 # Additional commands
@@ -316,7 +319,7 @@ The user must manually map each bin to its respective sample.
 
 ## Create initial depth file
 
-The script, `jgi_summarize_bam_contig_depths.pl`, must be used to create the depth file needed in `files_prep.py` and can be found here along with its usage notes: https://bitbucket.org/berkeleylab/metabat/src/master/.
+The script, `jgi_summarize_bam_contig_depths.pl`, must be used to create the depth file needed in `files_prep.py` and can be found [here](https://bitbucket.org/berkeleylab/metabat/src/master/) along with its usage notes.
 
 ## Mapping taxa
 
@@ -324,15 +327,11 @@ One way to map each the taxa to each bin is to use the GTDBTK tool found here: h
 
 ## Creating IMG annotation
 
-First, log on to the IMG server found [here](https://genome.jgi.doe.gov/portal/help/download.jsf#/api). Then, download and unzip the tar.gz file.
+First, log on to the IMG server found [here](https://genome.jgi.doe.gov/portal/help/download.jsf#/api). Then, download and unzip the tar.gz file. Once you have the IMG annotation files, run the `consolidateJGIdata.pl` script to consolidate the data obtained from JGI IMG into one file. The script can be found [here](https://github.com/Geo-omics/scripts).
 
 ## Defining metabolic database
 
 When creating a user-defined database, there are multiple format requirements. The metabolic databases of interest should contain one or multiple headers (KEGG, COG, PFAM, EC_NUMBER) depending on which database the user wants to analyze. All other auxiliary columns will be mapped to the bins and added to the final outputted file. Lastly, in each of the database columns, please format each pathway name as it is in the IMG annotation file:
-
-## Creating Vibrant mapping
-
-I need help with this.
 
 ```{bash,eval=FALSE}
 KEGG - KO:K12345
@@ -340,6 +339,9 @@ COG - COG12345
 PFAM - pfam12345
 EC_NUMBER - EC:EC12345
 ```
+## Creating Vibrant mapping
+
+I need help with this.
 
 # Support and Development
 
