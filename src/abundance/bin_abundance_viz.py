@@ -1,12 +1,11 @@
+#!/usr/bin/env python
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
 # ------------------------------
 # Name:     metagaia_viz.py
 # Purpose:  use the output file after calculating bin abundacnces to visualize the data.
-#
 # @uthors:     sbs - sbs2756@utexas.edu
-#
 # Created:     2021
 # Licence:     GNU GENERAL PUBLIC LICENSE, Version 3, 29 June 2007
 # ------------------------------
@@ -34,14 +33,14 @@ class Command_line_args():
 
 		#Command line arguments
 		self.parser = argparse.ArgumentParser()
-		self.parser.add_argument('-b', '--bin_abundance', required=True, type=str, help='Input file path outputted from MetaGaia with bin abundances with extension (str).')
+		self.parser.add_argument('-b', '--bin_abundance', required=True, type=str, help='Input file path outputted from MetaGaia with bin abundances with extension.')
 		self.parser.add_argument('-t', '--taxonomy_info', required=True, type=str, help='Input file path mapping taxonomy to each bin (with extension).')
-		self.parser.add_argument('-p', '--percent', required=False, type=float, default=10, help='Percent of highest sample in each bin [10] (float).')
-		self.parser.add_argument('-w', '--width', required=False, type=int, default=4, help='Width of outputted clustermap figure [4] (int).')
-		self.parser.add_argument('-l', '--height', required=False, type=int, default=5, help='Height of outputted clustermap figure [5] (int).')
-		self.parser.add_argument('-d', '--dpi', required=False, type=int, default=300, help='Resolution for output figure file [300] (int).')
-		self.parser.add_argument('-o', '--out_fig', required=False, type=str, default="test.png", help='Stores the figure in the specified file path and format [test.png] (str).')
-		self.parser.add_argument('-c', '--taxa_color', required=False, type=str, default="", help='Input file path containing the RGB color code for each taxa with extension [""] (str).')
+		self.parser.add_argument('-p', '--percent', required=False, type=float, default=10, help='Percent of highest sample in each bin [10].')
+		self.parser.add_argument('-w', '--width', required=False, type=int, default=4, help='Width of outputted clustermap figure [4].')
+		self.parser.add_argument('-l', '--height', required=False, type=int, default=5, help='Height of outputted clustermap figure [5].')
+		self.parser.add_argument('-d', '--dpi', required=False, type=int, default=300, help='Resolution for output figure file [300].')
+		self.parser.add_argument('-o', '--out_fig', required=False, type=str, default="test.png", help='Stores the figure in the specified file path and format [test.png].')
+		self.parser.add_argument('-c', '--taxa_color', required=False, type=str, default="", help='Input file path containing the RGB color code for each taxa with extension [""].')
 		self.args = self.parser.parse_args()
 
 
@@ -184,9 +183,9 @@ def create_clustermap(arguments, bin_abundances, palette, row_colors, heatmp = F
 	#Save or show plot
 	if arguments.args.out_fig:
 		if heatmp:
-			plt.savefig("../../../output/heatmap_top_" + arguments.args.out_fig, dpi=arguments.args.dpi, bbox_inches="tight")
+			plt.savefig("../../output/heatmap_top_" + arguments.args.out_fig, dpi=arguments.args.dpi, bbox_inches="tight")
 		else:
-			plt.savefig("../../../output/clustermap_" + arguments.args.out_fig, dpi=arguments.args.dpi, bbox_inches="tight")
+			plt.savefig("../../output/clustermap_" + arguments.args.out_fig, dpi=arguments.args.dpi, bbox_inches="tight")
 	else:
 		plt.show()
 
@@ -229,7 +228,7 @@ def main():
 
 	#Get dataframe with highest abundances in each column
 	merged_df = filter_top_sites(arguments, bin_abundance_df)
-	merged_df.to_csv('../../../output/top_sample_abundances.tsv', sep='\t')
+	merged_df.to_csv('../../output/top_sample_abundances.tsv', sep='\t')
 
 	#Set color palette
 	my_palette = dict(zip(merged_df.Taxa.unique(), final_colors))
@@ -238,7 +237,7 @@ def main():
 	#Outputs final heatmap
 	create_clustermap(arguments, merged_df, my_palette, row_colors, True)
 
-	print("Files in \'output\' folder.\nEnjoy!")
+	print("Files in \"output\" folder.\nEnjoy!")
 
 if __name__ == "__main__":
 	main()

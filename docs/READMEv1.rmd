@@ -63,17 +63,18 @@ git clone https://github.com/valdeanda/MetaGaia
 1. The `mapping_file.tsv` file created from the "bin_abundance" section of the pipeline.
 2. An account at the Integrated Microbial Genomes with Microbiome Samples system [IMG](https://img.jgi.doe.gov/) is needed with the IMG annotation of all of the samples being analyzed.
 3. File to combine annotation files. (What is this file?)
-3. A user created file that contains the KEGG, COG, PFAM, and/or EC_NUMBER pathways of interest.
+4. A user created file that contains the KEGG, COG, PFAM, and/or EC_NUMBER pathways of interest.
 
-## Finding commonalities between phages and their hosts (phage-host_analysis)
+## Finding commonalities between phages and their hosts (phage-host_comparison)
 
-1. To be updated.
+1. The "database_counts" file from the `merge_databases.py` script that contains only one of the following databases: KEGG, COG, PFAM, or EC_NUMBER.
+2. The output from Vibrant that maps phage scaffolds to metabolic pathways.
 
 # Running bin_abundance
 
 ## Creating bin abundance input files
 
-1. To create all the input files necessary, run the `files_prep.py` script. Two input files are necessary and the directories where the `fastq` and `fna ` files are located are needed to run this script. These are the arguments necessary to run this script:
+1. To create all the input files necessary, run the `files_prep.py` script. Two input files are necessary and the directories where the `fastq` and `fna ` files are located are needed to run this script (see "Download fastqs" for more information on where to obtain these). These are the arguments necessary to run this script:
 
 ```{bash, highlight=TRUE, eval=FALSE}
 usage: files_prep.py [-h] -b BIN_SAMPLES -d DEPTH -q FASTQ_DIR -a FNA_DIR
@@ -82,17 +83,14 @@ optional arguments:
   -h, --help            show this help message and exit
   -b BIN_SAMPLES, --bin_samples BIN_SAMPLES
                         Input file path containing each bin mapped to each
-                        sample with extension. Only tsv or csv files allowed
-                        (str).
+                        sample with extension. Only tsv or csv files allowed.
   -d DEPTH, --depth DEPTH
                         Input file path containing depth information (with
-                        extension). Only tsv or csv files allowed (str).
+                        extension). Only tsv or csv files allowed.
   -q FASTQ_DIR, --fastq_dir FASTQ_DIR
-                        Input directory path containing all the fasta files
-                        (str).
+                        Input directory path containing all the fasta files.
   -a FNA_DIR, --fna_dir FNA_DIR
-                        Input directory path containing all the fna files
-                        (str).
+                        Input directory path containing all the fna files.
   
 ```
 
@@ -152,23 +150,23 @@ optional arguments:
   -h, --help            show this help message and exit
   -b BIN_ABUNDANCE, --bin_abundance BIN_ABUNDANCE
                         Input file path outputted from MetaGaia with bin
-                        abundances with extension (str).
+                        abundances with extension.
   -t TAXONOMY_INFO, --taxonomy_info TAXONOMY_INFO
                         Input file path mapping taxonomy to each bin (with
                         extension).
   -p PERCENT, --percent PERCENT
-                        Percent of highest sample in each bin [10] (float).
+                        Percent of highest sample in each bin [10].
   -w WIDTH, --width WIDTH
-                        Width of outputted clustermap figure [4] (int).
+                        Width of outputted clustermap figure [4].
   -l HEIGHT, --height HEIGHT
-                        Height of outputted clustermap figure [5] (int).
-  -d DPI, --dpi DPI     Resolution for output figure file [300] (int).
+                        Height of outputted clustermap figure [5].
+  -d DPI, --dpi DPI     Resolution for output figure file [300].
   -o OUT_FIG, --out_fig OUT_FIG
                         Stores the figure in the specified file path and
-                        format [test.png] (str).
+                        format [test.png].
   -c TAXA_COLOR, --taxa_color TAXA_COLOR
                         Input file path containing the RGB color code for each
-                        taxa with extension [""] (str).
+                        taxa with extension [""].
 ```  
 
 Here is an example of how to run this script:
@@ -277,9 +275,40 @@ python3 pathway_extraction.py -c user-defined_database.tsv -p ../../../output/fi
 
 # Running phage-host analysis
 
-## To be updated
+## Compare phage and host metabolisms to identify commonalities
 
-# Additional commands possibly needed
+1. There are two requirements needed to run this script: 1) the "database_counts" file outputted using the `merge_databases.py` script from the "metabolism" portion of this pipeline and 2) the Vibrant output file mapping scaffolds to metabolic pathways.
+
+2. To analyze the unique and shared metabolic pathways between the two organisms, run the `id_common_metabolism.py` script. These are the arguments for the script:
+
+```{bash,eval=FALSE}
+usage: id_common_metabolism.py [-h] -p PATHWAY_DATABASE -v VIBRANT_OUTOUT -d
+                               DATABASE
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -p PATHWAY_DATABASE, --pathway_database PATHWAY_DATABASE
+                        Input file in tsv format that contains the counts of
+                        each pathways per bin.
+  -v VIBRANT_OUTOUT, --vibrant_outout VIBRANT_OUTOUT
+                        Input file from Vibrant in tsv format that contains
+                        phage scaffolds mapped to metabolic pathways.
+  -d DATABASE, --database DATABASE
+                        Input only one of the following database names the
+                        user is interested in analyzing: KEGG, COG, PFAM, or
+                        EC_NUMBER.
+```
+Here is an example of how to run this script:
+```{bash,eval=FALSE}
+python3 id_common_metabolism.py -p ../../output/KEGG_database_counts.tsv -v ~/vibrant_output.tsv KEGG
+```
+3. Outputs will be places in the `output` directory containing the names "phage_host_metabolism.tsv" and "phage_host_mapping.tsv".
+
+# Additional commands
+
+## Download fastqs
+
+Follow the download instructions found on [IMG](https://genome.jgi.doe.gov/portal/help/download.jsf#/api).
 
 ## Mapping bins to samples
 
@@ -295,11 +324,15 @@ One way to map each the taxa to each bin is to use the GTDBTK tool found here: h
 
 ## Creating IMG annotation
 
-I need help with this.
+First, log on to the IMG server found [here](https://genome.jgi.doe.gov/portal/help/download.jsf#/api). Then, download and unzip the tar.gz file.
 
 ## Defining metabolic database
 
 When creating a user-defined database, there are multiple format requirements. The metabolic databases of interest should contain one or multiple headers (KEGG, COG, PFAM, EC_NUMBER) depending on which database the user wants to analyze. All other auxiliary columns will be mapped to the bins and added to the final outputted file. Lastly, in each of the database columns, please format each pathway name as it is in the IMG annotation file:
+
+## Creating Vibrant mapping
+
+I need help with this.
 
 ```{bash,eval=FALSE}
 KEGG - KO:K12345

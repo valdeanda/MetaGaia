@@ -1,12 +1,11 @@
+#!/usr/bin/env python
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
 # ------------------------------
-# Name:     files_prep.py
-# Purpose:  create the input files needed to calculate bin abundacnces.
-#
-# @uthors:      sbs - sahil2699@gmail.com
-#
+# Name:        files_prep.py
+# Purpose:     create the input files needed to calculate bin abundacnces.
+# @uthors:     sbs - sahil2699@gmail.com
 # Created:     2021
 # Licence:     GNU GENERAL PUBLIC LICENSE, Version 3, 29 June 2007
 # ------------------------------
@@ -29,10 +28,10 @@ class Command_line_args():
 
 		#Command line arguments
 		self.parser = argparse.ArgumentParser()
-		self.parser.add_argument('-b', '--bin_samples', required=True, type=str, help='Input file path containing each bin mapped to each sample with extension. Only tsv or csv files allowed (str).')
-		self.parser.add_argument('-d', '--depth', required=True, type=str, help='Input file path containing depth information (with extension). Only tsv or csv files allowed (str).')
-		self.parser.add_argument('-q', '--fastq_dir', required=True, type=str, help='Input directory path containing all the fasta files (str).')
-		self.parser.add_argument('-a', '--fna_dir', required=True, type=str, help='Input directory path containing all the fna files (str).')
+		self.parser.add_argument('-b', '--bin_samples', required=True, type=str, help='Input file path containing each bin mapped to each sample with extension. Only tsv or csv files allowed.')
+		self.parser.add_argument('-d', '--depth', required=True, type=str, help='Input file path containing depth information (with extension). Only tsv or csv files allowed.')
+		self.parser.add_argument('-q', '--fastq_dir', required=True, type=str, help='Input directory path containing all the fasta files.')
+		self.parser.add_argument('-a', '--fna_dir', required=True, type=str, help='Input directory path containing all the fna files.')
 		self.args = self.parser.parse_args()
 
 
@@ -49,11 +48,11 @@ def create_reads_file(arguments):
 	bash_command = "find " + arguments.args.fastq_dir + " -type f -name \'*.fastq.gz\' | parallel --jobs 8 bash ../bash/count_fastq_reads.sh {} \'>>\' ../../output/fastq_read_counts.txt"
 	os.system(bash_command)
 	#Read in outputted reads text file
-	reads_df = pd.read_csv("../../../output/fastq_read_counts.txt", sep="\s+")
+	reads_df = pd.read_csv("../../output/fastq_read_counts.txt", sep="\s+")
 	#Add column names to dataframe
 	reads_df.columns = ["Sample", "Reads"]
 	#Save dataframe to file
-	reads_df.to_csv("../../../output/reads_file.tsv", sep="\t", index=False)
+	reads_df.to_csv("../../output/reads_file.tsv", sep="\t", index=False)
 	print("Reads file has been created!")
 	print("WARNING: Path names in script must be edited to represent sample names!")
 
@@ -68,12 +67,12 @@ def create_binsize_file(arguments):
 	"""
 
 	#Run bach script to create a tab file containing the bin size information
-	bash_command = "sh ../../bash/calc_genome_size.sh " + arguments.args.fna_dir
+	bash_command = "sh ../bash/calc_genome_size.sh " + arguments.args.fna_dir
 	os.system(bash_command)
 	#Read in  the outputted binsize tab file and add column names
 	binsize_df = pd.read_csv(arguments.args.fna_dir + "genomesize.tab", sep="\t", names=["Bin", "Size"])
 	#Save dataframe to file
-	binsize_df.to_csv("../../../output/binsize_file.tsv", sep="\t", index=False)
+	binsize_df.to_csv("../../output/binsize_file.tsv", sep="\t", index=False)
 	#Delete unneeded tab file
 	os.remove(arguments.args.fna_dir + "genomesize.tab")
 	print("Bin size file has been created!")
@@ -98,7 +97,7 @@ def create_depth_file(arguments, depth_df):
 	#Rename a column
 	depth_df = depth_df.rename({"contigName": "Original_Contig_Name"})
 	#Save dataframe to file
-	depth_df.to_csv("../../../output/depth_file.tsv", sep="\t", index=False)
+	depth_df.to_csv("../../output/depth_file.tsv", sep="\t", index=False)
 	print("Depth file has been created!")
 	print("WARNING: If sample names in the \"Sample_Depth\" column does not match the other input files, it must be manually edited!")
 
@@ -133,7 +132,7 @@ def create_mapping_file(arguments, bin_sample):
 	mapping_df = pd.DataFrame(zip(contig_lst, bin_lst), columns=["Original_Contig_Name", "Bin"])
 	mapping_df = bin_sample.merge(mapping_df, on="Bin", how="left")
 	#Save dataframe to file
-	mapping_df.to_csv("../../../output/mapping_file.tsv", sep="\t", index=False)
+	mapping_df.to_csv("../../output/mapping_file.tsv", sep="\t", index=False)
 	print("Mapping file has been created!")
 
 

@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
 # ------------------------------
@@ -58,13 +60,13 @@ def main():
 		user_df = (user_df.set_index(index_cols)[check].apply(pd.Series).stack().reset_index().drop('level_'+str(len(index_cols)), axis=1).rename(columns={0:check}))
 		for val in user_df[check]:
 			if check == 'KEGG':
-				if val[:3] != 'KO':
+				if val[:3] != 'KO:':
 					user_df.loc[user_df[check] == val, check] = 'KO:' + val
 			elif check == 'PFAM':
 				if val[:4] != 'pfam':
 					user_df.loc[user_df[check] == val, check] = 'pfam' + val[2:]
 			elif check == 'EC_NUMBER':
-				if val[:3] != 'EC':
+				if val[:3] != 'EC:':
 					user_df.loc[user_df[check] == val, check] = 'EC:' + val
 
 	print('Beginning to extract pathway information.')
@@ -87,7 +89,7 @@ def main():
 	final_df = pd.concat(pathways_lst)
 	final_df = final_df.set_index('Database')
 	#Save file
-	final_df.to_csv('../../../output/extracted_pathways.tsv', sep='\t', index=True)
+	final_df.to_csv('../../output/extracted_pathways.tsv', sep='\t', index=True)
 	print('Finished extracting information! File is saved in the \"output\" folder as \"extracted_pathways.tsv\".')
 
 

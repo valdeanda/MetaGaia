@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
@@ -103,7 +102,7 @@ def main():
   #Output files
   abundance = args.mapping + "_MetaGaia_OUT_abundanceby_bin.tsv"
 
-  finaldf.to_csv("../../../output/" + abundance, sep = '\t', index = False)
+  finaldf.to_csv("../../output/" + abundance, sep = '\t', index = False)
 
 
   print("\n"

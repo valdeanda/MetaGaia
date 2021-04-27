@@ -1,13 +1,13 @@
+#!/usr/bin/env python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
 # ------------------------------
-# Name:     mapping_scaffolds.py
-# Purpose:  use the IMG derived annotation file and map to the original scaffold names
+# Name:     metabolic_profile.py
+# Purpose:  map scaffolds to their respective bins and determine the number of times a metabolic pathway appears in within each bin
+# @uthors:      sbs - sbs2756@utexas.edu
 #
-# @uthors:      vda - valdeanda@utexas.edu, acph - dragopoot@gmail.com
-# @ modif:		sbs - sbs2756@utexas.edu
-#
-# Created:     2019
+# Created:     2021
 # Licence:     GNU GENERAL PUBLIC LICENSE, Version 3, 29 June 2007
 # ------------------------------
 
@@ -84,7 +84,7 @@ def map_scaffolds(arguments, img_df, mapping_df):
 	databases_df = databases_df.merge(mapping_df, on='Scaffold', how='left')
 
 	#Save file in output folder
-	databases_df.to_csv(uniquify("../../../output/mapped_scaffolds.tsv"), index=False, sep="\t")
+	databases_df.to_csv(uniquify("../../output/mapped_scaffolds.tsv"), index=False, sep="\t")
 
 	return databases_df
 
@@ -146,7 +146,7 @@ def get_database_counts(extract_list, databases_df):
 		count_df['Total'] = count_df.sum(axis=1)
 
 		#Save file in the output folder
-		count_df.to_csv(uniquify('../../../output/' + d + '_metabolic_profile.tsv'), index=True, sep='\t')
+		count_df.to_csv(uniquify('../../output/' + d + '_metabolic_profile.tsv'), index=True, sep='\t')
 
 
 def main():

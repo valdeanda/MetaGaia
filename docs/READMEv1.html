@@ -355,10 +355,11 @@ div.tocify {
 <li>A user created file that contains the KEGG, COG, PFAM, and/or EC_NUMBER pathways of interest.</li>
 </ol>
 </div>
-<div id="finding-commonalities-between-phages-and-their-hosts-phage-host_analysis" class="section level2" number="3.3">
-<h2 number="3.3"><span class="header-section-number">3.3</span> Finding commonalities between phages and their hosts (phage-host_analysis)</h2>
+<div id="finding-commonalities-between-phages-and-their-hosts-phage-host_comparison" class="section level2" number="3.3">
+<h2 number="3.3"><span class="header-section-number">3.3</span> Finding commonalities between phages and their hosts (phage-host_comparison)</h2>
 <ol style="list-style-type: decimal">
-<li>To be updated.</li>
+<li>The “database_counts” file from the <code>merge_databases.py</code> script that contains only one of the following databases: KEGG, COG, PFAM, or EC_NUMBER.</li>
+<li>The output from Vibrant that maps phage scaffolds to metabolic pathways.</li>
 </ol>
 </div>
 </div>
@@ -367,7 +368,7 @@ div.tocify {
 <div id="creating-bin-abundance-input-files" class="section level2" number="4.1">
 <h2 number="4.1"><span class="header-section-number">4.1</span> Creating bin abundance input files</h2>
 <ol style="list-style-type: decimal">
-<li>To create all the input files necessary, run the <code>files_prep.py</code> script. Two input files are necessary and the directories where the <code>fastq</code> and <code>fna</code> files are located are needed to run this script. These are the arguments necessary to run this script:</li>
+<li>To create all the input files necessary, run the <code>files_prep.py</code> script. Two input files are necessary and the directories where the <code>fastq</code> and <code>fna</code> files are located are needed to run this script (see “Download fastqs” for more information on where to obtain these). These are the arguments necessary to run this script:</li>
 </ol>
 <div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">usage:</span> files_prep.py [-h] <span class="at">-b</span> BIN_SAMPLES <span class="at">-d</span> DEPTH <span class="at">-q</span> FASTQ_DIR <span class="at">-a</span> FNA_DIR</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -375,18 +376,15 @@ div.tocify {
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-h,</span> <span class="at">--help</span>            show this help message and exit</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-b</span> BIN_SAMPLES, <span class="at">--bin_samples</span> BIN_SAMPLES</span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> file path containing each bin mapped to each</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">sample</span> with extension. Only tsv or csv files allowed</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>                        <span class="kw">(</span><span class="ex">str</span><span class="kw">)</span><span class="bu">.</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-d</span> DEPTH, <span class="at">--depth</span> DEPTH</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> file path containing depth information <span class="er">(</span><span class="ex">with</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">extension</span><span class="er">)</span><span class="bu">.</span> Only tsv or csv files allowed <span class="er">(</span><span class="ex">str</span><span class="kw">)</span><span class="bu">.</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-q</span> FASTQ_DIR, <span class="at">--fastq_dir</span> FASTQ_DIR</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> directory path containing all the fasta files</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>                        <span class="kw">(</span><span class="ex">str</span><span class="kw">)</span><span class="bu">.</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-a</span> FNA_DIR, <span class="at">--fna_dir</span> FNA_DIR</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> directory path containing all the fna files</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>                        <span class="kw">(</span><span class="ex">str</span><span class="kw">)</span><span class="bu">.</span></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  </span></code></pre></div>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">sample</span> with extension. Only tsv or csv files allowed.</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-d</span> DEPTH, <span class="at">--depth</span> DEPTH</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> file path containing depth information <span class="er">(</span><span class="ex">with</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">extension</span><span class="er">)</span><span class="bu">.</span> Only tsv or csv files allowed.</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-q</span> FASTQ_DIR, <span class="at">--fastq_dir</span> FASTQ_DIR</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> directory path containing all the fasta files.</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-a</span> FNA_DIR, <span class="at">--fna_dir</span> FNA_DIR</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> directory path containing all the fna files.</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  </span></code></pre></div>
 <p>To create the <code>bin_sample</code> file, read the “Mapping bins to samples” section below. To create the <code>depth</code> file, read the “Create initial depth file” section below as well.</p>
 <p>Here is an example of how to run this script:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> files_prep.py <span class="at">-b</span> bin2sample.tsv <span class="at">-d</span> depth.tsv <span class="at">-q</span> ~/fastq_files/ <span class="at">-a</span> ~/fna_files/</span></code></pre></div>
@@ -437,23 +435,23 @@ div.tocify {
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-h,</span> <span class="at">--help</span>            show this help message and exit</span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-b</span> BIN_ABUNDANCE, <span class="at">--bin_abundance</span> BIN_ABUNDANCE</span>
 <span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> file path outputted from MetaGaia with bin</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">abundances</span> with extension <span class="er">(</span><span class="ex">str</span><span class="kw">)</span><span class="bu">.</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">abundances</span> with extension.</span>
 <span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-t</span> TAXONOMY_INFO, <span class="at">--taxonomy_info</span> TAXONOMY_INFO</span>
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> file path mapping taxonomy to each bin <span class="er">(</span><span class="ex">with</span></span>
 <span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">extension</span><span class="er">)</span><span class="bu">.</span></span>
 <span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-p</span> PERCENT, <span class="at">--percent</span> PERCENT</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Percent</span> of highest sample in each bin [10] <span class="er">(</span><span class="ex">float</span><span class="kw">)</span><span class="bu">.</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Percent</span> of highest sample in each bin [10].</span>
 <span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-w</span> WIDTH, <span class="at">--width</span> WIDTH</span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Width</span> of outputted clustermap figure [4] <span class="er">(</span><span class="ex">int</span><span class="kw">)</span><span class="bu">.</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Width</span> of outputted clustermap figure [4].</span>
 <span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-l</span> HEIGHT, <span class="at">--height</span> HEIGHT</span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Height</span> of outputted clustermap figure [5] <span class="er">(</span><span class="ex">int</span><span class="kw">)</span><span class="bu">.</span></span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-d</span> DPI, <span class="at">--dpi</span> DPI     Resolution for output figure file [300] <span class="er">(</span><span class="ex">int</span><span class="kw">)</span><span class="bu">.</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Height</span> of outputted clustermap figure [5].</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-d</span> DPI, <span class="at">--dpi</span> DPI     Resolution for output figure file [300].</span>
 <span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-o</span> OUT_FIG, <span class="at">--out_fig</span> OUT_FIG</span>
 <span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Stores</span> the figure in the specified file path and</span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">format</span> [test.png] <span class="er">(</span><span class="ex">str</span><span class="kw">)</span><span class="bu">.</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">format</span> [test.png].</span>
 <span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-c</span> TAXA_COLOR, <span class="at">--taxa_color</span> TAXA_COLOR</span>
 <span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> file path containing the RGB color code for each</span>
-<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">taxa</span> with extension [<span class="st">&quot;&quot;</span>] <span class="er">(</span><span class="ex">str</span><span class="kw">)</span><span class="bu">.</span></span></code></pre></div>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">taxa</span> with extension [<span class="st">&quot;&quot;</span>].</span></code></pre></div>
 <p>Here is an example of how to run this script:</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> bin_abundance_viz.py <span class="at">-b</span> ../output/bin_abundance_output.tsv <span class="at">-t</span> ~/tax2bin.tsv <span class="at">-p</span> 10 <span class="at">-w</span> 8 <span class="at">-l</span> 5 <span class="at">-d</span> 500 <span class="at">-o</span> figure1.jpg <span class="at">-c</span> ~/tax2color.tsv</span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
@@ -544,35 +542,67 @@ div.tocify {
 </div>
 <div id="running-phage-host-analysis" class="section level1" number="6">
 <h1 number="6"><span class="header-section-number">6</span> Running phage-host analysis</h1>
-<div id="to-be-updated" class="section level2" number="6.1">
-<h2 number="6.1"><span class="header-section-number">6.1</span> To be updated</h2>
+<div id="compare-phage-and-host-metabolisms-to-identify-commonalities" class="section level2" number="6.1">
+<h2 number="6.1"><span class="header-section-number">6.1</span> Compare phage and host metabolisms to identify commonalities</h2>
+<ol style="list-style-type: decimal">
+<li><p>There are two requirements needed to run this script: 1) the “database_counts” file outputted using the <code>merge_databases.py</code> script from the “metabolism” portion of this pipeline and 2) the Vibrant output file mapping scaffolds to metabolic pathways.</p></li>
+<li><p>To analyze the unique and shared metabolic pathways between the two organisms, run the <code>id_common_metabolism.py</code> script. These are the arguments for the script:</p></li>
+</ol>
+<div class="sourceCode" id="cb14"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ex">usage:</span> id_common_metabolism.py [-h] <span class="at">-p</span> PATHWAY_DATABASE <span class="at">-v</span> VIBRANT_OUTOUT <span class="at">-d</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>                               <span class="ex">DATABASE</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="ex">optional</span> arguments:</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-h,</span> <span class="at">--help</span>            show this help message and exit</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-p</span> PATHWAY_DATABASE, <span class="at">--pathway_database</span> PATHWAY_DATABASE</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> file in tsv format that contains the counts of</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">each</span> pathways per bin.</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-v</span> VIBRANT_OUTOUT, <span class="at">--vibrant_outout</span> VIBRANT_OUTOUT</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> file from Vibrant in tsv format that contains</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">phage</span> scaffolds mapped to metabolic pathways.</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-d</span> DATABASE, <span class="at">--database</span> DATABASE</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> only one of the following database names the</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">user</span> is interested in analyzing: KEGG, COG, PFAM, or</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">EC_NUMBER.</span></span></code></pre></div>
+<p>Here is an example of how to run this script:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> id_common_metabolism.py <span class="at">-p</span> ../../output/KEGG_database_counts.tsv <span class="at">-v</span> ~/vibrant_output.tsv KEGG</span></code></pre></div>
+<ol start="3" style="list-style-type: decimal">
+<li>Outputs will be places in the <code>output</code> directory containing the names “phage_host_metabolism.tsv” and “phage_host_mapping.tsv”.</li>
+</ol>
 </div>
 </div>
-<div id="additional-commands-possibly-needed" class="section level1" number="7">
-<h1 number="7"><span class="header-section-number">7</span> Additional commands possibly needed</h1>
-<div id="mapping-bins-to-samples" class="section level2" number="7.1">
-<h2 number="7.1"><span class="header-section-number">7.1</span> Mapping bins to samples</h2>
+<div id="additional-commands" class="section level1" number="7">
+<h1 number="7"><span class="header-section-number">7</span> Additional commands</h1>
+<div id="download-fastqs" class="section level2" number="7.1">
+<h2 number="7.1"><span class="header-section-number">7.1</span> Download fastqs</h2>
+<p>Follow the download instructions found on <a href="https://genome.jgi.doe.gov/portal/help/download.jsf#/api">IMG</a>.</p>
+</div>
+<div id="mapping-bins-to-samples" class="section level2" number="7.2">
+<h2 number="7.2"><span class="header-section-number">7.2</span> Mapping bins to samples</h2>
 <p>The user must manually map each bin to its respective sample.</p>
 </div>
-<div id="create-initial-depth-file" class="section level2" number="7.2">
-<h2 number="7.2"><span class="header-section-number">7.2</span> Create initial depth file</h2>
+<div id="create-initial-depth-file" class="section level2" number="7.3">
+<h2 number="7.3"><span class="header-section-number">7.3</span> Create initial depth file</h2>
 <p>The script, <code>jgi_summarize_bam_contig_depths.pl</code>, must be used to create the depth file needed in <code>files_prep.py</code> and can be found here along with its usage notes: <a href="https://bitbucket.org/berkeleylab/metabat/src/master/" class="uri">https://bitbucket.org/berkeleylab/metabat/src/master/</a>.</p>
 </div>
-<div id="mapping-taxa" class="section level2" number="7.3">
-<h2 number="7.3"><span class="header-section-number">7.3</span> Mapping taxa</h2>
+<div id="mapping-taxa" class="section level2" number="7.4">
+<h2 number="7.4"><span class="header-section-number">7.4</span> Mapping taxa</h2>
 <p>One way to map each the taxa to each bin is to use the GTDBTK tool found here: <a href="https://github.com/Ecogenomics/GTDBTk" class="uri">https://github.com/Ecogenomics/GTDBTk</a>.</p>
 </div>
-<div id="creating-img-annotation" class="section level2" number="7.4">
-<h2 number="7.4"><span class="header-section-number">7.4</span> Creating IMG annotation</h2>
-<p>I need help with this.</p>
+<div id="creating-img-annotation" class="section level2" number="7.5">
+<h2 number="7.5"><span class="header-section-number">7.5</span> Creating IMG annotation</h2>
+<p>First, log on to the IMG server found <a href="https://genome.jgi.doe.gov/portal/help/download.jsf#/api">here</a>. Then, download and unzip the tar.gz file.</p>
 </div>
-<div id="defining-metabolic-database" class="section level2" number="7.5">
-<h2 number="7.5"><span class="header-section-number">7.5</span> Defining metabolic database</h2>
+<div id="defining-metabolic-database" class="section level2" number="7.6">
+<h2 number="7.6"><span class="header-section-number">7.6</span> Defining metabolic database</h2>
 <p>When creating a user-defined database, there are multiple format requirements. The metabolic databases of interest should contain one or multiple headers (KEGG, COG, PFAM, EC_NUMBER) depending on which database the user wants to analyze. All other auxiliary columns will be mapped to the bins and added to the final outputted file. Lastly, in each of the database columns, please format each pathway name as it is in the IMG annotation file:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ex">KEGG</span> <span class="at">-</span> KO:K12345</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="ex">COG</span> <span class="at">-</span> COG12345</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="ex">PFAM</span> <span class="at">-</span> pfam12345</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="ex">EC_NUMBER</span> <span class="at">-</span> EC:EC12345</span></code></pre></div>
+</div>
+<div id="creating-vibrant-mapping" class="section level2" number="7.7">
+<h2 number="7.7"><span class="header-section-number">7.7</span> Creating Vibrant mapping</h2>
+<p>I need help with this.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ex">KEGG</span> <span class="at">-</span> KO:K12345</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="ex">COG</span> <span class="at">-</span> COG12345</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="ex">PFAM</span> <span class="at">-</span> pfam12345</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="ex">EC_NUMBER</span> <span class="at">-</span> EC:EC12345</span></code></pre></div>
 </div>
 </div>
 <div id="support-and-development" class="section level1" number="8">
