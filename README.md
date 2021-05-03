@@ -14,7 +14,7 @@ The Gaia hypothesis, also known as Gaia theory or Gaia principle, proposes that 
 
 [Lovelock, J.E and Margulis, L. (1974). “Atmospheric homeostasis by and for the biosphere- The Gaia hypothesis”. Tellus 26 (1): 2–10](https://onlinelibrary.wiley.com/doi/abs/10.1111/j.2153-3490.1974.tb01946.x)
 
-View the full documentation [here](https://valdeanda.github.io/MetaGaia/READMEv1.html).
+View the full documentation [here](https://valdeanda.github.io/MetaGaia/docs/READMEv1.html).
 
 If you find MetaGaia useful for your research, please cite the biorXiv preprint as:
 
