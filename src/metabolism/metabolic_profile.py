@@ -29,7 +29,7 @@ class Command_line_args():
 		#Command line arguments
 		self.parser = argparse.ArgumentParser()
 		self.parser.add_argument('-i', '--imganno', required=True, help=("Input file in tsv format. Rows are genes columns are IMG annotations."))
-		self.parser.add_argument('-m', '--mapping', required=True, help=('A tsv file containing original contig name, sample, and bin columns'))
+		self.parser.add_argument('-m', '--mapping', required=True, help=("A tsv file containing original contig name, sample, and bin columns. Created from the files_prep.py script."))
 		self.parser.add_argument('-d', '--database', required=True, help=("Database(s) of interest to merge together. Input as a list."))
 		self.parser.add_argument('-c', '--consistency', required=False, default="", help=('Boolean value that determines if scaffolds not containing a value for each database should be kept. Leave blank if consistency check is not needed.'))
 		self.args = self.parser.parse_args()

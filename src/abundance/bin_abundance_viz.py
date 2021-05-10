@@ -33,14 +33,14 @@ class Command_line_args():
 
 		#Command line arguments
 		self.parser = argparse.ArgumentParser()
-		self.parser.add_argument('-b', '--bin_abundance', required=True, type=str, help='Input file path outputted from MetaGaia with bin abundances with extension.')
-		self.parser.add_argument('-t', '--taxonomy_info', required=True, type=str, help='Input file path mapping taxonomy to each bin (with extension).')
+		self.parser.add_argument('-b', '--bin_abundance', required=True, type=str, help='Input file outputted from the bin_abundance.py script with file extension.')
+		self.parser.add_argument('-t', '--taxonomy_info', required=True, type=str, help='Input file mapping taxonomy to each bin with file extension.')
 		self.parser.add_argument('-p', '--percent', required=False, type=float, default=10, help='Percent of highest sample in each bin [10].')
 		self.parser.add_argument('-w', '--width', required=False, type=int, default=4, help='Width of outputted clustermap figure [4].')
 		self.parser.add_argument('-l', '--height', required=False, type=int, default=5, help='Height of outputted clustermap figure [5].')
 		self.parser.add_argument('-d', '--dpi', required=False, type=int, default=300, help='Resolution for output figure file [300].')
 		self.parser.add_argument('-o', '--out_fig', required=False, type=str, default="test.png", help='Stores the figure in the specified file path and format [test.png].')
-		self.parser.add_argument('-c', '--taxa_color', required=False, type=str, default="", help='Input file path containing the RGB color code for each taxa with extension [""].')
+		self.parser.add_argument('-c', '--taxa_color', required=False, type=str, default="", help='Input file containing the RGB color code for each taxa with file extension [""].')
 		self.args = self.parser.parse_args()
 
 
@@ -202,9 +202,9 @@ def main():
 
 	#Read in taxanomy file
 	if "tsv" in arguments.args.taxonomy_info:
-		taxonomy_df = pd.read_csv(arguments.args.taxonomy_info, sep = "\t", header = None)
+		taxonomy_df = pd.read_csv(arguments.args.taxonomy_info, sep = "\t", header = 0)
 	else:
-		taxonomy_df = pd.read_csv(arguments.args.taxonomy_info, header = None)
+		taxonomy_df = pd.read_csv(arguments.args.taxonomy_info, header = 0)
 	
 	#Format dataframe to desired layout
 	bin_abundance_df = format_dataframe(arguments, bin_abundance_df, taxonomy_df)

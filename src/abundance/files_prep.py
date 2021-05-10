@@ -28,8 +28,9 @@ class Command_line_args():
 
 		#Command line arguments
 		self.parser = argparse.ArgumentParser()
-		self.parser.add_argument('-b', '--bin_samples', required=True, type=str, help='Input file path containing each bin mapped to each sample with extension. Only tsv or csv files allowed.')
-		self.parser.add_argument('-d', '--depth', required=True, type=str, help='Input file path containing depth information (with extension). Only tsv or csv files allowed.')
+		self.parser.add_argument('-b', '--bin_samples', required=True, type=str, help='Input file containing 2 columns: 1st column contains bin names and 2nd column contains sample names. Requires header for each column, \"Bin\" and \"Sample\" respectively. File must have tsv or csv file extension.')
+		self.parser.add_argument('-d', '--depth', required=False, default="", type=str, help='Input file containing 5 columns: contigName, contigLen, totalAvgDepth, Sample_Depth, and Depth. This file can be created with jgi_summarize_bam_contig_depths. File must have tsv or csv file extension.')
+		self.parser.add_argument('-f', '--depth_dir', required=False, default="", type=str, help='Input directory path containing all the depth txt files that must be concatenated. ')
 		self.parser.add_argument('-q', '--fastq_dir', required=True, type=str, help='Input directory path containing all the fasta files.')
 		self.parser.add_argument('-a', '--fna_dir', required=True, type=str, help='Input directory path containing all the fna files.')
 		self.args = self.parser.parse_args()
@@ -78,7 +79,7 @@ def create_binsize_file(arguments):
 	print("Bin size file has been created!")
 
 
-def create_depth_file(arguments, depth_df):
+def create_depth_file(arguments, depth_format, depth_dir):
 	"""
 	This function creates the depth file needed.
 	Input(s):
@@ -88,8 +89,17 @@ def create_depth_file(arguments, depth_df):
 	A file containing the depth information is saved in the "output" folder.
 	"""
 
-	#Drop all columns that contain var in the names (as they are not needed)
-	depth_df = depth_df[depth_df.columns.drop(list(depth_df.filter(regex='var')))]
+	#If depth txt files are not concatenated already
+	if depth_dir:
+		depth_list = []
+		for file in glob.glob(depth_format):
+			depth_df = pd.read_csv(file, sep='\s+')
+			depth_list.append(depth_df)
+		depth_df = pd.concat(depth_list)
+		depth_df.to_csv("../../output/depth_file_intermediate.tsv", sep="\t", index=False)
+	else:
+		depth_df = depth_format
+
 	#Rename certain coulumns
 	depth_df = depth_df.rename(columns=lambda x: re.sub('_S\d+','',x))
 	#Pivot dataframe into a long format
@@ -155,19 +165,27 @@ def main():
 	else:
 		print("Bin to sample file is not in tsv or csv format!")
 		quit()
-	if ".tsv" in arguments.args.depth:
-		depth_df = pd.read_csv(arguments.args.depth, sep="\t")
-	elif ".csv" in arguments.args.depth:
-		depth_df = pd.read_csv(arguments.args.depth)
+
+	#Create depth file
+	print("Beginning to create input files. This may take a while.")
+	if arguments.args.depth:
+		if ".tsv" in arguments.args.depth:
+			depth_df = pd.read_csv(arguments.args.depth, sep="\t")
+		elif ".csv" in arguments.args.depth:
+			depth_df = pd.read_csv(arguments.args.depth)
+		else:
+			print("Depth file is not in tsv or csv format!")
+			quit()
+		create_depth_file(arguments, depth_df, False)
+	elif arguments.args.depth_dir:
+		create_depth_file(arguments, arguments.args.depth_dir, True)
 	else:
-		print("Depth file is not in tsv or csv format!")
+		print("Must have the depth or depth_dir arguments! Please rerun with the required arguments.")
 		quit()
 
 	#Create input files
-	print("Beginning to create input files. This may take a while.")
 	create_reads_file(arguments)
 	create_binsize_file(arguments)
-	create_depth_file(arguments, depth_df)
 	create_mapping_file(arguments, bin_sample_df)
 	print("All input files have been successfully created and can be found in the \"output\" directory!")
 
