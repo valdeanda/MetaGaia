@@ -93,7 +93,10 @@ def create_depth_file(arguments, depth_format, depth_dir):
 	if depth_dir:
 		depth_list = []
 		for file in glob.glob(depth_format):
-			depth_df = pd.read_csv(file, sep='\s+')
+			if 'txt' in file:
+				depth_df = pd.read_csv(file, sep='\s+')
+			elif 'tsv' in file:
+				depth_df = pd.read_csv(file, sep='\t')
 			depth_list.append(depth_df)
 		depth_df = pd.concat(depth_list)
 		depth_df.to_csv("../../output/depth_file_intermediate.tsv", sep="\t", index=False)
