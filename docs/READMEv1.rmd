@@ -53,6 +53,8 @@ git clone https://github.com/valdeanda/MetaGaia
 
 # Requirements
 
+*NOTE: Please do NOT use symbolic links for fastq or fna files.*
+
 ## Calculating bin abundances (abundance)
 
 1. All necessary fastq files have been downloaded and placed within the same directory.
