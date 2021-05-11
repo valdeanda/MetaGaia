@@ -12,8 +12,11 @@
 # ------------------------------
 
 import argparse
-import pandas as pd
 import numpy as np
+import os
+import pandas as pd
+
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 def main():
 

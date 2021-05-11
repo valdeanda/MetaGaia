@@ -15,6 +15,8 @@ import os
 import pandas as pd
 import re
 
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
 class Command_line_args():
 	"""
     This class contains all the arguments the user inputs for the class to run.

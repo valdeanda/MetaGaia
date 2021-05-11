@@ -14,7 +14,10 @@
 
 
 import argparse
+import os
 import pandas as pd
+
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 
 class Command_line_args():
