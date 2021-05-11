@@ -339,11 +339,15 @@ div.tocify {
 <p>The MetaGaia software is available as an open-source package distributed from a GitHub repository. Thus, the natural way of installing it is by cloning the repository via the following commands:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/valdeanda/MetaGaia</span></code></pre></div>
 </div>
-<div id="requirements" class="section level1" number="3">
-<h1 number="3"><span class="header-section-number">3</span> Requirements</h1>
-<p><em>NOTE: Please do NOT use symbolic links for fastq or fna files.</em></p>
-<div id="calculating-bin-abundances-abundance" class="section level2" number="3.1">
-<h2 number="3.1"><span class="header-section-number">3.1</span> Calculating bin abundances (abundance)</h2>
+<div id="python-installation-requirements-linux" class="section level1" number="3">
+<h1 number="3"><span class="header-section-number">3</span> Python installation requirements (Linux)</h1>
+<p>To install python, run <code>sudo apt-get install python3</code>. To install pip, run <code>sudo apt install python3-pip</code>. To install pandas, run <code>pip install pandas</code>. To install numpy, run <code>pip install numpy</code>. To install seaborn, run <code>pip install seaborn</code>.</p>
+</div>
+<div id="requirements" class="section level1" number="4">
+<h1 number="4"><span class="header-section-number">4</span> Requirements</h1>
+<p><em>NOTE: Please do NOT use symbolic links for fastq or fna files. Also, make sure headers are present and properly separated in input files.</em></p>
+<div id="calculating-bin-abundances-abundance" class="section level2" number="4.1">
+<h2 number="4.1"><span class="header-section-number">4.1</span> Calculating bin abundances (abundance)</h2>
 <ol style="list-style-type: decimal">
 <li>All necessary fastq files have been downloaded and placed within the same directory.</li>
 <li>All necessary fna files have been downloaded and placed within the same directory.</li>
@@ -352,8 +356,8 @@ div.tocify {
 <li>The GTDBTK tool has been downloaded to map each bin to its respective taxa (see “Mapping taxa” for more information).</li>
 </ol>
 </div>
-<div id="identifying-metabolic-pathways-metabolism" class="section level2" number="3.2">
-<h2 number="3.2"><span class="header-section-number">3.2</span> Identifying metabolic pathways (metabolism)</h2>
+<div id="identifying-metabolic-pathways-metabolism" class="section level2" number="4.2">
+<h2 number="4.2"><span class="header-section-number">4.2</span> Identifying metabolic pathways (metabolism)</h2>
 <ol style="list-style-type: decimal">
 <li>The <code>mapping_file.tsv</code> file created from the “bin_abundance” section of the pipeline.</li>
 <li>An account at the Integrated Microbial Genomes with Microbiome Samples system <a href="https://img.jgi.doe.gov/">IMG</a> is needed with the IMG annotation of all of the samples being analyzed.</li>
@@ -361,18 +365,18 @@ div.tocify {
 <li>A user created file that contains the KEGG, COG, PFAM, and/or EC_NUMBER pathways of interest.</li>
 </ol>
 </div>
-<div id="finding-commonalities-between-phages-and-their-hosts-host-virus" class="section level2" number="3.3">
-<h2 number="3.3"><span class="header-section-number">3.3</span> Finding commonalities between phages and their hosts (host-virus)</h2>
+<div id="finding-commonalities-between-phages-and-their-hosts-host-virus" class="section level2" number="4.3">
+<h2 number="4.3"><span class="header-section-number">4.3</span> Finding commonalities between phages and their hosts (host-virus)</h2>
 <ol style="list-style-type: decimal">
 <li>The “database_counts” file from the <code>merge_databases.py</code> script that contains only one of the following databases: KEGG, COG, PFAM, or EC_NUMBER.</li>
 <li>The output from Vibrant that maps phage scaffolds to metabolic pathways.</li>
 </ol>
 </div>
 </div>
-<div id="running-abundance" class="section level1" number="4">
-<h1 number="4"><span class="header-section-number">4</span> Running abundance</h1>
-<div id="creating-bin-abundance-input-files" class="section level2" number="4.1">
-<h2 number="4.1"><span class="header-section-number">4.1</span> Creating bin abundance input files</h2>
+<div id="running-abundance" class="section level1" number="5">
+<h1 number="5"><span class="header-section-number">5</span> Running abundance</h1>
+<div id="creating-bin-abundance-input-files" class="section level2" number="5.1">
+<h2 number="5.1"><span class="header-section-number">5.1</span> Creating bin abundance input files</h2>
 <ol style="list-style-type: decimal">
 <li>To create all the input files necessary, run the <code>files_prep.py</code> script. Two input files (concatenated <code>depth</code> file is optional) are necessary and the directories where the <code>fastq</code> and <code>fna</code> (and optional <code>depth</code>) files are located are needed to run this script (see “Download fastqs” for more information on where to obtain these). One of the depth arguments must be present: depth or depth_dir. These are the arguments necessary to run this script:</li>
 </ol>
@@ -423,8 +427,8 @@ div.tocify {
 <li>There should be four files named “reads_file.tsv”, “mapping_file.tsv”, “depth_file”, and “binsize_file.tsv” saved in the <code>output</code> folder.</li>
 </ol>
 </div>
-<div id="calculate-relative-bin-abundance" class="section level2" number="4.2">
-<h2 number="4.2"><span class="header-section-number">4.2</span> Calculate relative bin abundance</h2>
+<div id="calculate-relative-bin-abundance" class="section level2" number="5.2">
+<h2 number="5.2"><span class="header-section-number">5.2</span> Calculate relative bin abundance</h2>
 <ol style="list-style-type: decimal">
 <li>The <code>bin_abundance.py</code> script then takes in a list of input files (processed from by running the <code>files_prep.py</code> script) that need to be created beforehand. Here are the descriptions of each of the input files:</li>
 </ol>
@@ -453,8 +457,8 @@ div.tocify {
 <li>The output will be a file saved in the <code>output</code> directory. This file can then be used in the next script: <code>bin_abundance_viz.py</code> to visualize the data.</li>
 </ol>
 </div>
-<div id="visualize-relative-bin-abundance" class="section level2" number="4.3">
-<h2 number="4.3"><span class="header-section-number">4.3</span> Visualize relative bin abundance</h2>
+<div id="visualize-relative-bin-abundance" class="section level2" number="5.3">
+<h2 number="5.3"><span class="header-section-number">5.3</span> Visualize relative bin abundance</h2>
 <ol style="list-style-type: decimal">
 <li>With the <code>bin_abundance_viz.py</code> script, the files outputted from <code>bin_abundance.py</code> can be used to visualize the relative bin abundances in addition to a file mapping each bin to their respective taxa (see “Mapping taxa” for more information). These are the arguments needed for the visualization script:</li>
 </ol>
@@ -503,11 +507,11 @@ div.tocify {
 </ol>
 </div>
 </div>
-<div id="running-metabolism" class="section level1" number="5">
-<h1 number="5"><span class="header-section-number">5</span> Running metabolism</h1>
+<div id="running-metabolism" class="section level1" number="6">
+<h1 number="6"><span class="header-section-number">6</span> Running metabolism</h1>
 <p><em>NOTE: The only metabolic pathways that are available to analyze are in the KEGG, COG, PFAM, and EC_NUMBER databases.</em></p>
-<div id="map-metabolic-pathways-to-the-scaffold-containing-them-and-get-the-counts-of-each-pathway-per-bin" class="section level2" number="5.1">
-<h2 number="5.1"><span class="header-section-number">5.1</span> Map metabolic pathways to the scaffold containing them and get the counts of each pathway per bin</h2>
+<div id="map-metabolic-pathways-to-the-scaffold-containing-them-and-get-the-counts-of-each-pathway-per-bin" class="section level2" number="6.1">
+<h2 number="6.1"><span class="header-section-number">6.1</span> Map metabolic pathways to the scaffold containing them and get the counts of each pathway per bin</h2>
 <ol style="list-style-type: decimal">
 <li><p>One requirement must be met before running the <code>metabolic_profile.py</code> script, which is that the IMG annotation files must be combined into one (see “Creating IMG annotation” for more information).</p></li>
 <li><p>To get the pathways mapped to each scaffold and the number of times each pathway is found within a bin, run the <code>metabolic_profile.py</code> script. These are the arguments for this script:</p></li>
@@ -550,8 +554,8 @@ div.tocify {
 <li>Outputs will be saved in the <code>output</code> directory containing name formats: “mapped_scaffolds.tsv” and the database name followed by “metabolic_profile.tsv”.</li>
 </ol>
 </div>
-<div id="optional-step-merge-databases-into-one-file" class="section level2" number="5.2">
-<h2 number="5.2"><span class="header-section-number">5.2</span> Optional step: Merge databases into one file</h2>
+<div id="optional-step-merge-databases-into-one-file" class="section level2" number="6.2">
+<h2 number="6.2"><span class="header-section-number">6.2</span> Optional step: Merge databases into one file</h2>
 <p><em>This step is optional if the user has multiple databases that they need to merge into one file for the next step.</em></p>
 <ol style="list-style-type: decimal">
 <li>To merge each of the databases, run the <code>merge_database.py</code> script. These are the arguments for the script:</li>
@@ -571,8 +575,8 @@ div.tocify {
 <li>Outputs will be places in the <code>output</code> directory containing the name formats: “merged_” database name &quot;_metabolic_profile.tsv&quot; and “final_merged_metabolic_profile.tsv”.</li>
 </ol>
 </div>
-<div id="extract-specific-pathways-to-analyze" class="section level2" number="5.3">
-<h2 number="5.3"><span class="header-section-number">5.3</span> Extract specific pathways to analyze</h2>
+<div id="extract-specific-pathways-to-analyze" class="section level2" number="6.3">
+<h2 number="6.3"><span class="header-section-number">6.3</span> Extract specific pathways to analyze</h2>
 <ol style="list-style-type: decimal">
 <li><p>One requirement must be met to run the <code>pathway_extraction.py</code> script, which is that the user-defined database must be created (see “Defining metabolic database” for more information).</p></li>
 <li><p>To extract and analyze specific metabolic pathways, run the <code>pathway_extraction.py</code> script. These are the arguments for the script:</p></li>
@@ -613,10 +617,10 @@ div.tocify {
 </ol>
 </div>
 </div>
-<div id="running-host-virus" class="section level1" number="6">
-<h1 number="6"><span class="header-section-number">6</span> Running host-virus</h1>
-<div id="compare-phage-and-host-metabolisms-to-identify-commonalities" class="section level2" number="6.1">
-<h2 number="6.1"><span class="header-section-number">6.1</span> Compare phage and host metabolisms to identify commonalities</h2>
+<div id="running-host-virus" class="section level1" number="7">
+<h1 number="7"><span class="header-section-number">7</span> Running host-virus</h1>
+<div id="compare-phage-and-host-metabolisms-to-identify-commonalities" class="section level2" number="7.1">
+<h2 number="7.1"><span class="header-section-number">7.1</span> Compare phage and host metabolisms to identify commonalities</h2>
 <ol style="list-style-type: decimal">
 <li><p>There are two requirements needed to run this script: 1) the “database_counts” file outputted using the <code>merge_databases.py</code> script from the “metabolism” portion of this pipeline and 2) the Vibrant output file mapping scaffolds to metabolic pathways.</p></li>
 <li><p>To analyze the unique and shared metabolic pathways between the two organisms, run the <code>amg_hostvi.py</code> script. These are the arguments for the script:</p></li>
@@ -658,49 +662,49 @@ div.tocify {
 </ol>
 </div>
 </div>
-<div id="additional-commands" class="section level1" number="7">
-<h1 number="7"><span class="header-section-number">7</span> Additional commands</h1>
-<div id="download-fastqs" class="section level2" number="7.1">
-<h2 number="7.1"><span class="header-section-number">7.1</span> Download fastqs</h2>
+<div id="additional-commands" class="section level1" number="8">
+<h1 number="8"><span class="header-section-number">8</span> Additional commands</h1>
+<div id="download-fastqs" class="section level2" number="8.1">
+<h2 number="8.1"><span class="header-section-number">8.1</span> Download fastqs</h2>
 <p>Follow the download instructions found on <a href="https://genome.jgi.doe.gov/portal/help/download.jsf#/api">IMG</a>.</p>
 </div>
-<div id="mapping-bins-to-samples" class="section level2" number="7.2">
-<h2 number="7.2"><span class="header-section-number">7.2</span> Mapping bins to samples</h2>
+<div id="mapping-bins-to-samples" class="section level2" number="8.2">
+<h2 number="8.2"><span class="header-section-number">8.2</span> Mapping bins to samples</h2>
 <p>The user must manually map each bin to its respective sample.</p>
 </div>
-<div id="create-initial-depth-file" class="section level2" number="7.3">
-<h2 number="7.3"><span class="header-section-number">7.3</span> Create initial depth file</h2>
+<div id="create-initial-depth-file" class="section level2" number="8.3">
+<h2 number="8.3"><span class="header-section-number">8.3</span> Create initial depth file</h2>
 <p>The script, <code>jgi_summarize_bam_contig_depths.pl</code>, must be used to create the depth file needed in <code>files_prep.py</code> and can be found <a href="https://bitbucket.org/berkeleylab/metabat/src/master/">here</a> along with its usage notes.</p>
 <p>Here is an example command to run this sccript:</p>
 <div class="sourceCode" id="cb27"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="ex">jgi_summarize_bam_contig_depths</span> <span class="at">--percentIdentity</span> 97 <span class="at">--outputDepth</span> ../../assembly_metaspades_cat_renamed_3kb_cov <span class="at">--referenceFasta</span> ../../data/assembly_metaspades_cat_renamed_3kb.fasta ../../read_mapping/metaspades_cat_renamed_3kb/assembly_metaspades_cat_renamed_3kb_D<span class="pp">*</span>.coordsort.bam</span></code></pre></div>
 </div>
-<div id="mapping-taxa" class="section level2" number="7.4">
-<h2 number="7.4"><span class="header-section-number">7.4</span> Mapping taxa</h2>
+<div id="mapping-taxa" class="section level2" number="8.4">
+<h2 number="8.4"><span class="header-section-number">8.4</span> Mapping taxa</h2>
 <p>One way to map each the taxa to each bin is to use the GTDBTK tool found here: <a href="https://github.com/Ecogenomics/GTDBTk" class="uri">https://github.com/Ecogenomics/GTDBTk</a>.</p>
 </div>
-<div id="creating-img-annotation" class="section level2" number="7.5">
-<h2 number="7.5"><span class="header-section-number">7.5</span> Creating IMG annotation</h2>
+<div id="creating-img-annotation" class="section level2" number="8.5">
+<h2 number="8.5"><span class="header-section-number">8.5</span> Creating IMG annotation</h2>
 <p>First, log on to the IMG server found <a href="https://genome.jgi.doe.gov/portal/help/download.jsf#/api">here</a>. Then, download and unzip the tar.gz file. Once you have the IMG annotation files, run the <code>consolidateJGIdata.pl</code> script to consolidate the data obtained from JGI IMG into one file. The script can be found <a href="https://github.com/Geo-omics/scripts">here</a>.</p>
 </div>
-<div id="defining-metabolic-database" class="section level2" number="7.6">
-<h2 number="7.6"><span class="header-section-number">7.6</span> Defining metabolic database</h2>
+<div id="defining-metabolic-database" class="section level2" number="8.6">
+<h2 number="8.6"><span class="header-section-number">8.6</span> Defining metabolic database</h2>
 <p>When creating a user-defined database, there are multiple format requirements. The metabolic databases of interest should contain one or multiple headers (KEGG, COG, PFAM, EC_NUMBER) depending on which database the user wants to analyze. All other auxiliary columns will be mapped to the bins and added to the final outputted file. Lastly, in each of the database columns, please format each pathway name as it is in the IMG annotation file:</p>
 <div class="sourceCode" id="cb28"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="ex">KEGG</span> <span class="at">-</span> KO:K12345</span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="ex">COG</span> <span class="at">-</span> COG12345</span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="ex">PFAM</span> <span class="at">-</span> pfam12345</span>
 <span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="ex">EC_NUMBER</span> <span class="at">-</span> EC:EC12345</span></code></pre></div>
 </div>
-<div id="creating-vibrant-mapping" class="section level2" number="7.7">
-<h2 number="7.7"><span class="header-section-number">7.7</span> Creating Vibrant mapping</h2>
+<div id="creating-vibrant-mapping" class="section level2" number="8.7">
+<h2 number="8.7"><span class="header-section-number">8.7</span> Creating Vibrant mapping</h2>
 <p>I need help with this.</p>
 </div>
 </div>
-<div id="support-and-development" class="section level1" number="8">
-<h1 number="8"><span class="header-section-number">8</span> Support and Development</h1>
+<div id="support-and-development" class="section level1" number="9">
+<h1 number="9"><span class="header-section-number">9</span> Support and Development</h1>
 <p>This pipeline has been developed by the Baker lab at UT Austin. If there are any questions, comments, or concerns, please email us at either <a href="mailto:sahilbshah@berkeley.edu" class="email">sahilbshah@berkeley.edu</a> or <a href="mailto:valdeanda@utexas.edu" class="email">valdeanda@utexas.edu</a>.</p>
 </div>
-<div id="cite" class="section level1" number="9">
-<h1 number="9"><span class="header-section-number">9</span> Cite</h1>
+<div id="cite" class="section level1" number="10">
+<h1 number="10"><span class="header-section-number">10</span> Cite</h1>
 <p>If you find this software useful please cite us as:</p>
 <p>Coming soon!</p>
 </div>

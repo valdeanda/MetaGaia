@@ -112,7 +112,7 @@ def create_depth_file(arguments, depth_format, depth_dir):
 	#Pivot dataframe into a long format
 	depth_df = pd.melt(depth_df, id_vars=['contigName', 'contigLen', 'totalAvgDepth'], value_vars=depth_df.columns.tolist()[3:], var_name='Sample_Depth',value_name='Depth')
 	#Rename a column
-	depth_df = depth_df.rename({"contigName": "Original_Contig_Name"})
+	depth_df = depth_df.rename(columns={"contigName": "Original_Contig_Name"})
 	#Save dataframe to file
 	depth_df.to_csv(os.path.dirname(os.path.abspath(__file__)) + "/../../output/depth_file.tsv", sep="\t", index=False)
 	print("Depth file has been created!")

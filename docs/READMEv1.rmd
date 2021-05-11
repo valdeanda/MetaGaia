@@ -51,9 +51,17 @@ the natural way of installing it is by cloning the repository via the following 
 git clone https://github.com/valdeanda/MetaGaia
 ```
 
+# Python installation requirements (Linux)
+
+To install python, run `sudo apt-get install python3`.
+To install pip, run `sudo apt install python3-pip`.
+To install pandas, run `pip install pandas`.
+To install numpy, run `pip install numpy`.
+To install seaborn, run `pip install seaborn`.
+
 # Requirements
 
-*NOTE: Please do NOT use symbolic links for fastq or fna files.*
+*NOTE: Please do NOT use symbolic links for fastq or fna files. Also, make sure headers are present and properly separated in input files.*
 
 ## Calculating bin abundances (abundance)
 
