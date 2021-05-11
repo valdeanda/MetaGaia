@@ -19,7 +19,6 @@ import argparse
 import os
 import pandas as pd
 
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 def main():
 
@@ -104,7 +103,7 @@ def main():
   #Output files
   abundance = "MetaGaia_OUT_abundanceby_bin.tsv"
 
-  finaldf.to_csv("../../output/" + abundance, sep = '\t', index = False)
+  finaldf.to_csv(os.path.dirname(os.path.abspath(__file__)) + "/../../output/" + abundance, sep = '\t', index = False)
 
 
   print("\n"

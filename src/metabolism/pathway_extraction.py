@@ -17,8 +17,6 @@ import argparse
 import os
 import pandas as pd
 
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
-
 
 class Command_line_args():
 	"""
@@ -92,7 +90,7 @@ def main():
 	final_df = pd.concat(pathways_lst)
 	final_df = final_df.set_index('Database')
 	#Save file
-	final_df.to_csv('../../output/extracted_pathways.tsv', sep='\t', index=True)
+	final_df.to_csv(os.path.dirname(os.path.abspath(__file__)) + '/../../output/extracted_pathways.tsv', sep='\t', index=True)
 	print('Finished extracting information! File is saved in the \"output\" folder as \"extracted_pathways.tsv\".')
 
 

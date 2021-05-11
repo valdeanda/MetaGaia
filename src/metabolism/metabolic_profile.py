@@ -15,7 +15,6 @@ import argparse
 import os
 import pandas as pd
 
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 class Command_line_args():
 	"""
@@ -86,7 +85,7 @@ def map_scaffolds(arguments, img_df, mapping_df):
 	databases_df = databases_df.merge(mapping_df, on='Scaffold', how='left')
 
 	#Save file in output folder
-	databases_df.to_csv(uniquify("../../output/mapped_scaffolds.tsv"), index=False, sep="\t")
+	databases_df.to_csv(uniquify(os.path.dirname(os.path.abspath(__file__)) + "/../../output/mapped_scaffolds.tsv"), index=False, sep="\t")
 
 	return databases_df
 
@@ -148,7 +147,7 @@ def get_database_counts(extract_list, databases_df):
 		count_df['Total'] = count_df.sum(axis=1)
 
 		#Save file in the output folder
-		count_df.to_csv(uniquify('../../output/' + d + '_metabolic_profile.tsv'), index=True, sep='\t')
+		count_df.to_csv(uniquify(os.path.dirname(os.path.abspath(__file__)) + '/../../output/' + d + '_metabolic_profile.tsv'), index=True, sep='\t')
 
 
 def main():

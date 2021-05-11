@@ -15,7 +15,6 @@ import glob
 import os
 import pandas as pd
 
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 def main():
 
@@ -52,7 +51,7 @@ def main():
 			counter+=1
 
 		#Save each merged dataframe
-		merged_dfs.to_csv('../../output/merged_' + d + '_metabolic_profile.tsv', sep='\t', index=False)
+		merged_dfs.to_csv(os.path.dirname(os.path.abspath(__file__)) + '/../../output/merged_' + d + '_metabolic_profile.tsv', sep='\t', index=False)
 		if len(databases_list) > 1:
 			dfs_list.append(merged_dfs)
 
@@ -61,7 +60,7 @@ def main():
 		final_df = pd.concat(dfs_list)
 		final_df = final_df.set_index(databases_list)
 		#Save dataframe containing multiple database columns
-		final_df.to_csv('../../output/final_merged_metabolic_profile.tsv', sep='\t', index=True)
+		final_df.to_csv(os.path.dirname(os.path.abspath(__file__)) + '/../../output/final_merged_metabolic_profile.tsv', sep='\t', index=True)
 
 
 if __name__ == '__main__':

@@ -15,7 +15,6 @@ import os
 import pandas as pd
 import re
 
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 class Command_line_args():
 	"""
@@ -48,14 +47,14 @@ def create_reads_file(arguments):
 	"""
 
 	#Run bash script to create a text file containing the reads information
-	bash_command = "find " + arguments.args.fastq_dir + " -type f -name \'*.fastq.gz\' | parallel --jobs 8 bash ../bash/count_fastq_reads.sh {} \'>>\' ../../output/fastq_read_counts.txt"
+	bash_command = "find " + arguments.args.fastq_dir + " -type f -name \'*.fastq.gz\' | parallel --jobs 8 bash " + os.path.dirname(os.path.abspath(__file__)) + "/../bash/count_fastq_reads.sh {} \'>>\' " + os.path.dirname(os.path.abspath(__file__)) + "/../../output/fastq_read_counts.txt"
 	os.system(bash_command)
 	#Read in outputted reads text file
-	reads_df = pd.read_csv("../../output/fastq_read_counts.txt", sep="\s+")
+	reads_df = pd.read_csv(os.path.dirname(os.path.abspath(__file__)) + "/../../output/fastq_read_counts.txt", sep="\s+")
 	#Add column names to dataframe
 	reads_df.columns = ["Sample", "Reads"]
 	#Save dataframe to file
-	reads_df.to_csv("../../output/reads_file.tsv", sep="\t", index=False)
+	reads_df.to_csv(os.path.dirname(os.path.abspath(__file__)) + "/../../output/reads_file.tsv", sep="\t", index=False)
 	print("Reads file has been created!")
 	print("WARNING: Path names in script must be edited to represent sample names!")
 
@@ -70,12 +69,12 @@ def create_binsize_file(arguments):
 	"""
 
 	#Run bach script to create a tab file containing the bin size information
-	bash_command = "sh ../bash/calc_genome_size.sh " + arguments.args.fna_dir
+	bash_command = "sh " + os.path.dirname(os.path.abspath(__file__)) + "/../bash/calc_genome_size.sh " + arguments.args.fna_dir
 	os.system(bash_command)
 	#Read in  the outputted binsize tab file and add column names
 	binsize_df = pd.read_csv(arguments.args.fna_dir + "genomesize.tab", sep="\t", names=["Bin", "Size"])
 	#Save dataframe to file
-	binsize_df.to_csv("../../output/binsize_file.tsv", sep="\t", index=False)
+	binsize_df.to_csv(os.path.dirname(os.path.abspath(__file__)) + "/../../output/binsize_file.tsv", sep="\t", index=False)
 	#Delete unneeded tab file
 	os.remove(arguments.args.fna_dir + "genomesize.tab")
 	print("Bin size file has been created!")
@@ -94,7 +93,7 @@ def create_depth_file(arguments, depth_format, depth_dir):
 	#If depth txt files are not concatenated already
 	if depth_dir:
 		depth_list = []
-		if depth_format[-1:] != '/':
+		if depth_format[-1] != '/':
 			depth_format = depth_format + '/'
 		for file in glob.glob(depth_format+'*'):
 			if 'depth' in file:
@@ -104,7 +103,7 @@ def create_depth_file(arguments, depth_format, depth_dir):
 					depth_df = pd.read_csv(file, sep='\t')
 				depth_list.append(depth_df)
 		depth_df = pd.concat(depth_list)
-		depth_df.to_csv("../../output/depth_file_intermediate.tsv", sep="\t", index=False)
+		depth_df.to_csv(os.path.dirname(os.path.abspath(__file__)) + "/../../output/depth_file_intermediate.tsv", sep="\t", index=False)
 	else:
 		depth_df = depth_format
 
@@ -115,7 +114,7 @@ def create_depth_file(arguments, depth_format, depth_dir):
 	#Rename a column
 	depth_df = depth_df.rename({"contigName": "Original_Contig_Name"})
 	#Save dataframe to file
-	depth_df.to_csv("../../output/depth_file.tsv", sep="\t", index=False)
+	depth_df.to_csv(os.path.dirname(os.path.abspath(__file__)) + "/../../output/depth_file.tsv", sep="\t", index=False)
 	print("Depth file has been created!")
 	print("WARNING: If sample names in the \"Sample_Depth\" column does not match the other input files, it must be manually edited!")
 
@@ -150,7 +149,7 @@ def create_mapping_file(arguments, bin_sample):
 	mapping_df = pd.DataFrame(zip(contig_lst, bin_lst), columns=["Original_Contig_Name", "Bin"])
 	mapping_df = bin_sample.merge(mapping_df, on="Bin", how="left")
 	#Save dataframe to file
-	mapping_df.to_csv("../../output/mapping_file.tsv", sep="\t", index=False)
+	mapping_df.to_csv(os.path.dirname(os.path.abspath(__file__)) + "/../../output/mapping_file.tsv", sep="\t", index=False)
 	print("Mapping file has been created!")
 
 

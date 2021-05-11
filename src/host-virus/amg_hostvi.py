@@ -16,7 +16,6 @@ import numpy as np
 import os
 import pandas as pd
 
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 def main():
 
@@ -73,12 +72,12 @@ def main():
 	#Drop all rows with NaN in the Presence column
 	phage_host_df = phage_host_df.dropna()
 	#Save file
-	phage_host_df.to_csv('../../output/phage_host_metabolism.tsv', sep='\t', index=False)
+	phage_host_df.to_csv(os.path.dirname(os.path.abspath(__file__)) + '/../../output/phage_host_metabolism.tsv', sep='\t', index=False)
 
 	#Only keep the bins mapped to scaffolds
 	phage_host_df = phage_host_df[phage_host_df['Presence'] == 'both'].drop(columns=['Presence', 'KEGG'])
 	#Save file
-	phage_host_df.to_csv('../../output/phage_host_mapping.tsv', sep='\t', index=False)
+	phage_host_df.to_csv(os.path.dirname(os.path.abspath(__file__)) + '/../../output/phage_host_mapping.tsv', sep='\t', index=False)
 	print('Success! All outputs are saved in the \"output\" directory.')
 
 if __name__ == "__main__":
