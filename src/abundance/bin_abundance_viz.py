@@ -37,6 +37,7 @@ class Command_line_args():
 		self.parser = argparse.ArgumentParser()
 		self.parser.add_argument('-b', '--bin_abundance', required=True, type=str, help='Input file outputted from the bin_abundance.py script with file extension.')
 		self.parser.add_argument('-t', '--taxonomy_info', required=True, type=str, help='Input file mapping taxonomy to each bin with file extension.')
+		self.parser.add_argument('-s', '--sample2site', required=False, type=str, default="", help='Input file containing each sample to the site it was taken from with file extension [""].')
 		self.parser.add_argument('-p', '--percent', required=False, type=float, default=10, help='Percent of highest sample in each bin [10].')
 		self.parser.add_argument('-w', '--width', required=False, type=int, default=4, help='Width of outputted clustermap figure [4].')
 		self.parser.add_argument('-l', '--height', required=False, type=int, default=5, help='Height of outputted clustermap figure [5].')
@@ -58,9 +59,16 @@ def format_dataframe(arguments, bin_abundances, taxonomy_info):
 	"""
 
 	#Set Sample column to the site number
-	for sample in bin_abundances['Sample'].unique():
-		digit_index = re.search("_[0-9]", sample)
-		bin_abundances['Sample'] = bin_abundances.Sample.str.replace(sample, sample[digit_index.start()+1:])
+	# for sample in bin_abundances['Sample'].unique():
+	# 	digit_index = re.search("_[0-9]", sample)
+	# 	bin_abundances['Sample'] = bin_abundances.Sample.str.replace(sample, sample[digit_index.start()+1:])
+	if arguments.args.sample2site:
+		if 'tsv' in arguments.args.sample2site:
+			sample2site_df = pd.read_csv(arguments.args.sample2site, sep='\t')
+		else:
+			sample2site_df = pd.read_csv(arguments.args.sample2site)
+		bin_abundances = bin_abundances.merge(sample2site_df, on='Sample', how='left')
+		bin_abundances = bin_abundances.drop(columns=['Sample']).rename(columns={'Site': 'Sample'})
 
     #Drop unneeded columns
 	bin_abundances = bin_abundances.drop(columns=['RelativeAbundance'])

@@ -47,7 +47,7 @@ def create_reads_file(arguments):
 	"""
 
 	#Run bash script to create a text file containing the reads information
-	bash_command = "find " + arguments.args.fastq_dir + " -type f -name \'*.fastq.gz\' | parallel --jobs 8 bash " + os.path.dirname(os.path.abspath(__file__)) + "/../bash/count_fastq_reads.sh {} \'>>\' " + os.path.dirname(os.path.abspath(__file__)) + "/../../output/fastq_read_counts.txt"
+	bash_command = "find " + arguments.args.fastq_dir + " -type f -maxdepth 1 -name \'*.fastq.gz\' | parallel --jobs 8 bash " + os.path.dirname(os.path.abspath(__file__)) + "/../bash/count_fastq_reads.sh {} \'>>\' " + os.path.dirname(os.path.abspath(__file__)) + "/../../output/fastq_read_counts.txt"
 	os.system(bash_command)
 	#Read in outputted reads text file
 	reads_df = pd.read_csv(os.path.dirname(os.path.abspath(__file__)) + "/../../output/fastq_read_counts.txt", sep="\s+")
@@ -103,7 +103,7 @@ def create_depth_file(arguments, depth_format, depth_dir):
 					depth_df = pd.read_csv(file, sep='\t')
 				depth_list.append(depth_df)
 		depth_df = pd.concat(depth_list)
-		depth_df.to_csv(os.path.dirname(os.path.abspath(__file__)) + "/../../output/depth_file_intermediate.tsv", sep="\t", index=False)
+		#depth_df.to_csv(os.path.dirname(os.path.abspath(__file__)) + "/../../output/depth_file_intermediate.tsv", sep="\t", index=False)
 	else:
 		depth_df = depth_format
 

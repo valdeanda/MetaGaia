@@ -108,11 +108,9 @@ def main():
 
   print("\n"
         "[END] Done computing abundance..........................................................................:\n"
-        "Please check the output files:..........................................................................:\n\n"
+        "Please check the output file:..........................................................................:\n\n"
 
-        "1. Mapping File with intermediate values:", args.mapping + "__IMGap_OUT_intermediate_abundance_values.tsv\n"
-
-        "2. File containing relative abundance normalized by bin:", args.mapping + "_IMGap_OUT_abundanceby_bin.tsv\n\n"
+        "1. File containing relative abundance normalized by bin: MetaGaia_OUT_abundanceby_bin.tsv\n\n"
 
         "Have a nice day :D\n")
 
