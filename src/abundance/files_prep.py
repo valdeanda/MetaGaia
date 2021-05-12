@@ -46,6 +46,8 @@ def create_reads_file(arguments):
 	A file containing the reads information is saved in the "output" folder.
 	"""
 
+	if os.path.exists(os.path.dirname(os.path.abspath(__file__)) + "/../../output/fastq_read_counts.txt"):
+		os.remove(os.path.dirname(os.path.abspath(__file__)) + "/../../output/fastq_read_counts.txt")
 	#Run bash script to create a text file containing the reads information
 	bash_command = "find " + arguments.args.fastq_dir + " -type f -maxdepth 1 -name \'*.fastq.gz\' | parallel --jobs 8 bash " + os.path.dirname(os.path.abspath(__file__)) + "/../bash/count_fastq_reads.sh {} \'>>\' " + os.path.dirname(os.path.abspath(__file__)) + "/../../output/fastq_read_counts.txt"
 	os.system(bash_command)
