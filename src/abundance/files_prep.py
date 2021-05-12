@@ -49,10 +49,8 @@ def create_reads_file(arguments):
 	#Run bash script to create a text file containing the reads information
 	bash_command = "find " + arguments.args.fastq_dir + " -type f -maxdepth 1 -name \'*.fastq.gz\' | parallel --jobs 8 bash " + os.path.dirname(os.path.abspath(__file__)) + "/../bash/count_fastq_reads.sh {} \'>>\' " + os.path.dirname(os.path.abspath(__file__)) + "/../../output/fastq_read_counts.txt"
 	os.system(bash_command)
-	#Read in outputted reads text file
-	reads_df = pd.read_csv(os.path.dirname(os.path.abspath(__file__)) + "/../../output/fastq_read_counts.txt", sep="\s+")
-	#Add column names to dataframe
-	reads_df.columns = ["Sample", "Reads"]
+	#Read in outputted reads text file add column names to dataframe
+	reads_df = pd.read_csv(os.path.dirname(os.path.abspath(__file__)) + "/../../output/fastq_read_counts.txt", sep="\s+", names=["Sample", "Reads"])
 	#Save dataframe to file
 	reads_df.to_csv(os.path.dirname(os.path.abspath(__file__)) + "/../../output/reads_file.tsv", sep="\t", index=False)
 	os.remove(os.path.dirname(os.path.abspath(__file__)) + "/../../output/fastq_read_counts.txt")
