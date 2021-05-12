@@ -104,11 +104,10 @@ def create_depth_file(arguments, depth_format, depth_dir):
 					depth_df = pd.read_csv(file, sep='\t')
 				depth_list.append(depth_df)
 		depth_df = pd.concat(depth_list)
-		#depth_df.to_csv(os.path.dirname(os.path.abspath(__file__)) + "/../../output/depth_file_intermediate.tsv", sep="\t", index=False)
 	else:
 		depth_df = depth_format
 
-	#Rename certain coulumns
+	#Rename certain columns
 	depth_df = depth_df.rename(columns=lambda x: re.sub('_S\d+','',x))
 	#Pivot dataframe into a long format
 	depth_df = pd.melt(depth_df, id_vars=['contigName', 'contigLen', 'totalAvgDepth'], value_vars=depth_df.columns.tolist()[3:], var_name='Sample_Depth',value_name='Depth')
@@ -131,6 +130,7 @@ def create_mapping_file(arguments, bin_sample):
 	"""
 
 	contig_lst = []
+	og_contig_lst = []
 	bin_lst = []
 
 	#Get contig names
@@ -148,7 +148,14 @@ def create_mapping_file(arguments, bin_sample):
 
 	#Add each contig name to each bin name in bin_sample
 	mapping_df = pd.DataFrame(zip(contig_lst, bin_lst), columns=["Original_Contig_Name", "Bin"])
-	mapping_df = bin_sample.merge(mapping_df, on="Bin", how="left")
+	mapping_df = mapping_df.merge(bin_sample, on="Bin", how="left")
+	#Edit names in Original_Contig_Name column
+	i = 0
+	for sample in mapping_df['Original_Contig_Name']:
+    	idx = re.search("_scaffold", sample)
+    	og_contig_lst.append(mapping_df['Sample'].iloc[i]+sample[idx.start():])
+    	i+=1
+    mapping_df['Original_Contig_Name'] = og_contig_lst
 	#Save dataframe to file
 	mapping_df.to_csv(os.path.dirname(os.path.abspath(__file__)) + "/../../output/mapping_file.tsv", sep="\t", index=False)
 	print("Mapping file has been created!")
