@@ -55,6 +55,7 @@ def create_reads_file(arguments):
 	reads_df.columns = ["Sample", "Reads"]
 	#Save dataframe to file
 	reads_df.to_csv(os.path.dirname(os.path.abspath(__file__)) + "/../../output/reads_file.tsv", sep="\t", index=False)
+	os.remove(os.path.dirname(os.path.abspath(__file__)) + "/../../output/fastq_read_counts.txt")
 	print("Reads file has been created!")
 	print("WARNING: Path names in script must be edited to represent sample names!")
 
