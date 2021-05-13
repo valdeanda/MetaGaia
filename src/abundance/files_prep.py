@@ -152,10 +152,10 @@ def create_mapping_file(arguments, bin_sample):
 	#Edit names in Original_Contig_Name column
 	i = 0
 	for sample in mapping_df['Original_Contig_Name']:
-    	idx = re.search("_scaffold", sample)
-    	og_contig_lst.append(mapping_df['Sample'].iloc[i]+sample[idx.start():])
-    	i+=1
-    mapping_df['Original_Contig_Name'] = og_contig_lst
+		idx = re.search("_scaffold", sample)
+		og_contig_lst.append(mapping_df['Sample'].iloc[i]+sample[idx.start():])
+		i+=1
+	mapping_df['Original_Contig_Name'] = og_contig_lst
 	#Save dataframe to file
 	mapping_df.to_csv(os.path.dirname(os.path.abspath(__file__)) + "/../../output/mapping_file.tsv", sep="\t", index=False)
 	print("Mapping file has been created!")
