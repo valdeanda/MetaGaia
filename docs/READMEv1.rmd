@@ -116,7 +116,7 @@ optional arguments:
                         Input directory path containing all the fna files.
 ```
 
-Example of concatenated depth file (NOTE: If the depth_dir argument was used, the Sample_Depth names may need to be edited by the user to match the Sample names in the reads_file.tsv):
+Example of concatenated depth file (NOTE: The Sample_Depth names may need to be edited by the user to match the Sample names in the reads_file.tsv):
 
 ```{bash, eval=FALSE}
 contigName              contigLen   totalAvgDepth         Sample_Depth         Depth
@@ -147,6 +147,10 @@ Here is an example of how to run this script:
 ```{bash, eval=FALSE}
 python3 files_prep.py -b bin2sample.tsv -d depth.tsv -q ~/fastq_files/ -a ~/fna_files/
 ```
+or (if depth files are not already concatenated):
+```{bash, eval=FALSE}
+python3 files_prep.py -b bin2sample.tsv -f ~/depth_files/ -q ~/fastq_files/ -a ~/fna_files/
+```
 
 2. There should be four files named "reads_file.tsv" (Sample names may need to be edited by user), "mapping_file.tsv", "depth_file", and "binsize_file.tsv" saved in the `output` folder.
 
@@ -175,6 +179,8 @@ optional arguments:
                         A large number to multiply the relative abundances so
                         that it is human readable.
 ```
+
+1.1. The Sample column un the reads file and the Sample_Depth column in the depth file must contain matching sample names. If this is not currently formatted correctly, manually adjust the names of each column in their respective file. For an example, please look at the `example__reads.tsv` and `example__depth.tsv` files.
 
 Here is an example of how to run the script (using example data provided in the `data` folder): 
 
@@ -239,13 +245,14 @@ Bin             Taxa
 13_Jan_SF_Bin61 Thermoplasmata
 ```
 
-Example of sample2site file:
+Example of sample2site file - the Sample names should be the unique names in the Sample column of the `bin_abundance.py` output; the Site names are the physical location's name/code that each sample was taken from:
 
 ```{bash, eval=FALSE}
-Sample    Site
-AB_3033   San Francisco
-AB_1004   Oakland
-AB_5468   Berkeley
+Sample             Site
+SF_Jan12_USGS_1    21
+SF_Jan12_USGS_2    24
+SF_Jul11_USGS_3    13
+SF_Jul11_USGS_1    21
 ```
 
 Example of taxa_color file:
