@@ -37,7 +37,7 @@ class Command_line_args():
 		self.parser = argparse.ArgumentParser()
 		self.parser.add_argument('-b', '--bin_abundance', required=True, type=str, help='Input file outputted from the bin_abundance.py script with file extension.')
 		self.parser.add_argument('-t', '--taxonomy_info', required=True, type=str, help='Input file mapping taxonomy to each bin with file extension.')
-		self.parser.add_argument('-s', '--sample2site', required=False, type=str, default="", help='Input file containing each sample to the site it was taken from with file extension [""].')
+		self.parser.add_argument('-s', '--sample2site', required=True, type=str, default="", help='Input file containing each sample to the site it was taken from with file extension [""].')
 		self.parser.add_argument('-p', '--percent', required=False, type=float, default=10, help='Percent of highest sample in each bin [10].')
 		self.parser.add_argument('-w', '--width', required=False, type=int, default=4, help='Width of outputted clustermap figure [4].')
 		self.parser.add_argument('-l', '--height', required=False, type=int, default=5, help='Height of outputted clustermap figure [5].')
