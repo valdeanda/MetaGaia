@@ -10,6 +10,7 @@
 # Licence:     GNU GENERAL PUBLIC LICENSE, Version 3, 29 June 2007
 # ------------------------------
 import argparse
+import copy
 import glob
 import os
 import pandas as pd
@@ -103,7 +104,13 @@ def create_depth_file(arguments, depth_format, depth_dir):
 				elif 'tsv' in file:
 					depth_df = pd.read_csv(file, sep='\t')
 				depth_list.append(depth_df)
-		depth_df = pd.concat(depth_list)
+		i = 1
+		for df in depth_list:
+			if i == 1:
+				depth_df = copy.deepcopy(df)
+			else:
+				depth_df = depth_df.merge(df, on='contigName', how='outer')
+			i+=1
 	else:
 		depth_df = depth_format
 
