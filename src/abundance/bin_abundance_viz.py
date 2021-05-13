@@ -37,7 +37,6 @@ class Command_line_args():
 		self.parser = argparse.ArgumentParser()
 		self.parser.add_argument('-b', '--bin_abundance', required=True, type=str, help='Input tsv file outputted from the bin_abundance.py script with file extension.')
 		self.parser.add_argument('-t', '--taxonomy_info', required=True, type=str, help='Input tsv or csv file mapping taxonomy to each bin with file extension.')
-		self.parser.add_argument('-s', '--sample2site', required=True, type=str, default="", help='Input tsv or csv file containing each sample to the site it was taken from with file extension [""].')
 		self.parser.add_argument('-p', '--percent', required=False, type=float, default=10, help='Percent of highest sample in each bin [10].')
 		self.parser.add_argument('-w', '--width', required=False, type=int, default=4, help='Width of outputted clustermap figure [4].')
 		self.parser.add_argument('-l', '--height', required=False, type=int, default=5, help='Height of outputted clustermap figure [5].')
@@ -58,24 +57,10 @@ def format_dataframe(arguments, bin_abundances, taxonomy_info):
 	A formatted bin abundances dataframe.
 	"""
 
-	#Set Sample column to the site number
-	# for sample in bin_abundances['Sample'].unique():
-	# 	digit_index = re.search("_[0-9]", sample)
-	# 	bin_abundances['Sample'] = bin_abundances.Sample.str.replace(sample, sample[digit_index.start()+1:])
-	if 'tsv' in arguments.args.sample2site:
-		sample2site_df = pd.read_csv(arguments.args.sample2site, sep='\t')
-	elif "csv" in arguments.args.sample2site:
-		sample2site_df = pd.read_csv(arguments.args.sample2site)
-	else:
-		print("Please make sure all of your input files are in a tsv or csv format!")
-		quit()
-	bin_abundances = bin_abundances.merge(sample2site_df, on='Sample', how='left')
-	bin_abundances = bin_abundances.drop(columns=['Sample']).rename(columns={'Site': 'Sample'})
-
     #Drop unneeded columns
-	bin_abundances = bin_abundances.drop(columns=['RelativeAbundance'])
+	bin_abundances = bin_abundances.drop(columns=['RelativeAbundance', 'Sample']).drop_duplicates(keep='first')
 	#Log abundances
-	bin_abundances['RelativeAbundanceReadable'] = np.log10(bin_abundances['RelativeAbundanceReadable'])
+	bin_abundances['RelativeAbundanceReadable'] = np.log10(bin_abundances['RelativeAbundanceReadable'].replace(0, np.nan))
     #Pivot table wider so that each bin is mapped to its respective site
 	bin_abundances = bin_abundances.pivot(index='Bin', columns='Sample', values='RelativeAbundanceReadable')
     #Replace NaN with 0 and set the index to the Bin

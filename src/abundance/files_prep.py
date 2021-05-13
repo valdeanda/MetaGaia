@@ -30,7 +30,7 @@ class Command_line_args():
 
 		#Command line arguments
 		self.parser = argparse.ArgumentParser()
-		self.parser.add_argument('-b', '--bin_samples', required=True, type=str, help='Input file containing 2 columns: 1st column contains bin names and 2nd column contains sample names. Requires header for each column, \"Bin\" and \"Sample\" respectively. File must have tsv or csv file extension.')
+		self.parser.add_argument('-b', '--bin_samples', required=True, type=str, help='Input file containing 2 columns: 1st column contains bin names and 2nd column contains sample names. Requires header for each column, \"Bin\" and \"Sampling_Site\" respectively. File must have tsv or csv file extension.')
 		self.parser.add_argument('-d', '--depth', required=False, default="", type=str, help='Input file containing 5 columns: contigName, contigLen, totalAvgDepth, Sample_Depth, and Depth. This file can be created with jgi_summarize_bam_contig_depths. File must have tsv or csv file extension.')
 		self.parser.add_argument('-f', '--depth_dir', required=False, default="", type=str, help='Input directory path containing all the depth txt files that must be concatenated. ')
 		self.parser.add_argument('-q', '--fastq_dir', required=True, type=str, help='Input directory path containing all the fasta files.')
@@ -120,7 +120,7 @@ def create_depth_file(arguments, depth_format, depth_dir):
 	#Rename certain columns
 	depth_df = depth_df.rename(columns=lambda x: re.sub('_S\d+','',x))
 	#Pivot dataframe into a long format
-	depth_df = pd.melt(depth_df, id_vars=['contigName', 'contigLen'], value_vars=depth_df.columns.tolist()[2:], var_name='Sample_Depth',value_name='Depth')
+	depth_df = pd.melt(depth_df, id_vars=['contigName', 'contigLen'], value_vars=depth_df.columns.tolist()[2:], var_name='Sample',value_name='Depth')
 	#Rename a column
 	depth_df = depth_df.rename(columns={"contigName": "Original_Contig_Name"})
 	#Save dataframe to file
@@ -163,7 +163,7 @@ def create_mapping_file(arguments, bin_sample):
 	i = 0
 	for sample in mapping_df['Original_Contig_Name']:
 		idx = re.search("_scaffold", sample)
-		og_contig_lst.append(mapping_df['Sample'].iloc[i]+sample[idx.start():])
+		og_contig_lst.append(mapping_df['Sampling_Site'].iloc[i]+sample[idx.start():])
 		i+=1
 	mapping_df['Original_Contig_Name'] = og_contig_lst
 	#Save dataframe to file

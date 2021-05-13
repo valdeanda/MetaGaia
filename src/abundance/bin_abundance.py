@@ -66,11 +66,8 @@ def main():
   # Map the Bin size to the mapping file
   mapping_size=pd.merge(df_mapping,df_size[['Bin','Size']],on ='Bin')
   # Map the coverage of each scaffold in different samples to the mapping file
-  mapping_size_depth=pd.merge(mapping_size,df_depth[['Original_Contig_Name', 'contigLen', 'Sample_Depth', 'Depth']],on='Original_Contig_Name')
+  mapping_size_depth_new=pd.merge(mapping_size,df_depth[['Original_Contig_Name', 'contigLen', 'Sample_Depth', 'Depth']],on='Original_Contig_Name')
 
-  #Rename columns to perform a final merge
-
-  mapping_size_depth_new=mapping_size_depth.rename(columns={"Sample": "Sampling_Site","Sample_Depth": "Sample",'Reads':'Total_Reads'})
   #Final dataframe to compute relative abundance
 
   mapping_size_depth_new_reads=pd.merge(mapping_size_depth_new,df_reads[['Sample', 'Reads']], on='Sample')
@@ -97,7 +94,7 @@ def main():
   mapping_size_depth_new_reads['RelativeAbundanceReadable'] = mapping_size_depth_new_reads['RelativeAbundance'].astype(float) * readablenum
 
   #Drop duplicates
-  finaldf=mapping_size_depth_new_reads[['Bin', 'Sample', 'RelativeAbundance', 'RelativeAbundanceReadable']]
+  finaldf=mapping_size_depth_new_reads[['Bin', 'Sample', 'Sampling_Site', 'RelativeAbundance', 'RelativeAbundanceReadable']]
   finaldf=finaldf.drop_duplicates()
 
   #Output files

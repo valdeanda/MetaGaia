@@ -68,7 +68,7 @@ To install seaborn, run `pip install seaborn`.
 1. All necessary fastq files have been downloaded and placed within the same directory. All files with the .fastq.gz extension in a directory will be analyzed.
 2. All necessary fna files have been downloaded and placed within the same directory.
 3. All necessary depth text files have been downloaded and placed within the same directory or a concatenated depth file has already been created.
-4. A file has been created that maps each bin to its respective sample name (see "Mapping bins to samples" for more information).
+4. A file has been created that maps each bin to its respective sample site (see "Mapping bins to sample sites" for more information).
 5. The GTDBTK tool has been downloaded to map each bin to its respective taxa (see "Mapping taxa" for more information).
 
 ## Identifying metabolic pathways (metabolism)
@@ -134,12 +134,12 @@ To create the `bin_sample` file, read the "Mapping bins to samples" section belo
 Example of bin_sample file:
 
 ```{bash, eval=FALSE}
-Bin                 Sample
-NoBin               S1A
-13_Jan_SF_Bin44     S1A
-14_Jan_SF_Bin36     S2B
-21_Jan_SF_Bin21     S3B
-24_Jan_SF_Bin43     S1A
+Bin                 Sampling_Site
+NoBin               4.1
+13_Jan_SF_Bin44     8.1
+14_Jan_SF_Bin36     13
+21_Jan_SF_Bin21     24
+24_Jan_SF_Bin43     21
 ```
 
 Here is an example of how to run this script:
@@ -209,9 +209,6 @@ optional arguments:
   -t TAXONOMY_INFO, --taxonomy_info TAXONOMY_INFO
                         Input tsv or csv file mapping taxonomy to each bin
                         with file extension.
-  -s SAMPLE2SITE, --sample2site SAMPLE2SITE
-                        Input tsv or csv file containing each sample to the
-                        site it was taken from with file extension [""].
   -p PERCENT, --percent PERCENT
                         Percent of highest sample in each bin [10].
   -w WIDTH, --width WIDTH
@@ -245,16 +242,6 @@ Bin             Taxa
 13_Jan_SF_Bin40 Thaumarchaeota_Nitrosopumilus
 13_Jan_SF_Bin52 Thaumarchaeota_Nitrosopumilus
 13_Jan_SF_Bin61 Thermoplasmata
-```
-
-Example of sample2site file - the Sample names should be the names in the Sample column of `reads_file.tsv`; the Site names are the physical location's name/code that each sample was taken from:
-
-```{bash, eval=FALSE}
-Sample             Site
-SF_Jan12_USGS_1    21
-SF_Jan12_USGS_2    24
-SF_Jul11_USGS_3    13
-SF_Jul11_USGS_1    21
 ```
 
 Example of taxa_color file:
@@ -480,9 +467,9 @@ python3 amg_hostvi.py -p ../../output/KEGG_database_counts.tsv -v ~/vibrant_outp
 
 Follow the download instructions found on [IMG](https://genome.jgi.doe.gov/portal/help/download.jsf#/api).
 
-## Mapping bins to samples
+## Mapping bins to sample site
 
-The user must manually map each bin to its respective sample.
+The user must manually map each bin to its respective sample location.
 
 ## Create initial depth file
 
@@ -497,10 +484,6 @@ jgi_summarize_bam_contig_depths --percentIdentity 97 --outputDepth ../../assembl
 ## Mapping taxa
 
 One way to map each the taxa to each bin is to use the GTDBTK tool found here: https://github.com/Ecogenomics/GTDBTk.
-
-## Mapping sample to site
-
-The user must manually map each sample to its respective site that the sample was extracted from.
 
 ## Creating IMG annotation
 
