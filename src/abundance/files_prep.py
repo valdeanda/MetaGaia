@@ -103,21 +103,24 @@ def create_depth_file(arguments, depth_format, depth_dir):
 					depth_df = pd.read_csv(file, sep='\s+')
 				elif 'tsv' in file:
 					depth_df = pd.read_csv(file, sep='\t')
+				depth_df = depth_df.drop(columns=['totalAvgDepth'])
 				depth_list.append(depth_df)
 		i = 1
 		for df in depth_list:
 			if i == 1:
 				depth_df = copy.deepcopy(df)
 			else:
-				depth_df = depth_df.merge(df, on='contigName', how='outer')
+				depth_df = depth_df.merge(df, on=['contigName', 'contigLen'], how='outer')
 			i+=1
 	else:
 		depth_df = depth_format
+		if 'totalAvgDepth' in depth_df.columns:
+			depth_df = depth_df.drop(columns=['totalAvgDepth'])
 
 	#Rename certain columns
 	depth_df = depth_df.rename(columns=lambda x: re.sub('_S\d+','',x))
 	#Pivot dataframe into a long format
-	depth_df = pd.melt(depth_df, id_vars=['contigName', 'contigLen', 'totalAvgDepth'], value_vars=depth_df.columns.tolist()[3:], var_name='Sample_Depth',value_name='Depth')
+	depth_df = pd.melt(depth_df, id_vars=['contigName', 'contigLen'], value_vars=depth_df.columns.tolist()[2:], var_name='Sample_Depth',value_name='Depth')
 	#Rename a column
 	depth_df = depth_df.rename(columns={"contigName": "Original_Contig_Name"})
 	#Save dataframe to file
