@@ -53,7 +53,7 @@ def main():
   mapping      = args.mapping
   depth        = args.depth
   size         = args.binsize
-  readablenum  = args.readablenum
+  readablenum  = float(args.readablenum)
 
   df_reads    = pd.read_csv(reads,sep="\t")
   df_mapping  = pd.read_csv(mapping, sep="\t",index_col=False)
