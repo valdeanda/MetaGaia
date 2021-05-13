@@ -192,24 +192,26 @@ python3 bin_abundance.py -r ../../data/example_input_files/example__reads.tsv -m
 
 ## Visualize relative bin abundance
 
+*ALL input files for this step should be in either tsv or csv format.*
+
 1. With the `bin_abundance_viz.py` script, the files outputted from `bin_abundance.py` can be used to visualize the relative bin abundances in addition to a files mapping each bin to their respective taxa (see "Mapping taxa" for more information) and each sample to their respective site (see "Mapping sample to site" for more information). These are the arguments needed for the visualization script:
 
 ```{bash, eval=FALSE}
-usage: bin_abundance_viz.py [-h] -b BIN_ABUNDANCE -t TAXONOMY_INFO
-                            [-s SAMPLE2SITE] [-p PERCENT] [-w WIDTH]
-                            [-l HEIGHT] [-d DPI] [-o OUT_FIG] [-c TAXA_COLOR]
+usage: bin_abundance_viz.py [-h] -b BIN_ABUNDANCE -t TAXONOMY_INFO -s
+                            SAMPLE2SITE [-p PERCENT] [-w WIDTH] [-l HEIGHT]
+                            [-d DPI] [-o OUT_FIG] [-c TAXA_COLOR]
 
 optional arguments:
   -h, --help            show this help message and exit
   -b BIN_ABUNDANCE, --bin_abundance BIN_ABUNDANCE
-                        Input file outputted from the bin_abundance.py script
-                        with file extension.
+                        Input tsv file outputted from the bin_abundance.py
+                        script with file extension.
   -t TAXONOMY_INFO, --taxonomy_info TAXONOMY_INFO
-                        Input file mapping taxonomy to each bin with file
-                        extension.
+                        Input tsv or csv file mapping taxonomy to each bin
+                        with file extension.
   -s SAMPLE2SITE, --sample2site SAMPLE2SITE
-                        Input file containing each sample to the site it was
-                        taken from with file extension [""].
+                        Input tsv or csv file containing each sample to the
+                        site it was taken from with file extension [""].
   -p PERCENT, --percent PERCENT
                         Percent of highest sample in each bin [10].
   -w WIDTH, --width WIDTH
@@ -221,8 +223,8 @@ optional arguments:
                         Stores the figure in the specified file path and
                         format [test.png].
   -c TAXA_COLOR, --taxa_color TAXA_COLOR
-                        Input file containing the RGB color code for each taxa
-                        with file extension [""].
+                        Input tsv or csv file containing the RGB color code
+                        for each taxa with file extension [""].
 ```  
 
 Example of bin_abundance file:
@@ -245,7 +247,7 @@ Bin             Taxa
 13_Jan_SF_Bin61 Thermoplasmata
 ```
 
-Example of sample2site file - the Sample names should be the unique names in the Sample column of the `bin_abundance.py` output; the Site names are the physical location's name/code that each sample was taken from:
+Example of sample2site file - the Sample names should be the names in the Sample column of `reads_file.tsv`; the Site names are the physical location's name/code that each sample was taken from:
 
 ```{bash, eval=FALSE}
 Sample             Site

@@ -462,24 +462,25 @@ div.tocify {
 </div>
 <div id="visualize-relative-bin-abundance" class="section level2" number="5.3">
 <h2 number="5.3"><span class="header-section-number">5.3</span> Visualize relative bin abundance</h2>
+<p><em>ALL input files for this step should be in either tsv or csv format.</em></p>
 <ol style="list-style-type: decimal">
 <li>With the <code>bin_abundance_viz.py</code> script, the files outputted from <code>bin_abundance.py</code> can be used to visualize the relative bin abundances in addition to a files mapping each bin to their respective taxa (see “Mapping taxa” for more information) and each sample to their respective site (see “Mapping sample to site” for more information). These are the arguments needed for the visualization script:</li>
 </ol>
-<div class="sourceCode" id="cb9"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">usage:</span> bin_abundance_viz.py [-h] <span class="at">-b</span> BIN_ABUNDANCE <span class="at">-t</span> TAXONOMY_INFO</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>                            <span class="ex">[-s</span> SAMPLE2SITE] [-p PERCENT] [-w WIDTH]</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                            <span class="ex">[-l</span> HEIGHT] [-d DPI] [-o OUT_FIG] [-c TAXA_COLOR]</span>
+<div class="sourceCode" id="cb9"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">usage:</span> bin_abundance_viz.py [-h] <span class="at">-b</span> BIN_ABUNDANCE <span class="at">-t</span> TAXONOMY_INFO <span class="at">-s</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>                            <span class="ex">SAMPLE2SITE</span> [-p PERCENT] [-w WIDTH] [-l HEIGHT]</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                            <span class="ex">[-d</span> DPI] [-o OUT_FIG] [-c TAXA_COLOR]</span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="ex">optional</span> arguments:</span>
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-h,</span> <span class="at">--help</span>            show this help message and exit</span>
 <span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-b</span> BIN_ABUNDANCE, <span class="at">--bin_abundance</span> BIN_ABUNDANCE</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> file outputted from the bin_abundance.py script</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">with</span> file extension.</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> tsv file outputted from the bin_abundance.py</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">script</span> with file extension.</span>
 <span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-t</span> TAXONOMY_INFO, <span class="at">--taxonomy_info</span> TAXONOMY_INFO</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> file mapping taxonomy to each bin with file</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">extension.</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> tsv or csv file mapping taxonomy to each bin</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">with</span> file extension.</span>
 <span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-s</span> SAMPLE2SITE, <span class="at">--sample2site</span> SAMPLE2SITE</span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> file containing each sample to the site it was</span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">taken</span> from with file extension [<span class="st">&quot;&quot;</span>].</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> tsv or csv file containing each sample to the</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">site</span> it was taken from with file extension [<span class="st">&quot;&quot;</span>].</span>
 <span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-p</span> PERCENT, <span class="at">--percent</span> PERCENT</span>
 <span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Percent</span> of highest sample in each bin [10].</span>
 <span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-w</span> WIDTH, <span class="at">--width</span> WIDTH</span>
@@ -491,8 +492,8 @@ div.tocify {
 <span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Stores</span> the figure in the specified file path and</span>
 <span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">format</span> [test.png].</span>
 <span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-c</span> TAXA_COLOR, <span class="at">--taxa_color</span> TAXA_COLOR</span>
-<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> file containing the RGB color code for each taxa</span>
-<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">with</span> file extension [<span class="st">&quot;&quot;</span>].</span></code></pre></div>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> tsv or csv file containing the RGB color code</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>                        <span class="cf">for</span> each <span class="ex">taxa</span> with file extension [<span class="st">&quot;&quot;</span>].</span></code></pre></div>
 <p>Example of bin_abundance file:</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Bin</span>             Sample  RelativeAbundance       RelativeAbundanceReadable</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="ex">AB_1215_Bin_45</span>  AB_3033 4.30188348833424e-12    0.00043018834883342403</span>
@@ -505,7 +506,7 @@ div.tocify {
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="ex">13_Jan_SF_Bin40</span> Thaumarchaeota_Nitrosopumilus</span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="ex">13_Jan_SF_Bin52</span> Thaumarchaeota_Nitrosopumilus</span>
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="ex">13_Jan_SF_Bin61</span> Thermoplasmata</span></code></pre></div>
-<p>Example of sample2site file - the Sample names should be the unique names in the Sample column of the <code>bin_abundance.py</code> output; the Site names are the physical location’s name/code that each sample was taken from:</p>
+<p>Example of sample2site file - the Sample names should be the names in the Sample column of <code>reads_file.tsv</code>; the Site names are the physical location’s name/code that each sample was taken from:</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Sample</span>             Site</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="ex">SF_Jan12_USGS_1</span>    21</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="ex">SF_Jan12_USGS_2</span>    24</span>
