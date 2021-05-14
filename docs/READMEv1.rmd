@@ -209,6 +209,9 @@ optional arguments:
   -t TAXONOMY_INFO, --taxonomy_info TAXONOMY_INFO
                         Input tsv or csv file mapping taxonomy to each bin
                         with file extension.
+  -s SAMPLE2SITE, --sample2site SAMPLE2SITE
+                      Input tsv or csv file containing each sample to the
+                      site it was taken from with file extension [""].
   -p PERCENT, --percent PERCENT
                         Percent of highest sample in each bin [10].
   -w WIDTH, --width WIDTH
@@ -242,6 +245,16 @@ Bin             Taxa
 13_Jan_SF_Bin40 Thaumarchaeota_Nitrosopumilus
 13_Jan_SF_Bin52 Thaumarchaeota_Nitrosopumilus
 13_Jan_SF_Bin61 Thermoplasmata
+```
+
+Example of sample2site file - the Sample names should be the names in the Sample column of `reads_file.tsv`; the Site names are the physical location's name/code that each sample was taken from:
+
+```{bash, eval=FALSE}
+Sample             Site
+SF_Jan12_USGS_1    21
+SF_Jan12_USGS_2    24
+SF_Jul11_USGS_3    13
+SF_Jul11_USGS_1    21
 ```
 
 Example of taxa_color file:

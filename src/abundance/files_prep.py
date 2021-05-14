@@ -58,7 +58,7 @@ def create_reads_file(arguments):
 	reads_df.to_csv(os.path.dirname(os.path.abspath(__file__)) + "/../../output/reads_file.tsv", sep="\t", index=False)
 	os.remove(os.path.dirname(os.path.abspath(__file__)) + "/../../output/fastq_read_counts.txt")
 	print("Reads file has been created!")
-	print("WARNING: Path names in script must be edited to represent sample names!")
+	print("WARNING: Path names in script must be edited to represent Sample names!")
 
 
 def create_binsize_file(arguments):
@@ -126,7 +126,7 @@ def create_depth_file(arguments, depth_format, depth_dir):
 	#Save dataframe to file
 	depth_df.to_csv(os.path.dirname(os.path.abspath(__file__)) + "/../../output/depth_file.tsv", sep="\t", index=False)
 	print("Depth file has been created!")
-	print("WARNING: If sample names in the \"Sample_Depth\" column does not match the other input files, it must be manually edited!")
+	print("WARNING: If sample names in the \"Sample\" column does not match the other input files, it must be manually edited!")
 
 
 def create_mapping_file(arguments, bin_sample):

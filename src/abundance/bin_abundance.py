@@ -66,7 +66,7 @@ def main():
   # Map the Bin size to the mapping file
   mapping_size=pd.merge(df_mapping,df_size[['Bin','Size']],on ='Bin')
   # Map the coverage of each scaffold in different samples to the mapping file
-  mapping_size_depth_new=pd.merge(mapping_size,df_depth[['Original_Contig_Name', 'contigLen', 'Sample_Depth', 'Depth']],on='Original_Contig_Name')
+  mapping_size_depth_new=pd.merge(mapping_size,df_depth[['Original_Contig_Name', 'contigLen', 'Sample', 'Depth']],on='Original_Contig_Name')
 
   #Final dataframe to compute relative abundance
 
