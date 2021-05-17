@@ -119,6 +119,8 @@ def get_database_counts(extract_list, databases_df):
 	count_df is a pandas dataframe that tracks the count of each metabolic pathway per bin.
 	"""
 
+	files_list = []
+
 	#For each database the user wants to analyze
 	for d in extract_list:
 		db_list = []
@@ -146,8 +148,11 @@ def get_database_counts(extract_list, databases_df):
 		#Create a total columns
 		count_df['Total'] = count_df.sum(axis=1)
 
+		files_list.append(d + '_metabolic_profile.tsv')
 		#Save file in the output folder
 		count_df.to_csv(uniquify(os.path.dirname(os.path.abspath(__file__)) + '/../../output/' + d + '_metabolic_profile.tsv'), index=True, sep='\t')
+
+	return files_list
 
 
 def main():
@@ -173,8 +178,12 @@ def main():
 
 	print('Getting count of each database value in each bin.')
 	#Get the counts of each metabolic pathway in each bin
-	get_database_counts(databases_list, databases_df)
-	print('Finished getting counts! All outputs should be saved in the \"output\" folder.')
+	saved_files = get_database_counts(databases_list, databases_df)
+	saved_files.append('mapped_scaffolds.tsv')
+	print("Success!\nThe following files have been saved in the \"output\" directory:\n")
+	for f in saved_files:
+		print(f)
+	print()
 	
 
 if __name__ == '__main__':

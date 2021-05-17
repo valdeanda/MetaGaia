@@ -91,7 +91,7 @@ def main():
 	final_df = final_df.set_index('Database')
 	#Save file
 	final_df.to_csv(os.path.dirname(os.path.abspath(__file__)) + '/../../output/extracted_pathways.tsv', sep='\t', index=True)
-	print('Finished extracting information! File is saved in the \"output\" folder as \"extracted_pathways.tsv\".')
+	print("Success!\nThe following files have been saved in the \"output\" directory:\n\nextracted_pathways.tsv\n")
 
 
 if __name__ == '__main__':

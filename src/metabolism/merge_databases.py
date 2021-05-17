@@ -25,6 +25,7 @@ def main():
 	args = parser.parse_args()
 
 	dfs_list = []
+	files_list = []
 
 	#Make sure directory path is valid
 	if args.databases_path[-1] != '/':
@@ -51,6 +52,7 @@ def main():
 			counter+=1
 
 		#Save each merged dataframe
+		files_list.append('merged_' + d + '_metabolic_profile.tsv')
 		merged_dfs.to_csv(os.path.dirname(os.path.abspath(__file__)) + '/../../output/merged_' + d + '_metabolic_profile.tsv', sep='\t', index=False)
 		if len(databases_list) > 1:
 			dfs_list.append(merged_dfs)
@@ -60,7 +62,13 @@ def main():
 		final_df = pd.concat(dfs_list)
 		final_df = final_df.set_index(databases_list)
 		#Save dataframe containing multiple database columns
+		files_list.append('final_merged_metabolic_profile.tsv')
 		final_df.to_csv(os.path.dirname(os.path.abspath(__file__)) + '/../../output/final_merged_metabolic_profile.tsv', sep='\t', index=True)
+
+	print("Success!\nThe following files have been saved in the \"output\" directory:\n")
+	for f in files_list:
+		print(f)
+	print()
 
 
 if __name__ == '__main__':

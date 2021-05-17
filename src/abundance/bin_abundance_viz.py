@@ -69,16 +69,15 @@ def format_dataframe(arguments, bin_abundances, taxonomy_info):
 	bin_abundances = bin_abundances.drop(columns=['Sample']).rename(columns={'Site': 'Sample'})
 
     #Drop unneeded columns
-    bin_abundances = bin_abundances.drop(columns=['RelativeAbundance', 'Sampling_Site'])
-	# bin_abundances = bin_abundances.drop(columns=['RelativeAbundance', 'Sample'])
-	# bin_abundances = bin_abundances.sort_values('Bin')
-	# bin_abundances = bin_abundances.drop_duplicates(subset='Bin', keep='last')
+	bin_abundances = bin_abundances.drop(columns=['RelativeAbundance', 'Sampling_Site'])
 	#Log abundances
-	#bin_abundances['RelativeAbundanceReadable'] = np.log10(bin_abundances['RelativeAbundanceReadable'].replace(0, np.nan))
-    bin_abundances['RelativeAbundanceReadable'] = np.log10(bin_abundances['RelativeAbundanceReadable'])
+	bin_abundances['RelativeAbundanceReadable'] = np.log10(bin_abundances['RelativeAbundanceReadable'])
+	#Check if NaN in RelativeAbundanceReadable
+	if bin_abundances['RelativeAbundanceReadable'].isnull.values.any():
+		bin_abundances = bin_abundances.dropna()
+		print("WARNING: Some bins were not mapped to samples and thus discarded. If this is incorrect, please make sure the \"sample2site\" file is correct.")
     #Pivot table wider so that each bin is mapped to its respective site
-	#bin_abundances = bin_abundances.pivot(index='Bin', columns='Sampling_Site', values='RelativeAbundanceReadable')
-    bin_abundances = bin_abundances.pivot(index='Bin', columns='Sample', values='RelativeAbundanceReadable')
+	bin_abundances = bin_abundances.pivot(index='Bin', columns='Sample', values='RelativeAbundanceReadable')
     #Replace NaN with 0 and set the index to the Bin
 	bin_abundances = bin_abundances.replace(np.nan, 0)
 
@@ -259,7 +258,7 @@ def main():
 	#Outputs final heatmap
 	create_clustermap(arguments, merged_df, my_palette, row_colors, True)
 
-	print("Files in \"output\" folder.\nEnjoy!")
+	print("Success!\nThe following files have been saved in the \"output\" directory:\n\ntop_sample_abundances.tsv\n" + "heatmap_top_" + arguments.args.out_fig + "\nclustermap_" + arguments.args.out_fig)
 
 if __name__ == "__main__":
 	main()

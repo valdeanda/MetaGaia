@@ -78,7 +78,7 @@ def main():
 	phage_host_df = phage_host_df[phage_host_df['Presence'] == 'both'].drop(columns=['Presence', 'KEGG'])
 	#Save file
 	phage_host_df.to_csv(os.path.dirname(os.path.abspath(__file__)) + '/../../output/phage_host_mapping.tsv', sep='\t', index=False)
-	print('Success! All outputs are saved in the \"output\" directory.')
+	print("Success!\nThe following files have been saved in the \"output\" directory:\n\nphage_host_metabolism.tsv\nphage_host_mapping.tsv\n")
 
 if __name__ == "__main__":
 	main()

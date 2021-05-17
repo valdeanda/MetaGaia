@@ -116,7 +116,7 @@ optional arguments:
                         Input directory path containing all the fna files.
 ```
 
-Example of concatenated depth file (NOTE: The Sample_Depth names may need to be edited by the user to match the Sample names in the reads_file.tsv):
+Example of concatenated depth file (NOTE: The Sample_Depth names may need to be edited by the user to match the Sample names in the reads_file.tsv. WARNING: Samples without depth values are removed if present.):
 
 ```{bash, eval=FALSE}
 contigName              contigLen   totalAvgDepth         Sample_Depth         Depth
@@ -157,6 +157,8 @@ python3 files_prep.py -b bin2sample.tsv -f ~/depth_files/ -q ~/fastq_files/ -a ~
 ## Calculate relative bin abundance
 
 1. The `bin_abundance.py` script then takes in a list of input files (processed from by running the `files_prep.py` script) that need to be created beforehand. Here are the descriptions of each of the input files:
+    + make sure headers of input files are tab separated
+    + make sure are giving absolute paths to files (no symbolic links)
 
 ```{bash, eval=FALSE}
 usage: bin_abundance.py [-h] -r READS -m MAPPING -d DEPTH -s BINSIZE
@@ -180,15 +182,101 @@ optional arguments:
                         that it is human readable.
 ```
 
-1.1. The Sample column un the reads file and the Sample_Depth column in the depth file must contain matching sample names. If this is not currently formatted correctly, manually adjust the names of each column in their respective file. For an example, please look at the `example__reads.tsv` and `example__depth.tsv` files.
-
 Here is an example of how to run the script (using example data provided in the `data` folder): 
 
 ```{bash, eval=FALSE}
 python3 bin_abundance.py -r ../../data/example_input_files/example__reads.tsv -m ../../data/example_input_files/example__mapping.tsv -d ../../data/example_input_files/example__depth.tsv -s ../../data/example_input_files/example__size.tsv -n 1000000
 ```
 
-2. The output will be a file saved in the `output` directory. This file can then be used in the next script: `bin_abundance_viz.py` to visualize the data.
+2. From this output, you need to rename the reads_file.tsv and depth_file.tsv. These files will look something like this:
+```{bash, eval = FALSE}
+head reads_file.tsv
+```
+
+```{r table4, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+tabl_3 <- "
+
+| Sample      | Reads          | 
+|---------------|:-------------|
+| /home/mlangwig/Working_Dir/SF_Bay/fastq/SF_Jul11_sed_USGS_4_1_filter-METAGENOME.fastq.gz      | 135081488 |
+| /home/mlangwig/Working_Dir/SF_Bay/fastq/SF_Jan12_sed_USGS_4_1_filter-METAGENOME.fastq.gz      | 140529442   |
+"
+cat(tabl_3) # output the table in a format good for HTML/PDF/docx conversion
+```
+
+```{bash, eval = FALSE}
+head depth_file.tsv
+```
+
+```{r table5, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+tabl_4 <- "
+
+| Original_Contig_Name        | contigLen           | totalAvgDepth        | Sample_Depth           | Depth       | 
+|---------------|:-------------|:---------------|:-------------|:---------------:| 
+|S4C_scaffold_7529_c1 | 6042.0  | 23.1232  | SF_Jul11_USGS_4_1-sorted.bam   | 23.1232  |
+|S4C_scaffold_8778_c1 | 5493.0  | 9.78027  | SF_Jul11_USGS_4_1-sorted.bam   | 9.78027  |
+"
+cat(tabl_4) # output the table in a format good for HTML/PDF/docx conversion
+```
+
+3. Rename the reads_file.tsv and depth_file.tsv so that the Sample column from the reads_file.tsv matches the Sample column in the depth_file.tsv. We could not automate this because different projects have unique and specific sample names :
+```{bash, eval = FALSE}
+head reads_file_renamed.tsv
+```
+
+```{r table6, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+tabl_3 <- "
+
+| Sample      | Reads          | 
+|---------------|:-------------|
+| SF_Jul11_sed_USGS_4_1      | 135081488 |
+| SF_Jan12_sed_USGS_4_1     | 140529442   |
+"
+cat(tabl_3) # output the table in a format good for HTML/PDF/docx conversion
+```
+
+```{bash, eval = FALSE}
+head depth_file_renamed.tsv
+```
+
+```{r table7, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+tabl_4 <- "
+
+| Original_Contig_Name        | contigLen           | totalAvgDepth        | Sample_Depth           | Depth       | 
+|---------------|:-------------|:---------------|:-------------|:---------------:| 
+|S4C_scaffold_7529_c1 | 6042.0  | 23.1232  | SF_Jul11_USGS_4_1   | 23.1232  |
+|S4C_scaffold_8778_c1 | 5493.0  | 9.78027  | SF_Jul11_USGS_4_1   | 9.78027  |
+"
+cat(tabl_4) # output the table in a format good for HTML/PDF/docx conversion
+```
+
+###The following examples show how you could potentially rename these files:
+
+To rename the Sample column in the reads_file.tsv, example
+```{bash, eval = FALSE}
+sed 's/\/fastq\//\t/g' reads_file.tsv | cut -f2,3 | sed 's/_filter-METAGENOME.fastq.gz//g' | sed 's/Reads/Sample\tReads/g' | sed 's/sed_//g' > reads_file_renamed.tsv
+```
+
+To rename the Sample column in the depth_file.tsv, example:
+
+1. View unique names that need to be renamed
+```{bash, eval = FALSE}
+cut -f3 depth_file.tsv | sort | uniq
+```
+
+2. Rename
+```{bash, eval = FALSE}
+sed 's/-sorted.bam//g' depth_file.tsv | sed 's/\.fasta.2000kb//g' > depth_file_renamed.tsv
+```
+
+3. Make sure the names in the Sample colum of depth_file_renamed.tsv match the names of Sample in reads_file_renamed.tsv
+```{bash, eval = FALSE}
+cut -f3 depth_file_renamed.tsv | sort | uniq
+
+cut -f1 reads_file_renamed.tsv | sort
+```
+
+4. The output will be a file saved in the `output` directory. This file can then be used in the next script: `bin_abundance_viz.py` to visualize the data.
 
 ## Visualize relative bin abundance
 
@@ -486,13 +574,98 @@ The user must manually map each bin to its respective sample location.
 
 ## Create initial depth file
 
-The script, `jgi_summarize_bam_contig_depths.pl`, must be used to create the depth file needed in `files_prep.py` and can be found [here](https://bitbucket.org/berkeleylab/metabat/src/master/) along with its usage notes.
+There are two methods in order to create the initial depth txt files. The following two methods use BWA and JGI, respectively. 
 
-Here is an example command to run this sccript:
+### BWA method
+
+Here is an example of how to create the depth txt files using BWA:
+
+1. Prep samples one at time for mapping.
 
 ```{bash, eval=FALSE}
-jgi_summarize_bam_contig_depths --percentIdentity 97 --outputDepth ../../assembly_metaspades_cat_renamed_3kb_cov --referenceFasta ../../data/assembly_metaspades_cat_renamed_3kb.fasta ../../read_mapping/metaspades_cat_renamed_3kb/assembly_metaspades_cat_renamed_3kb_D*.coordsort.bam
+#Copy fq files from yggshare to folder
+cp 4998_22_23_H2_S10_fastp_bb.fastq.gz /home/keappler/07_Lab_Protocols/Binning/Guaymas_2018_Samples/mapping_bwa/
+  
+#Run mdsum
+for i in *.gz ; do md5sum $i > $i.md5sum ; done
 ```
+
+2. Run script example for one sample below.
+
+```{bash, eval=FALSE}
+#STARTED 10:39 4/5/2021
+#!/bin/bash
+fq=/home/keappler/07_Lab_Protocols/Binning/Guaymas_2018_Samples/mapping_bwa/4998_22_23_H2_S10_fastp_bb.fastq.gz
+assembly=/home/keappler/07_Lab_Protocols/Binning/Guaymas_2018_Samples/mapping_bwa/2.5kb/renamed/2.5kb_4998_22_23_H2_S10.headers.removed.fa
+
+#Index contigs >=2.5kb assembly subset created in previous steps
+
+bwa index $assembly 
+echo "Done index" 
+
+# Align contigs >=2.5kb against concatenated, interleaved, and trimmed R1 and R2
+bwa mem -t 70 $assembly -p $fq > 4998_22_23_H2_S10.sam
+echo "Done mapping" 
+
+#samtools create bam files- needed for binning
+samtools view -bS -F 4 -@10 4998_22_23_H2_S10.sam -o 4998_22_23_H2_S10.bam
+echo "Done bam" 
+
+#samtools create sorted bam files- needed for jgi_summarize_bam_contig_depths
+samtools sort -@10 4998_22_23_H2_S10.bam -o 4998_22_23_H2_S10_sorted.bam
+echo "Done sorted bam"
+
+#The file to put the contig by bam depth matrix > depth.txt
+#Do not include variance from mean depth along the contig
+jgi_summarize_bam_contig_depths  --outputDepth depth.txt 4998_22_23_H2_S10_sorted.bam --noIntraDepthVariance
+echo "Done depth file"
+```
+
+3. Run md5sum and delete .sam file (large) before starting next sample.
+
+```{bash, eval=FALSE}
+for i in *.sam ; do md5sum $i > $i.md5sum ; done
+```
+
+4. Repeat process for each sample.
+
+### JGI method
+
+The script, `jgi_summarize_bam_contig_depths.pl`, must be used to create the depth file needed in `files_prep.py` and can be found [here](https://bitbucket.org/berkeleylab/metabat/src/master/) along with its usage notes.
+
+Here is an example of how to create the depth txt files using JGI:
+
+1. Index bin.
+
+```{bash, eval=FALSE}
+bwa index 13_Jan_SF_Bin5.fna
+```
+
+2. BWA MEM to obtain SAM files.
+
+```{bash, eval=FALSE}
+for sample in `cat names.txt`; do bwa mem -t 30 13_Jan_SF_Bin5.fna -p /home/mlangwig/Working_Dir/SF_Bay/fastq/$sample.fastq.gz > $sample.sam; done
+```
+
+3. Samtools view to convert SAM to BAM.
+
+```{bash, eval=FALSE}
+for sample in `cat names.txt`; do samtools view -bS -F 4 -@10  $sample.sam -o $sample.bam; done
+```
+
+4. Obtain sorted bams.
+
+```{bash, eval=FALSE}
+for sample in `cat names.txt`; do samtools sort -@10 $sample.bam -o $sample-sorted.bam; done
+```
+
+5. Use sorted bams to get Cov_ files for mmgenome2.
+
+```{bash, eval=FALSE}
+jgi_summarize_bam_contig_depths --outputDepth depth.txt *sorted.bam --noIntraDepthVariance
+```
+
+6. Repeat process for each sample.
 
 ## Mapping taxa
 

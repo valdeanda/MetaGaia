@@ -79,6 +79,9 @@ def create_binsize_file(arguments):
 	binsize_df.to_csv(os.path.dirname(os.path.abspath(__file__)) + "/../../output/binsize_file.tsv", sep="\t", index=False)
 	#Delete unneeded tab file
 	os.remove(arguments.args.fna_dir + "genomesize.tab")
+	#Delete files created from bash script
+	for bins in glob.glob(arguments.args.fna_dir + '*.totalbp.txt'):
+		os.remove(bins)
 	print("Bin size file has been created!")
 
 
@@ -123,9 +126,10 @@ def create_depth_file(arguments, depth_format, depth_dir):
 	depth_df = pd.melt(depth_df, id_vars=['contigName', 'contigLen'], value_vars=depth_df.columns.tolist()[2:], var_name='Sample',value_name='Depth')
 	#Rename a column
 	depth_df = depth_df.rename(columns={"contigName": "Original_Contig_Name"})
+	depth_df = depth_df.dropna()
 	#Save dataframe to file
 	depth_df.to_csv(os.path.dirname(os.path.abspath(__file__)) + "/../../output/depth_file.tsv", sep="\t", index=False)
-	print("Depth file has been created!")
+	print("Depth file has been created! Samples containing no depth information were removed.")
 	print("WARNING: If sample names in the \"Sample\" column does not match the other input files, it must be manually edited!")
 
 
@@ -212,8 +216,8 @@ def main():
 	create_reads_file(arguments)
 	create_binsize_file(arguments)
 	create_mapping_file(arguments, bin_sample_df)
-	print("All input files have been successfully created and can be found in the \"output\" directory!")
-
+	print("Success!\nThe following files have been saved in the \"output\" directory:\n\ndepth_file.tsv\nreads_file.tsv\nbinsize_file.tsv\nmapping_file.tsv\n")
+	
 
 if __name__ == "__main__":
 	main()
