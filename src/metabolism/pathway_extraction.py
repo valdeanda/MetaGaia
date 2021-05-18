@@ -42,6 +42,11 @@ def main():
 	print('Make sure the pathway codes in the user provided file are formatted the same as it is throughout MetaGaia!!')
 	#Command line arguments
 	arguments = Command_line_args()
+
+	#Create output directory if not already present
+	if not os.path.exists(os.path.dirname(os.path.abspath(__file__)) + "/../../output"):
+		os.makedirs(os.path.dirname(os.path.abspath(__file__)) + "/../../output")
+
 	pathways_lst = []
 
 	#Read in files

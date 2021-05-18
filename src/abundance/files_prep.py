@@ -179,6 +179,10 @@ def main():
 
 	arguments = Command_line_args()
 
+	#Create output directory if not already present
+	if not os.path.exists(os.path.dirname(os.path.abspath(__file__)) + "/../../output"):
+		os.makedirs(os.path.dirname(os.path.abspath(__file__)) + "/../../output")
+
 	#Add backslash to the end of path
 	if arguments.args.fastq_dir[-1] != "/":
 		arguments.args.fastq_dir = arguments.args.fastq_dir + "/"

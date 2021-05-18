@@ -48,6 +48,10 @@ def main():
 
   args = parser.parse_args()
 
+  #Create output directory if not already present
+  if not os.path.exists(os.path.dirname(os.path.abspath(__file__)) + "/../../output"):
+    os.makedirs(os.path.dirname(os.path.abspath(__file__)) + "/../../output")
+
 
   reads        = args.reads
   mapping      = args.mapping

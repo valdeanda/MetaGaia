@@ -73,7 +73,7 @@ def format_dataframe(arguments, bin_abundances, taxonomy_info):
 	#Log abundances
 	bin_abundances['RelativeAbundanceReadable'] = np.log10(bin_abundances['RelativeAbundanceReadable'])
 	#Check if NaN in RelativeAbundanceReadable
-	if bin_abundances['RelativeAbundanceReadable'].isnull.values.any():
+	if bin_abundances['RelativeAbundanceReadable'].isnull().values.any():
 		bin_abundances = bin_abundances.dropna()
 		print("WARNING: Some bins were not mapped to samples and thus discarded. If this is incorrect, please make sure the \"sample2site\" file is correct.")
     #Pivot table wider so that each bin is mapped to its respective site
@@ -205,6 +205,10 @@ def create_clustermap(arguments, bin_abundances, palette, row_colors, heatmp = F
 def main():
 
 	arguments = Command_line_args()
+
+	#Create output directory if not already present
+	if not os.path.exists(os.path.dirname(os.path.abspath(__file__)) + "/../../output"):
+		os.makedirs(os.path.dirname(os.path.abspath(__file__)) + "/../../output")
 
 	#Read in bin abundance file
 	if "tsv" in arguments.args.bin_abundance:

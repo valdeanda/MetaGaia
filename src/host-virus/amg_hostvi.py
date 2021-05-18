@@ -26,6 +26,10 @@ def main():
 	parser.add_argument('-d', '--database', required=True, help="Input only one of the following database names the user is interested in analyzing: KEGG, COG, PFAM, or EC_NUMBER.")
 	args = parser.parse_args()
 
+	#Create output directory if not already present
+	if not os.path.exists(os.path.dirname(os.path.abspath(__file__)) + "/../../output"):
+		os.makedirs(os.path.dirname(os.path.abspath(__file__)) + "/../../output")
+
 	drop_list = []
 
 	print("Beginning to analyze phage and host metabolisms.")

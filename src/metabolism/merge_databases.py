@@ -24,6 +24,10 @@ def main():
 	parser.add_argument('-d', '--database', required=True, help=("Database(s) of interest to merge together. Input as a list."))
 	args = parser.parse_args()
 
+	#Create output directory if not already present
+	if not os.path.exists(os.path.dirname(os.path.abspath(__file__)) + "/../../output"):
+		os.makedirs(os.path.dirname(os.path.abspath(__file__)) + "/../../output")
+
 	dfs_list = []
 	files_list = []
 

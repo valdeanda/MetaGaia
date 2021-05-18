@@ -159,6 +159,11 @@ def main():
 
 	#Command line arguments
 	arguments = Command_line_args()
+
+	#Create output directory if not already present
+	if not os.path.exists(os.path.dirname(os.path.abspath(__file__)) + "/../../output"):
+		os.makedirs(os.path.dirname(os.path.abspath(__file__)) + "/../../output")
+
 	#Read in IMG annotated file
 	img_df = pd.read_csv(arguments.args.imganno, sep="\t")
 	#Read mapping file created previously (bin_abundance step)
