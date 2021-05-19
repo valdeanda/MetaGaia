@@ -2,7 +2,7 @@
 
 <img src="https://valdeanda.github.io/MetaGaia/docs/Metagaia_summ.png" width="400" height="300" align="center">
 
----
+
 
 
 ### `Last updateed`  
@@ -13,7 +13,7 @@ May 19th, 2021
 
 ### `Requirements`
 
-
+add requirements sahil
 ---
 
 ### `About Metagaia`
@@ -30,10 +30,11 @@ This pipeline is divided into three sections that perform different functions:
 3. Finding commonalities between phages and their hosts (host-virus).
 
 
+### `The Gaia hypothesis`
 
 The Gaia hypothesis, also known as Gaia theory or Gaia principle, proposes that all organisms and their inorganic surroundings on Earth are closely integrated to form a single and self-regulating complex system, maintaining the conditions for life on the planet
 
-[Lovelock, J.E and Margulis, L. (1974). “Atmospheric homeostasis by and for the biosphere- The Gaia hypothesis”. Tellus 26 (1): 2–10](https://onlinelibrary.wiley.com/doi/abs/10.1111/j.2153-3490.1974.tb01946.x)
+[Lovelock, J.E and Margulis, L. (1974) “Atmospheric homeostasis by and for the biosphere- The Gaia hypothesis”. Tellus 26 (1): 2–10](https://onlinelibrary.wiley.com/doi/abs/10.1111/j.2153-3490.1974.tb01946.x)
 
 --- 
 
