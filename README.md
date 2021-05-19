@@ -1,6 +1,6 @@
 # MetaGaia: A tool for analyzing bin abundances and metabolic profiles
 
-![MetaGaia pipeline](./Metagaia_summ.png)
+<img src=“https://valdeanda.github.io/MetaGaia/docs/Metagaia_summ.png” width=“200" height=“200” align=“right”>
 
 *Sahil B. Shah - sahilbshah@berkeley.edu, Marguerite Langwig - marguerite.langwig@utexas.edu, Valerie De Anda - valdeanda@utexas.edu*
 
