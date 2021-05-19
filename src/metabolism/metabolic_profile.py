@@ -12,6 +12,7 @@
 # ------------------------------
 
 import argparse
+import copy
 import os
 import pandas as pd
 
@@ -49,13 +50,15 @@ def map_scaffolds(arguments, img_df, mapping_df):
 
 	#Map scaffolds 
 	mapping_df = mapping_df[['Original_Contig_Name', 'Bin']]
-	scaff_df = pd.merge(img_df, mapping_df, on='Original_Contig_Name')
+	if 'Bin' not in img_df.columns:
+		scaff_df = pd.merge(img_df, mapping_df, on='Original_Contig_Name')
+	else:
+		scaff_df = copy.deepcopy(img_df)
 	#Rename columns
-	mapping_df.columns = ['Scaffold', 'Bin']
+	scaff_df = scaff_df.rename(columns={'Original_Contig_Name': 'Scaffold'})
 
 	#Extract columns of interest
-	taxonomy_df = scaff_df[['Original_Contig_Name','COG_ID','PFAM_ID','KO_Term', 'EC_Number', 'Bin']]
-	taxonomy_df.columns = ['Scaffold', 'COG_ID', 'PFAM_ID', 'KO_Term', 'EC_NUMBER', 'Bin']
+	taxonomy_df = scaff_df[['Scaffold','COG_ID','PFAM_ID','KO_Term', 'EC_Number', 'Bin']]
 
 	#Drop row if NaN is present in any of the four databases
 	if arguments.args.consistency:
