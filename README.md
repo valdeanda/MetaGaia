@@ -1,6 +1,9 @@
 # MetaGaia: A tool for analyzing bin abundances and metabolic profiles
 
-<img src="https://valdeanda.github.io/MetaGaia/docs/Metagaia_summ.png" width="200" height="200" align="right">
+<img src="https://valdeanda.github.io/MetaGaia/docs/Metagaia_summ.png" width="300" height="300" align="center">
+
+---
+
 
 ### `Last updateed`  
 
@@ -11,7 +14,7 @@ May 19th, 2021
 ### `Requirements`
 
 
-
+---
 
 ### `About Metagaia`
 MetaGaia is a pipeline that streamlines the process of calculating Metagenome-Assambled-Genomes (MAGs) relative abundance in metagenomic communities, identifying the metabolic pathways present, and the identification of Auxiliary Metabolic Genes (AMGs) present in in both viral phages and their MAGs hosts. 
