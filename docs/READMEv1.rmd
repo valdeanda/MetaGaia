@@ -225,7 +225,7 @@ tabl_4 <- "
 cat(tabl_4) # output the table in a format good for HTML/PDF/docx conversion
 ```
 
-###The following examples show how you could potentially rename these files:
+### The following examples show how you could potentially rename these files:
 
 To rename the Sample column in the reads_file.tsv, example
 ```{bash, eval = FALSE}

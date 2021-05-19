@@ -81,7 +81,7 @@ def map_scaffolds(arguments, img_df, mapping_df):
 	databases_df = databases_df.merge(pfam_df, on='Scaffold', how='outer')
 
 	#Create a dataframe with bins and ECs per bin
-	ec_df = pd.DataFrame(taxonomy_df.apply(lambda x: x['EC_NUMBER'].unique().tolist()), columns=['EC_NUMBER'])
+	ec_df = pd.DataFrame(taxonomy_df.apply(lambda x: x['EC_Number'].unique().tolist()), columns=['EC_NUMBER'])
 	#Merge KEGG/COG/PFAM with EC dataframe
 	databases_df = databases_df.merge(ec_df, on='Scaffold', how='outer')
 	#Map bins to each scaffold

@@ -471,7 +471,8 @@
 </tr>
 </tbody>
 </table>
-<p>###The following examples show how you could potentially rename these files:</p>
+<div id="the-following-examples-show-how-you-could-potentially-rename-these-files" class="section level3">
+<h3>The following examples show how you could potentially rename these files:</h3>
 <p>To rename the Sample column in the reads_file.tsv, example</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sed</span> <span class="st">&#39;s/\/fastq\//\t/g&#39;</span> reads_file.tsv <span class="kw">|</span> <span class="fu">cut</span> <span class="at">-f2,3</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">&#39;s/_filter-METAGENOME.fastq.gz//g&#39;</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">&#39;s/Reads/Sample\tReads/g&#39;</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">&#39;s/sed_//g&#39;</span> <span class="op">&gt;</span> reads_file_renamed.tsv</span></code></pre></div>
 <p>To rename the Sample column in the depth_file.tsv, example:</p>
@@ -492,6 +493,7 @@
 <ol start="4" style="list-style-type: decimal">
 <li>The output will be a file saved in the <code>output</code> directory. This file can then be used in the next script: <code>bin_abundance_viz.py</code> to visualize the data.</li>
 </ol>
+</div>
 </div>
 <div id="visualize-relative-bin-abundance" class="section level2">
 <h2>Visualize relative bin abundance</h2>
