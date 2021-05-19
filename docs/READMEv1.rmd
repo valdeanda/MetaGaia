@@ -18,8 +18,6 @@ knitr::opts_chunk$set(eval=TRUE, cache=FALSE, message=FALSE, warning=FALSE,
 
 MetaGaia is a pipeline that streamlines the process of calculating bin abundances, identifying the metabolic pathways present in each bin, and the metabolic pathways found in both phages and their hosts. The importance of performing each of these functions is to better understand microbial communities and the dominant microbes present within a community. This pipeline is divided into three sections that perform different functions: 1) Calculating bin abundances (abundance), 2) Identifying metabolic pathways present in each bin (metabolism), and 3) Finding commonalities between phages and their hosts (host-virus). Multiple requirements are needed and are specified in the "Requirements" section of this protocol.
 
-![MetaGaia pipeline](./Metagaia_summ.png)
-
 # MetaGaia installation 
 
 The MetaGaia software is available as an open-source package distributed from a GitHub repository. Thus,

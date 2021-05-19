@@ -1,5 +1,7 @@
 # MetaGaia: A tool for analyzing bin abundances and metabolic profiles
 
+![MetaGaia pipeline](./Metagaia_summ.png)
+
 *Sahil B. Shah - sahilbshah@berkeley.edu, Marguerite Langwig - marguerite.langwig@utexas.edu, Valerie De Anda - valdeanda@utexas.edu*
 
 MetaGaia is a pipeline that streamlines the process of calculating Metagenome-Assambled-Genomes (MAGs) relative abundance in metagenomic communities, identifying the metabolic pathways present, and the identification of Auxiliary Metabolic Genes (AMGs) present in in both viral phages and their MAGs hosts. 
