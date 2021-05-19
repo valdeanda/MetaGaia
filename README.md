@@ -2,13 +2,16 @@
 
 <img src="https://valdeanda.github.io/MetaGaia/docs/Metagaia_summ.png" width="200" height="200" align="right">
 
-Last updated:  May 19th, 2021
+### `Last updateed`  
+
+May 19th, 2021
+
+---
 
 ### `Requirements`
 
 
 
----
 
 ### `About Metagaia`
 MetaGaia is a pipeline that streamlines the process of calculating Metagenome-Assambled-Genomes (MAGs) relative abundance in metagenomic communities, identifying the metabolic pathways present, and the identification of Auxiliary Metabolic Genes (AMGs) present in in both viral phages and their MAGs hosts. 
@@ -29,11 +32,12 @@ The Gaia hypothesis, also known as Gaia theory or Gaia principle, proposes that 
 
 --- 
 
-**### `Readme`**
+### `Readme`
 View the full documentation [here](https://valdeanda.github.io/MetaGaia/docs/READMEv1.html).
 
 ---
-**### `Citation`**
+
+### `Citation`
 If you find MetaGaia useful for your research, please cite the biorXiv preprint as:
 
 Coming soon!
