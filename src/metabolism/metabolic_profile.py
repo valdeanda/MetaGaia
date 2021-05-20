@@ -87,6 +87,8 @@ def map_scaffolds(arguments, img_df, mapping_df):
 	databases_df = databases_df.merge(ec_df, on='Scaffold', how='outer')
 	#Map bins to each scaffold
 	databases_df = databases_df.merge(mapping_df, on='Scaffold', how='left')
+	#Fill bin NaNs as NoBin
+	databases_df = databases_df.fillna({'Bin': 'NoBin'})
 
 	#Save file in output folder
 	databases_df.to_csv(uniquify(os.path.dirname(os.path.abspath(__file__)) + "/../../output/mapped_scaffolds.tsv"), index=False, sep="\t")
@@ -179,10 +181,10 @@ def main():
 	print('Finished mapping scaffolds!')
 
 	#If the database the user wants is not present, quit the program
-	databases_list = arguments.args.database.upper().strip('[]').split(', ')
+	databases_list = arguments.args.database.upper().strip('[] ').split(', ')
 	for check in databases_list:
 		if check not in ['KEGG', 'COG', 'PFAM', 'EC_NUMBER']:
-			print('The requested database is not mapped in the mapped_scaffolds file!')
+			print('The ' + check + ' column is not mapped in the mapped_scaffolds file!')
 			quit()
 
 	print('Getting count of each database value in each bin.')
