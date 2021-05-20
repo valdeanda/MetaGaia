@@ -181,7 +181,7 @@ def main():
 	print('Finished mapping scaffolds!')
 
 	#If the database the user wants is not present, quit the program
-	if ' ' in databases_list:
+	if ' ' in arguments.args.database:
 		databases_list = arguments.args.database.upper().strip('[]').split(', ')
 	else:
 		databases_list = arguments.args.database.upper().strip('[]').split(',')
