@@ -56,6 +56,7 @@ def map_scaffolds(arguments, img_df, mapping_df):
 		scaff_df = copy.deepcopy(img_df)
 	#Rename columns
 	scaff_df = scaff_df.rename(columns={'Original_Contig_Name': 'Scaffold'})
+	mapping_df = mapping_df.rename(columns={'Original_Contig_Name': 'Scaffold'})
 
 	#Extract columns of interest
 	taxonomy_df = scaff_df[['Scaffold','COG_ID','PFAM_ID','KO_Term', 'EC_Number', 'Bin']]
