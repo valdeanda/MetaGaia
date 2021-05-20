@@ -179,7 +179,7 @@ def main():
 	print('Finished mapping scaffolds!')
 
 	#If the database the user wants is not present, quit the program
-	databases_list = args.database.upper().strip('[]').split(', ')
+	databases_list = arguments.args.database.upper().strip('[]').split(', ')
 	for check in databases_list:
 		if check not in ['KEGG', 'COG', 'PFAM', 'EC_NUMBER']:
 			print('The requested database is not mapped in the mapped_scaffolds file!')
