@@ -107,7 +107,7 @@ def uniquify(path):
 	i = 1
 
 	while os.path.exists(path):
-		path = filename + str(counter) + extension
+		path = filename + str(i) + extension
 		i+=1
 
 	return path
