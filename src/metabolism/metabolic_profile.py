@@ -175,7 +175,7 @@ def main():
 	#Read mapping file created previously (bin_abundance step)
 	mapping_df = pd.read_csv(arguments.args.mapping, sep="\t")
 
-	print('Beginning to map scaffolds to bins and database values.')
+	print('Beginning to map scaffolds to bins and database values. This may take a while.')
 	#Map scaffolds to each of the databases
 	databases_df = map_scaffolds(arguments, img_df, mapping_df)
 	print('Finished mapping scaffolds!')
