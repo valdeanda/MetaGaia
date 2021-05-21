@@ -38,10 +38,10 @@ def main():
 		databases_path = args.databases_path
 
 	#Verify database name is valid
-	if ' ' in arguments.args.database:
-		databases_list = arguments.args.database.upper().strip('[]').split(', ')
+	if ' ' in args.database:
+		databases_list = args.database.upper().strip('[]').split(', ')
 	else:
-		databases_list = arguments.args.database.upper().strip('[]').split(',')
+		databases_list = args.database.upper().strip('[]').split(',')
 	for check in databases_list:
 		if check not in ['KEGG', 'COG', 'PFAM', 'EC_NUMBER']:
 			print('Invalid database name was entered!')
