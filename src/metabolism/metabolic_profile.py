@@ -13,6 +13,7 @@
 
 import argparse
 import copy
+import glob
 import os
 import pandas as pd
 
@@ -30,7 +31,7 @@ class Command_line_args():
 
 		#Command line arguments
 		self.parser = argparse.ArgumentParser()
-		self.parser.add_argument('-i', '--imganno', required=True, help=("Input file in tsv format. Rows are genes columns are IMG annotations."))
+		self.parser.add_argument('-i', '--imganno', required=True, help=("Input file or files in tsv format. Rows are genes columns are IMG annotations."))
 		self.parser.add_argument('-m', '--mapping', required=True, help=("A tsv file containing original contig name, sample, and bin columns. Created from the files_prep.py script."))
 		self.parser.add_argument('-d', '--database', required=True, help=("Database(s) of interest to merge together. Input as a list."))
 		self.parser.add_argument('-c', '--consistency', required=False, default="", help=('Boolean value that determines if scaffolds not containing a value for each database should be kept. Leave blank if consistency check is not needed.'))
@@ -166,19 +167,11 @@ def main():
 	#Command line arguments
 	arguments = Command_line_args()
 
+	saved_files = ['mapped_scaffolds.tsv']
+
 	#Create output directory if not already present
 	if not os.path.exists(os.path.dirname(os.path.abspath(__file__)) + "/../../output"):
 		os.makedirs(os.path.dirname(os.path.abspath(__file__)) + "/../../output")
-
-	#Read in IMG annotated file
-	img_df = pd.read_csv(arguments.args.imganno, sep="\t")
-	#Read mapping file created previously (bin_abundance step)
-	mapping_df = pd.read_csv(arguments.args.mapping, sep="\t")
-
-	print('Beginning to map scaffolds to bins and database values. This may take a while.')
-	#Map scaffolds to each of the databases
-	databases_df = map_scaffolds(arguments, img_df, mapping_df)
-	print('Finished mapping scaffolds!')
 
 	#If the database the user wants is not present, quit the program
 	if ' ' in arguments.args.database:
@@ -190,10 +183,18 @@ def main():
 			print('The ' + check + ' column is not mapped in the mapped_scaffolds file!')
 			quit()
 
-	print('Getting count of each database value in each bin.')
-	#Get the counts of each metabolic pathway in each bin
-	saved_files = get_database_counts(databases_list, databases_df)
-	saved_files.append('mapped_scaffolds.tsv')
+	#Read mapping file created previously (bin_abundance step)
+	mapping_df = pd.read_csv(arguments.args.mapping, sep="\t")
+
+	#Read in IMG annotated file
+	print('Beginning to map scaffolds to bins and database values. Getting count of each database value in each bin. This may take a while.')
+	for img in glob.glob(arguments.args.imganno):
+		img_df = pd.read_csv(img, sep="\t")
+		#Map scaffolds to each of the databases
+		databases_df = map_scaffolds(arguments, img_df, mapping_df)
+		#Get the counts of each metabolic pathway in each bin
+		saved_files = saved_files + get_database_counts(databases_list, databases_df)
+	
 	print("Success!\nThe following files have been saved in the \"output\" directory:\n")
 	for f in saved_files:
 		print(f)
