@@ -62,19 +62,19 @@ def main():
 		if check not in ['KEGG', 'COG', 'PFAM', 'EC_NUMBER']:
 			print('Invalid database name was entered!')
 			quit()
-	else:
-		index_cols = [col for col in user_df.columns if col != check]
-		user_df = (user_df.set_index(index_cols)[check].apply(pd.Series).stack().reset_index().drop('level_'+str(len(index_cols)), axis=1).rename(columns={0:check}))
-		for val in user_df[check]:
-			if check == 'KEGG':
-				if val[:3] != 'KO:':
-					user_df.loc[user_df[check] == val, check] = 'KO:' + val
-			elif check == 'PFAM':
-				if val[:4] != 'pfam':
-					user_df.loc[user_df[check] == val, check] = 'pfam' + val[2:]
-			elif check == 'EC_NUMBER':
-				if val[:3] != 'EC:':
-					user_df.loc[user_df[check] == val, check] = 'EC:' + val
+		else:
+			index_cols = [col for col in user_df.columns if col != check]
+			user_df = (user_df.set_index(index_cols)[check].apply(pd.Series).stack().reset_index().drop('level_'+str(len(index_cols)), axis=1).rename(columns={0:check}))
+			for val in user_df[check]:
+				if check == 'KEGG':
+					if val[:3] != 'KO:':
+						user_df.loc[user_df[check] == val, check] = 'KO:' + val
+				elif check == 'PFAM':
+					if val[:4] != 'pfam':
+						user_df.loc[user_df[check] == val, check] = 'pfam' + val[2:]
+				elif check == 'EC_NUMBER':
+					if val[:3] != 'EC:':
+						user_df.loc[user_df[check] == val, check] = 'EC:' + val
 
 	print('Beginning to extract pathway information.')
 	for d in databases_list:
