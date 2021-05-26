@@ -49,16 +49,13 @@ def main():
 
 	#Get all dataframes and merge them
 	for d in databases_list:
-		counter = 1
+		merged_list = []
 		for file in glob.glob(databases_path + d + '_metabolic_profile*'):
-			if counter == 1:
-				merged_dfs = pd.read_csv(file, sep='\t', index_col=False)
-			else:
-				f = pd.read_csv(file, sep='\t', index_col=False)
-				merged_dfs = merged_dfs.merge(f, on=d, how='outer')
-			counter+=1
-
+			database_df = pd.read_csv(file, sep='\t', index_col=False)
+			merged_list.append(database_df)
+		
 		#Save each merged dataframe
+		merged_dfs = pd.concat(database_df)
 		files_list.append('merged_' + d + '_metabolic_profile.tsv')
 		merged_dfs.to_csv(os.path.dirname(os.path.abspath(__file__)) + '/../../output/merged_' + d + '_metabolic_profile.tsv', sep='\t', index=False)
 		if len(databases_list) > 1:
