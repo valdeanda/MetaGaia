@@ -56,6 +56,7 @@ def main():
 		
 		#Save each merged dataframe
 		merged_dfs = pd.concat(merged_list)
+		merged_dfs = merged_dfs.fillna(0.0)
 		files_list.append('merged_' + d + '_metabolic_profile.tsv')
 		merged_dfs.to_csv(os.path.dirname(os.path.abspath(__file__)) + '/../../output/merged_' + d + '_metabolic_profile.tsv', sep='\t', index=False)
 		if len(databases_list) > 1:
