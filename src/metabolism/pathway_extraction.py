@@ -39,7 +39,7 @@ class Command_line_args():
 
 def main():
 
-	print('Make sure the pathway codes in the user provided file are formatted the same as it is throughout MetaGaia!!')
+	print('Make sure the pathway codes in the user provided file are formatted the same as it is throughout MetaGaia!')
 	#Command line arguments
 	arguments = Command_line_args()
 
@@ -63,8 +63,6 @@ def main():
 			print('Invalid database name was entered!')
 			quit()
 	else:
-		#Convert to list
-		user_df[check] = user_df[check].str.split(', ')
 		index_cols = [col for col in user_df.columns if col != check]
 		user_df = (user_df.set_index(index_cols)[check].apply(pd.Series).stack().reset_index().drop('level_'+str(len(index_cols)), axis=1).rename(columns={0:check}))
 		for val in user_df[check]:
