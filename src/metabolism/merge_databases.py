@@ -59,7 +59,7 @@ def main():
 		merged_dfs = merged_dfs.fillna(0.0)
 		merged_dfs = merged_dfs.groupby(by=d).sum()
 		files_list.append('merged_' + d + '_metabolic_profile.tsv')
-		merged_dfs.to_csv(os.path.dirname(os.path.abspath(__file__)) + '/../../output/merged_' + d + '_metabolic_profile.tsv', sep='\t', index=False)
+		merged_dfs.to_csv(os.path.dirname(os.path.abspath(__file__)) + '/../../output/merged_' + d + '_metabolic_profile.tsv', sep='\t', index=True)
 		if len(databases_list) > 1:
 			dfs_list.append(merged_dfs)
 
@@ -67,6 +67,7 @@ def main():
 		#Combine multiple database dataframes into one
 		final_df = pd.concat(dfs_list)
 		final_df = final_df.fillna(0.0)
+		final_df.index.names = ['Database']
 		#Save dataframe containing multiple database columns
 		files_list.append('final_merged_metabolic_profile.tsv')
 		final_df.to_csv(os.path.dirname(os.path.abspath(__file__)) + '/../../output/final_merged_metabolic_profile.tsv', sep='\t', index=True)
