@@ -52,6 +52,7 @@ def main():
 		merged_list = []
 		for file in glob.glob(databases_path + d + '_metabolic_profile*'):
 			database_df = pd.read_csv(file, sep='\t', index_col=False)
+			database_df = database_df.groupby(by=d).sum()
 			merged_list.append(database_df)
 		
 		#Save each merged dataframe
