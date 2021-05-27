@@ -7,17 +7,14 @@
 
 ### `Last updateed`  
 
-May 19th, 2021
+May 26th, 2021
 
 ---
 
 ### `Requirements`
 
-To install python, run `sudo apt-get install python3`.
-To install pip, run `sudo apt install python3-pip`.
-To install pandas, run `pip install pandas`.
-To install numpy, run `pip install numpy`.
-To install seaborn, run `pip install seaborn`.
+To install python, run `sudo apt-get install python3`. To install pip, run `sudo apt install python3-pip`. To install pandas, run `pip install pandas`. To install numpy, run `pip install numpy`. To install seaborn, run `pip install seaborn`.
+
 ---
 
 ### `About Metagaia`

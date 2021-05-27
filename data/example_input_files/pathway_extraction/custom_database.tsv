@@ -1,0 +1,45 @@
+Pathway	Subpathway	KEGG	COG	PFAM	Description
+Nitrogen	Annamox	K20932	COG3391	PF18582	K20932; hydrazine synthase subunit [EC:1.7.2.7]
+Nitrogen	Annamox	K20933	COG1858		K20933; hydrazine synthase subunit [EC:1.7.2.7]
+Nitrogen	Annamox	K20934	COG0823		K20934; hydrazine synthase subunit [EC:1.7.2.7]
+Nitrogen	Annamox	K20935			hdh; hydrazine dehydrogenase [EC:1.7.2.8]
+Nitrogen	Assimilatory nitrate reduction	K00360			nasB; assimilatory nitrate reductase electron transfer subunit [EC:1.7.99.-]
+Nitrogen	Assimilatory nitrate reduction	K00366	COG0155	"PF01077, PF03460"	nirA; ferredoxin-nitrite reductase [EC:1.7.7.1]
+Nitrogen	Assimilatory nitrate reduction	K00367	COG0243	"PF00384, PF01568, PF04879"	narB; ferredoxin-nitrate reductase [EC:1.7.7.2]
+Nitrogen	Assimilatory nitrate reduction	K00372	COG0243		nasA; assimilatory nitrate reductase catalytic subunit [EC:1.7.99.-]
+Nitrogen	Assimilatory nitrate reduction	K10534		"PF00173, PF00174, PF00175, PF00970, PF03404"	NR; nitrate reductase (NAD(P)H) [EC:1.7.1.1 1.7.1.2 1.7.1.3]
+Nitrogen	Assimilatory nitrate reduction	K17877			NIT-6; nitrite reductase (NAD(P)H) [EC:1.7.1.4]
+Nitrogen	Denitrification	K00376	COG4263	"PF00116, PF18764, PF18793"	nosZ; nitrous-oxide reductase [EC:1.7.2.4]
+Nitrogen	Denitrification	K02305		PF00034	norC; nitric oxide reductase subunit C 
+Nitrogen	Denitrification	K04561	COG3256	PF00115	norB; nitric oxide reductase subunit B [EC:1.7.2.5]
+Nitrogen	Denitrification/Annamox	K00368			nirK; nitrite reductase (NO-forming) [EC:1.7.2.1]
+Nitrogen	Denitrification/Annamox	K15864	COG2010	PF13442	nirS; nitrite reductase (NO-forming) / hydroxylamine reductase [EC:1.7.2.1 1.7.99.1]
+Nitrogen	Denitrification/Dissimilatory nitrate reduction	K00374	COG2181	PF02665	"narI, narV; nitrate reductase gamma subunit [EC:1.7.5.1 1.7.99.-]"
+Nitrogen	Denitrification/Dissimilatory nitrate reduction	K02567	COG0243	"PF04879, PF00384, PF01568"	napA; nitrate reductase (cytochrome) [EC:1.9.6.1]
+Nitrogen	Denitrification/Dissimilatory nitrate reduction	K02568	COG3043	PF03892	"napB; nitrate reductase (cytochrome), electron transfer subunit "
+Nitrogen	Denitrification/Dissimilatory nitrate reduction/Nitrification	K00370	COG5013	"PF01568, PF14710, PF00384"	"narG, narZ, nxrA; nitrate reductase / nitrite oxidoreductase, alpha subunit [EC:1.7.5.1 1.7.99.-]"
+Nitrogen	Denitrification/Dissimilatory nitrate reduction/Nitrification	K00371	COG1140	"PF13247, PF14711"	"narH, narY, nxrB; nitrate reductase / nitrite oxidoreductase, beta subunit [EC:1.7.5.1 1.7.99.-]"
+Nitrogen	Dissimilatory nitrate reduction	K00362	COG1251	"PF04324, PF01077, PF03460, PF07992"	nirB; nitrite reductase (NADH) large subunit [EC:1.7.1.15]
+Nitrogen	Dissimilatory nitrate reduction	K00363	COG2146	PF13806	nirD; nitrite reductase (NADH) small subunit [EC:1.7.1.15]
+Nitrogen	Dissimilatory nitrate reduction	K03385	COG3303	PF02335	nrfA; nitrite reductase (cytochrome c-552) [EC:1.7.2.2]
+Nitrogen	Dissimilatory nitrate reduction	K15876	COG3005		nrfH; cytochrome c nitrite reductase small subunit 
+Nitrogen	N fixation	K00531		PF03139	anfG; nitrogenase delta subunit [EC:1.18.6.1]
+Nitrogen	N fixation	K02586	COG2710	PF00148	nifD; nitrogenase molybdenum-iron protein alpha chain [EC:1.18.6.1]
+Nitrogen	N fixation	K02588	COG1348	PF00142	nifH; nitrogenase iron protein NifH 
+Nitrogen	N fixation	K02591	COG2710		nifK; nitrogenase molybdenum-iron protein beta chain [EC:1.18.6.1]
+Nitrogen	N fixation	K22896	COG2710		vnfD; vanadium-dependent nitrogenase alpha chain [EC:1.18.6.2]
+Nitrogen	N fixation	K22897	COG2710	PF00148	vnfK; vanadium-dependent nitrogenase beta chain [EC:1.18.6.2]
+Nitrogen	N fixation	K22898			vnfG; vanadium nitrogenase delta subunit [EC:1.18.6.2]
+Nitrogen	N fixation	K22899	COG1348		vnfH; vanadium nitrogenase iron protein 
+Nitrogen	Nitrate assimilation	K02575	COG2223		"NRT, narK, nrtP, nasA; MFS transporter, NNP family, nitrate/nitrite transporter "
+Nitrogen	Nitrate assimilation	K15576	COG0715		"nrtA, nasF, cynA; nitrate/nitrite transport system substrate-binding protein "
+Nitrogen	Nitrate assimilation	K15577	COG0600		"nrtB, nasE, cynB; nitrate/nitrite transport system permease protein "
+Nitrogen	Nitrate assimilation	K15578	"COG0715, COG1116"		"nrtC, nasD; nitrate/nitrite transport system ATP-binding protein [EC:7.3.2.4]"
+Nitrogen	Nitrate assimilation	K15579	COG1116		"nrtD, cynD; nitrate/nitrite transport system ATP-binding protein "
+Nitrogen	Nitrification	K10535			hao; hydroxylamine dehydrogenase [EC:1.7.2.6]
+Nitrogen	Nitrification	K10944		PF02461	pmoA-amoA; methane/ammonia monooxygenase subunit A [EC:1.14.18.3 1.14.99.39]
+Nitrogen	Nitrification	K10945		PF04744	pmoB-amoB; methane/ammonia monooxygenase subunit B 
+Nitrogen	Nitrification	K10946		PF04896	pmoC-amoC; methane/ammonia monooxygenase subunit C 
+Nitrogen	Nitroalkanes	K00459	COG2070	PF03060	"ncd2, npd; nitronate monooxygenase [EC:1.13.12.16]"
+Nitrogen	Nitroalkanes	K19823			NAO; nitroalkane oxidase [EC:1.7.3.1]
+Nitrogen	Oxidoreductase for nitrogenous compounds	K05601	COG1151	PF03063	hcp; hydroxylamine reductase [EC:1.7.99.1]

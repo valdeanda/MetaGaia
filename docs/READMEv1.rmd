@@ -34,7 +34,7 @@ To install pandas, run `pip install pandas`.
 To install numpy, run `pip install numpy`.
 To install seaborn, run `pip install seaborn`.
 
-# Requirements
+# MetaGaia requirements
 
 *NOTE: Please do NOT use symbolic links for fastq or fna files. Also, make sure headers are present and properly separated in input files.*
 
@@ -94,14 +94,23 @@ optional arguments:
 Example of concatenated depth file (NOTE: The Sample_Depth names may need to be edited by the user to match the Sample names in the reads_file.tsv. WARNING: Samples without depth values are removed if present.):
 
 ```{bash, eval=FALSE}
-contigName              contigLen   totalAvgDepth         Sample_Depth         Depth
-S4B_scaffold_41967_c1   2430.0      15.7917               SF_May12_USGS_4_1    15.7917
-S4B_scaffold_22085_c1   3249.0      12.081                SF_May12_USGS_4_1    12.081
-S4B_scaffold_39665_c1   2489.0      9.998289999999999     SF_May12_USGS_4_1    9.998289999999999
-S4B_scaffold_36461_c1   2583.0      8.70695               SF_May12_USGS_4_1    8.70695
-S4B_scaffold_62858_c1   2036.0      11.1448               SF_May12_USGS_4_1    11.1448
-S4B_scaffold_47653_c1   2298.0      10.1196               SF_May12_USGS_4_1    10.1196
-S4B_scaffold_28262_c1   2900.0      8.95927               SF_May12_USGS_4_1    8.95927
+head depth_file.tsv
+```
+
+```{r table1, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+tabl_1 <- "
+
+| contigName      | contigLen         | TotalAvgDepth      | SF_Jul11_USGS_4_1-sorted.bam   |
+|---------------|:-------------|:-------------|:-------------:|
+| S4B_scaffold_41967_c1   | 2430.0    | 15.7917   | 15.7917   |
+| S4B_scaffold_22085_c1   | 3249.0    | 12.081   | 12.081   |
+| S4B_scaffold_39665_c1   | 2489.0    | 9.998289999999999   | 9.998289999999999   |
+| S4B_scaffold_36461_c1   | 2583.0    | 8.70695   | 8.70695   |
+| S4B_scaffold_62858_c1   | 2036.0    | 11.1448   | 11.1448   |
+| S4B_scaffold_47653_c1   | 2298.0    | 10.1196   | 10.1196   |
+| S4B_scaffold_28262_c1   | 2900.0    | 8.95927   | 8.95927   |
+"
+cat(tabl_1) # output the table in a format good for HTML/PDF/docx conversion
 ```
 
 To create the `bin_sample` file, read the "Mapping bins to samples" section below. To create the `depth` file, read the "Create initial depth file" section below as well.
@@ -109,12 +118,22 @@ To create the `bin_sample` file, read the "Mapping bins to samples" section belo
 Example of bin_sample file:
 
 ```{bash, eval=FALSE}
-Bin                 Sampling_Site
-NoBin               4.1
-13_Jan_SF_Bin44     8.1
-14_Jan_SF_Bin36     13
-21_Jan_SF_Bin21     24
-24_Jan_SF_Bin43     21
+head bin_sample.tsv
+```
+
+```{r table2, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+tabl2 <- "
+
+| Bin                 | Sampling_Site
+|---------------|:---------------:|
+| NoBin               | 4.1   |
+| 13_Jan_SF_Bin44     | 8.1   |
+| 14_Jan_SF_Bin36     | 13   |
+| 21_Jan_SF_Bin21     | 24   |
+| 24_Jan_SF_Bin43     | 21   |
+"
+
+cat(tabl2)
 ```
 
 Here is an example of how to run this script:
@@ -134,6 +153,7 @@ python3 files_prep.py -b bin2sample.tsv -f ~/depth_files/ -q ~/fastq_files/ -a ~
 1. The `bin_abundance.py` script then takes in a list of input files (processed from by running the `files_prep.py` script) that need to be created beforehand. Here are the descriptions of each of the input files:
     + make sure headers of input files are tab separated
     + make sure are giving absolute paths to files (no symbolic links)
+    + make sure readablenum is large enough to convert all RelativeAbundance values to greater than 1
 
 ```{bash, eval=FALSE}
 usage: bin_abundance.py [-h] -r READS -m MAPPING -d DEPTH -s BINSIZE
@@ -163,12 +183,12 @@ Here is an example of how to run the script (using example data provided in the 
 python3 bin_abundance.py -r ../../data/example_input_files/example__reads.tsv -m ../../data/example_input_files/example__mapping.tsv -d ../../data/example_input_files/example__depth.tsv -s ../../data/example_input_files/example__size.tsv -n 1000000
 ```
 
-2. From this output, you need to rename the reads_file.tsv and depth_file.tsv. These files will look something like this:
+2. From this output, you need to rename the reads_file.tsv and depth_file.tsv. These files will look like this:
 ```{bash, eval = FALSE}
 head reads_file.tsv
 ```
 
-```{r table4, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+```{r table3, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
 tabl_3 <- "
 
 | Sample      | Reads          | 
@@ -180,13 +200,13 @@ cat(tabl_3) # output the table in a format good for HTML/PDF/docx conversion
 ```
 
 ```{bash, eval = FALSE}
-head depth_file.tsv
+head depth_file_renamed.tsv
 ```
 
-```{r table5, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+```{r table4, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
 tabl_4 <- "
 
-| Original_Contig_Name        | contigLen           | totalAvgDepth        | Sample_Depth           | Depth       | 
+| Original_Contig_Name        | contigLen           | totalAvgDepth        | Sample           | Depth       | 
 |---------------|:-------------|:---------------|:-------------|:---------------:| 
 |S4C_scaffold_7529_c1 | 6042.0  | 23.1232  | SF_Jul11_USGS_4_1-sorted.bam   | 23.1232  |
 |S4C_scaffold_8778_c1 | 5493.0  | 9.78027  | SF_Jul11_USGS_4_1-sorted.bam   | 9.78027  |
@@ -199,30 +219,30 @@ cat(tabl_4) # output the table in a format good for HTML/PDF/docx conversion
 head reads_file_renamed.tsv
 ```
 
-```{r table6, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
-tabl_3 <- "
+```{r table5, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+tabl_5 <- "
 
 | Sample      | Reads          | 
 |---------------|:-------------|
-| SF_Jul11_sed_USGS_4_1      | 135081488 |
+| SF_Jul11_sed_USGS_4_1     | 135081488   |
 | SF_Jan12_sed_USGS_4_1     | 140529442   |
 "
-cat(tabl_3) # output the table in a format good for HTML/PDF/docx conversion
+cat(tabl_5) # output the table in a format good for HTML/PDF/docx conversion
 ```
 
 ```{bash, eval = FALSE}
 head depth_file_renamed.tsv
 ```
 
-```{r table7, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
-tabl_4 <- "
+```{r table6, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+tabl_6 <- "
 
-| Original_Contig_Name        | contigLen           | totalAvgDepth        | Sample_Depth           | Depth       | 
+| Original_Contig_Name        | contigLen           | totalAvgDepth        | Sample           | Depth       | 
 |---------------|:-------------|:---------------|:-------------|:---------------:| 
 |S4C_scaffold_7529_c1 | 6042.0  | 23.1232  | SF_Jul11_USGS_4_1   | 23.1232  |
 |S4C_scaffold_8778_c1 | 5493.0  | 9.78027  | SF_Jul11_USGS_4_1   | 9.78027  |
 "
-cat(tabl_4) # output the table in a format good for HTML/PDF/docx conversion
+cat(tabl_6) # output the table in a format good for HTML/PDF/docx conversion
 ```
 
 ### The following examples show how you could potentially rename these files:
@@ -293,42 +313,77 @@ optional arguments:
 Example of bin_abundance file:
 
 ```{bash, eval=FALSE}
-Bin             Sample  RelativeAbundance       RelativeAbundanceReadable
-AB_1215_Bin_45  AB_3033 4.30188348833424e-12    0.00043018834883342403
-AB_1215_Bin_149 AB_3033 1.2259111326544231e-11  0.0012259111326544231
-AB_1215_Bin_125 AB_3033 4.08691276142096e-12    0.000408691276142096
-AB_1215_Bin_136 AB_3033 1.3190975129266425e-12  0.00013190975129266424
+head bin_abundance.tsv
+```
+
+```{r table7, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+tabl7 <- "
+| Bin             | Sample  | Sampling_Site     | RelativeAbundance       | RelativeAbundanceReadable   |
+|---------------|:---------------|:---------------|:---------------|:---------------:|
+| 13_May_SF_Bin93  | SF_May12_USGS_13   | S1B   | 6.6878693485613E-08     | 6.687869348561300   |
+| 8_1_Oct_SF_Bin28 | SF_Oct11_USGS_8_1  | S5D   | 5.76751058810138E-08    | 5.767510588101380   |
+| 4_1_Jan_SF_Bin44 | SF_Jan12_USGS_4_1  | S4A   | 1.52873009442108E-07    | 15.28730094421080   |
+| 24_July_SF_Bin15 | SF_Jul11_USGS_24   | S3C   | 9.88355407641773E-08    | 9.883554076417730   |
+"
+
+cat(tabl7)
 ```
 
 Example of taxonomy_info file:
 
 ```{bash, eval=FALSE}
-Bin             Taxa
-13_Jan_SF_Bin36 Pacearchaeota
-13_Jan_SF_Bin40 Thaumarchaeota_Nitrosopumilus
-13_Jan_SF_Bin52 Thaumarchaeota_Nitrosopumilus
-13_Jan_SF_Bin61 Thermoplasmata
+head taxonomy_info.tsv
 ```
 
-Example of sample2site file - the Sample names should be the names in the Sample column of `reads_file.tsv`; the Site names are the physical location's name/code that each sample was taken from:
+```{r table8, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+tabl8 <- "
+| Bin             | Taxa    |
+|---------------|:---------------:|
+| 13_Jan_SF_Bin36 | Pacearchaeota                   |
+| 13_Jan_SF_Bin40 | Thaumarchaeota_Nitrosopumilus   |
+| 13_Jan_SF_Bin52 | Thaumarchaeota_Nitrosopumilus   |
+| 13_Jan_SF_Bin61 | Thermoplasmata                  |
+"
+
+cat(tabl8)
+```
+
+Example of sample2site file - the Sample names should match the names in the Sample column of `reads_file.tsv`; the Site names are the physical location's name/code that each sample was taken from:
 
 ```{bash, eval=FALSE}
-Sample             Site
-SF_Jan12_USGS_1    21
-SF_Jan12_USGS_2    24
-SF_Jul11_USGS_3    13
-SF_Jul11_USGS_1    21
+head sample2site.tsv
+```
+
+```{r table9, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+tabl9 <- "
+| Sample             | Site   |
+|---------------|:---------------:|
+| SF_Jan12_USGS_1    | 21   |
+| SF_Jan12_USGS_2    | 24   |
+| SF_Jul11_USGS_3    | 13   |
+| SF_Jul11_USGS_1    | 21   |
+"
+
+cat(tabl9)
 ```
 
 Example of taxa_color file:
 
 ```{bash, eval=FALSE}
-#a3c1ad
-#ede4d9
-#426ca6 
-#ffdab9
-#fff5e5
-#ffefd5
+head taxa_color.tsv
+```
+
+```{r table10, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+tabl10 <- "
+| #a3c1ad
+| #ede4d9
+| #426ca6
+| #ffdab9
+| #fff5e5
+| #ffefd5
+"
+
+cat(tabl10)
 ```
 
 Here is an example of how to run this script:
@@ -350,55 +405,72 @@ python3 bin_abundance_viz.py -b ../output/bin_abundance_output.tsv -t ~/tax2bin.
 2. To get the pathways mapped to each scaffold and the number of times each pathway is found within a bin, run the `metabolic_profile.py` script. These are the arguments for this script:
 
 ```{bash, highlight=TRUE, eval=FALSE}
-usage: metabolic_profile.py [-h] -i IMGANNO -m MAPPING -d DATABASE
-                            [-c CONSISTENCY]
+usage: metabolic_profile.py [-h] -i IMGANNO -m MAPPING -d DATABASE [-c CONSISTENCY]
 
 optional arguments:
   -h, --help            show this help message and exit
   -i IMGANNO, --imganno IMGANNO
-                        Input file in tsv format. Rows are genes columns are
-                        IMG annotations.
+                        Input file or files in tsv format. Rows are genes columns are IMG annotations.
   -m MAPPING, --mapping MAPPING
-                        A tsv file containing original contig name, sample,
-                        and bin columns. Created from the files_prep.py
-                        script.
+                        A tsv file containing original contig name, sample, and bin columns. Created from the files_prep.py script.
   -d DATABASE, --database DATABASE
-                        Database(s) of interest to merge together. Input as a
-                        list.
+                        Database(s) of interest to merge together. Input as a list.
   -c CONSISTENCY, --consistency CONSISTENCY
-                        Boolean value that determines if scaffolds not
-                        containing a value for each database should be kept.
-                        Leave blank if consistency check is not needed.
+                        Boolean value that determines if scaffolds not containing a value for each database should be kept. Leave blank if consistency check is not needed.
 ```
 
 Example of imganno file:
 
 ```{bash, eval=FALSE}
-Original_Contig_Name    IMG_Contig_Name Locus_Tag       IMG_Gene_ID     Gene_Type       Gene_Start      Gene_Stop       Gene_Length     Homolog_Gene_ID Homolog_Taxon_ID        Lineage_%ID     Lineag
-S1A_scaffold_1_c2       Ga0224507_10000001      Ga0224507_100000011     Ga0224507_10000001.1    CDS     2       805     803     641316135       641228499       65.06   Archaea;Thaumarchaeota;unclass
-S1A_scaffold_1_c2       Ga0224507_10000001      Ga0224507_100000012     Ga0224507_10000001.3    CDS     943     1254    311     2518759324      2518645532      79.61   Archaea;Thaumarchaeota;unclass
-S1A_scaffold_1_c2       Ga0224507_10000001      Ga0224507_100000013     Ga0224507_10000001.5    CDS     1243    1911    668     2518890842      2518645576      82.81   Archaea;Thaumarchaeota;unclass
-S1A_scaffold_1_c2       Ga0224507_10000001      Ga0224507_100000014     Ga0224507_10000001.7    CDS     1945    3255    1310    641316132       641228499       88.97   Archaea;Thaumarchaeota;unclass
-S1A_scaffold_1_c2       Ga0224507_10000001      Ga0224507_100000015     Ga0224507_10000001.9    CDS     3248    3595    347     2518890840      2518645576      72.17   Archaea;Thaumarchaeota;unclass
+head imganno1.tsv
+```
+
+```{r table11, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+tabl11 <- "
+| Original_Contig_Name    | IMG_Contig_Name | Locus_Tag       | IMG_Gene_ID     | Gene_Type       | Gene_Start      | Gene_Stop       | Gene_Length     | Homolog_Gene_ID   | Homolog_Taxon_ID        | Lineage_%ID     |
+|---------------|:---------------|:---------------|:---------------|:---------------|:---------------|:---------------|:---------------|:---------------|:---------------|:---------------:|
+| S1A_scaffold_1_c2       | Ga0224507_10000001      | Ga0224507_100000011     | Ga0224507_10000001.1    | CDS     | 2       805     | 803     | 641316135       | 641228499       | 65.06   | Archaea;Thaumarchaeota;unclass  |
+| S1A_scaffold_1_c2       | Ga0224507_10000001      | Ga0224507_100000012     | Ga0224507_10000001.3    | CDS     | 943     | 1254    | 311     | 2518759324      | 2518645532      | 79.61   | Archaea;Thaumarchaeota;unclass  |
+| S1A_scaffold_1_c2       | Ga0224507_10000001      | Ga0224507_100000013     | Ga0224507_10000001.5    | CDS     | 1243    | 1911    | 668     | 2518890842      | 2518645576      | 82.81   | Archaea;Thaumarchaeota;unclass  |
+| S1A_scaffold_1_c2       | Ga0224507_10000001      | Ga0224507_100000014     | Ga0224507_10000001.7    | CDS     | 1945    | 3255    | 1310    | 641316132       | 641228499       | 88.97   | Archaea;Thaumarchaeota;unclass  |
+| S1A_scaffold_1_c2       | Ga0224507_10000001      | Ga0224507_100000015     | Ga0224507_10000001.9    | CDS     | 3248    | 3595    | 347     | 2518890840      | 2518645576      | 72.17   | Archaea;Thaumarchaeota;unclass  |
+"
+
+cat(tabl11)
 ```
 
 Example of mapping file:
 
 ```{bash, eval=FALSE}
-Original_Contig_Name    Bin     Sample
-S1A_scaffold_1000000_c1 NoBin   S1A
-S1A_scaffold_1000001_c1 NoBin   S1A
-S1A_scaffold_1000002_c1 NoBin   S1A
-S1A_scaffold_1000003_c1 NoBin   S1As
+head mapping_file.tsv
 ```
 
-Here is an example of how to run this script:
+```{r table12, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+tabl12 <- "
+| Original_Contig_Name    | Bin     | Sampling_Site   | 
+|---------------|:---------------|:---------------:|
+| S1B_scaffold_1283_c1    | 13_May_SF_Bin93 | S1B     | 
+| S1B_scaffold_1516_c1    | 13_May_SF_Bin93 | S1B     | 
+| S1B_scaffold_1603_c1    | 13_May_SF_Bin93 | S1B     | 
+| S1B_scaffold_1628_c1    | 13_May_SF_Bin93 | S1B     | 
+"
+
+cat(tabl12)
+```
+
+Here is an example of how to run this script with a single IMG annotation file:
 
 ```{bash, highlight=TRUE, eval=FALSE}
 python3 metabolic_profile.py -i imgannotation.tsv -m ../../../output/mapping_file.tsv -d [KEGG, COG, PFAM, EC_NUMBER] -c True
 ```
 
-2. Outputs will be saved in the `output` directory containing name formats: "mapped_scaffolds.tsv" and the database name followed by "metabolic_profile.tsv".
+Here is an example of how to run this script with multiple IMG annotation files (escape character needed for the asterisk *):
+
+```{bash, highlight=TRUE, eval=FALSE}
+python3 metabolic_profile.py -i /\*_imgannotation.tsv -m ../../../output/mapping_file.tsv -d [KEGG, COG, PFAM, EC_NUMBER] -c True
+```
+
+2. Outputs will be saved in the `output` directory containing name formats: "mapped_scaffolds.tsv" and the database name followed by "metabolic_profile.tsv". NOTE: Old files will NOT be removed as each output is uniquely named.
 
 ## Optional step: Merge databases into one file
 
@@ -452,24 +524,42 @@ optional arguments:
 Example of customdata file (can have other descriptive columns if needed):
 
 ```{bash,eval=FALSE}
-Pathway    Subpathway   KEGG    COG      PFAM     Description
-Nitrogen   Annamox      K20932  COG3391  PF18582  K20932; hydrazine synthase subunit [EC:1.7.2.7]
-Nitrogen   Annamox      K20933  COG1858           K20933; hydrazine synthase subunit [EC:1.7.2.7]
-Nitrogen   Annamox      K20934  COG0823           K20934; hydrazine synthase subunit [EC:1.7.2.7]
-Nitrogen   Annamox      K20935                    hdh; hydrazine dehydrogenase [EC:1.7.2.8]
+head custom_database.tsv
+```
+
+```{r table13, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+tabl13 <- "
+| Pathway    | Subpathway   | KEGG    | COG      | PFAM     | Description   | 
+|---------------|:---------------|:---------------|:---------------|:---------------|:---------------:|
+| Nitrogen   | Annamox      | K20932  | COG3391  | PF18582  | K20932; hydrazine synthase subunit [EC:1.7.2.7]   | 
+| Nitrogen   | Annamox      | K20933  | COG1858  |          | K20933; hydrazine synthase subunit [EC:1.7.2.7]   | 
+| Nitrogen   | Annamox      | K20934  | COG0823  |          | K20934; hydrazine synthase subunit [EC:1.7.2.7]   | 
+| Nitrogen   | Annamox      | K20935  |          |          | hdh; hydrazine dehydrogenase [EC:1.7.2.8]   | 
+"
+
+cat(tabl13)
 ```
 
 Example of pathway_database file:
 
 ```{bash,eval=FALSE}
-KEGG        13_Jan_SF_Bin1  13_Jan_SF_Bin10  13_Jan_SF_Bin12  13_Jan_SF_Bin13  13_Jan_SF_Bin14  13_Jan_SF_Bin2  13_Jan_SF_Bin21
-KO:K00001   0.0             0.0              0.0              0.0              0.0              0.0             0.0     
-KO:K00002   1.0             0.0              0.0              0.0              0.0              0.0             0.0     
-KO:K00003   2.0             0.0              1.0              1.0              0.0              0.0             1.0    
-KO:K00004   0.0             0.0              0.0              0.0              0.0              0.0             0.0     
-KO:K00005   0.0             0.0              0.0              0.0              0.0              0.0             0.0     
-KO:K00006   0.0             0.0              0.0              0.0              0.0              0.0             0.0     
-KO:K00008   0.0             0.0              0.0              0.0              0.0              0.0             0.0 
+head final_merged_metabolic_profile.tsv
+```
+
+```{r table14, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+tabl14 <- "
+| KEGG        | 13_Jan_SF_Bin1  | 13_Jan_SF_Bin10  | 13_Jan_SF_Bin12  | 13_Jan_SF_Bin13  | 13_Jan_SF_Bin14  | 13_Jan_SF_Bin2  | 13_Jan_SF_Bin21   | 
+|---------------|:---------------|:---------------|:---------------|:---------------|:---------------|:---------------|:---------------:|
+| KO:K00001   | 0.0             | 0.0              | 0.0              | 0.0              | 0.0              | 0.0             | 0.0   | 
+| KO:K00002   | 1.0             | 0.0              | 0.0              | 0.0              | 0.0              | 0.0             | 0.0   |   
+| KO:K00003   | 2.0             | 0.0              | 1.0              | 1.0              | 0.0              | 0.0             | 1.0   |   
+| KO:K00004   | 0.0             | 0.0              | 0.0              | 0.0              | 0.0              | 0.0             | 0.0   |    
+| KO:K00005   | 0.0             | 0.0              | 0.0              | 0.0              | 0.0              | 0.0             | 0.0   |    
+| KO:K00006   | 0.0             | 0.0              | 0.0              | 0.0              | 0.0              | 0.0             | 0.0   |    
+| KO:K00008   | 0.0             | 0.0              | 0.0              | 0.0              | 0.0              | 0.0             | 0.0   | 
+"
+
+cat(tabl14)
 ```
 
 Here is an example of how to run this script:
@@ -509,24 +599,42 @@ optional arguments:
 Example of pathway_database file:
 
 ```{bash,eval=FALSE}
-KEGG        13_Jan_SF_Bin1  13_Jan_SF_Bin10  13_Jan_SF_Bin12  13_Jan_SF_Bin13  13_Jan_SF_Bin14  13_Jan_SF_Bin2  13_Jan_SF_Bin21
-KO:K00001   0.0             0.0              0.0              0.0              0.0              0.0             0.0     
-KO:K00002   1.0             0.0              0.0              0.0              0.0              0.0             0.0     
-KO:K00003   2.0             0.0              1.0              1.0              0.0              0.0             1.0    
-KO:K00004   0.0             0.0              0.0              0.0              0.0              0.0             0.0     
-KO:K00005   0.0             0.0              0.0              0.0              0.0              0.0             0.0     
-KO:K00006   0.0             0.0              0.0              0.0              0.0              0.0             0.0     
-KO:K00008   0.0             0.0              0.0              0.0              0.0              0.0             0.0     
+head final_merged_metabolic_profile.tsv
+```
+
+```{r table15, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+tabl15 <- "
+| KEGG        | 13_Jan_SF_Bin1  | 13_Jan_SF_Bin10  | 13_Jan_SF_Bin12  | 13_Jan_SF_Bin13  | 13_Jan_SF_Bin14  | 13_Jan_SF_Bin2  | 13_Jan_SF_Bin21   | 
+|---------------|:---------------|:---------------|:---------------|:---------------|:---------------|:---------------|:---------------:|
+| KO:K00001   | 0.0             | 0.0              | 0.0              | 0.0              | 0.0              | 0.0             | 0.0   | 
+| KO:K00002   | 1.0             | 0.0              | 0.0              | 0.0              | 0.0              | 0.0             | 0.0   |   
+| KO:K00003   | 2.0             | 0.0              | 1.0              | 1.0              | 0.0              | 0.0             | 1.0   |   
+| KO:K00004   | 0.0             | 0.0              | 0.0              | 0.0              | 0.0              | 0.0             | 0.0   |    
+| KO:K00005   | 0.0             | 0.0              | 0.0              | 0.0              | 0.0              | 0.0             | 0.0   |    
+| KO:K00006   | 0.0             | 0.0              | 0.0              | 0.0              | 0.0              | 0.0             | 0.0   |    
+| KO:K00008   | 0.0             | 0.0              | 0.0              | 0.0              | 0.0              | 0.0             | 0.0   | 
+"
+
+cat(tabl15)
 ```
 
 Example of vibrant_output file
 
 ```{bash,eval=FALSE}
-protein             scaffold        AMG KO   AMG KO name                                            Pfam         Pfam name
-scaffold_1527_10    scaffold_1527   K03639   "moaA, CNX2; GTP 3',8-cyclase [EC:4.1.99.22]"          PF04055.21   Radical SAM superfamily
-scaffold_1527_19    scaffold_1527   K01939   "purA, ADSS; adenylosuccinate synthase [EC:6.3.4.4]"   PF00709.21   Adenylosuccinate synthetase
-scaffold_224_117    scaffold_224    K01939   "purA, ADSS; adenylosuccinate synthase [EC:6.3.4.4]"   PF00709.21   Adenylosuccinate synthetase
-scaffold_224_158    scaffold_224    K22227   "ahbD; heme synthase"                                  PF13186.6    Iron-sulfur cluster-binding domain
+head vibrant_output.tsv
+```
+
+```{r table16, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+tabl16 <- "
+| protein             | scaffold        | AMG KO   | AMG KO name                                            | Pfam         | Pfam name   |
+|---------------|:---------------|:---------------|:---------------|:---------------|:---------------:|
+| scaffold_1527_10    | scaffold_1527   | K03639   | \"moaA, CNX2; GTP 3',8-cyclase [EC:4.1.99.22]\"          | PF04055.21   | Radical SAM superfamily   |
+| scaffold_1527_19    | scaffold_1527   | K01939   | \"purA, ADSS; adenylosuccinate synthase [EC:6.3.4.4]\"   | PF00709.21   | Adenylosuccinate synthetase   |
+| scaffold_224_117    | scaffold_224    | K01939   | \"purA, ADSS; adenylosuccinate synthase [EC:6.3.4.4]\"   | PF00709.21   | Adenylosuccinate synthetase   |
+| scaffold_224_158    | scaffold_224    | K22227   | \"ahbD; heme synthase\"                                  | PF13186.6    | Iron-sulfur cluster-binding domain   |
+"
+
+cat(tabl16)
 ```
 
 Here is an example of how to run this script:
@@ -547,9 +655,43 @@ Follow the download instructions found on [IMG](https://genome.jgi.doe.gov/porta
 
 The user must manually map each bin to its respective sample location.
 
-## Create initial depth file
+## Download and annotate genomes using IMG
 
-There are two methods in order to create the initial depth txt files. The following two methods use BWA and JGI, respectively. 
+Annotate metagenomes at the [IMG JGI platafform](https://img.jgi.doe.gov/cgi-bin/mer/main.cgi) 
+
+After completion, you will download a directory of each of your metagenomic samples containing the following subdirectories: 
+
+1. **IMG Data**: Contanining the following files 
+
+```
+207502.assembled.COG
+207502.assembled.crisprs
+207502.assembled.EC
+207502.assembled.faa
+207502.assembled.fna
+207502.assembled.gff
+207502.assembled.KO
+207502.assembled.last.blasttab
+207502.assembled.names_map
+207502.assembled.Pfam.blout
+207502.assembled.phylodist
+207502.assembled.product_names
+207502.assembled.unsorted.Pfam.hmmout
+3300033388
+```
+
+2. **Metagenome Report Tables**: containing the following files 
+
+```
+Table_6_-_207017.annotation_parameters.txt
+Table_7_-_3300033141.metagenome_properties.txt
+Table_8_-_3300033141.taxonomic_composition.txt
+Table_9_-_3300033141.functional_diversity.txt
+```
+
+## Create initial depth files
+
+After you have annotated and downloaded your genomes using IMG's JGI platform, there are two possible methods to create the initial depth txt files. The following two methods use BWA and JGI, respectively.
 
 ### BWA method
 
