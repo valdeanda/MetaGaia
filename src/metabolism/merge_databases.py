@@ -66,8 +66,8 @@ def main():
 	if len(databases_list) > 1:
 		#Combine multiple database dataframes into one
 		final_df = pd.concat(dfs_list)
-		final_df = final_df.fillna(0.0)
 		final_df = final_df.set_index(databases_list)
+		final_df = final_df.fillna(0.0)
 		#Save dataframe containing multiple database columns
 		files_list.append('final_merged_metabolic_profile.tsv')
 		final_df.to_csv(os.path.dirname(os.path.abspath(__file__)) + '/../../output/final_merged_metabolic_profile.tsv', sep='\t', index=True)
