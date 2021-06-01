@@ -74,17 +74,16 @@ def main():
 				del user_df[check]
 				user_df = user_df.join(add_df)
 
-			for val in user_df[check]:
-				if type(val) != float:
-					if check == 'KEGG':
-						if val[:3] != 'KO:':
-							user_df.loc[user_df[check] == val, check] = 'KO:' + val
-					elif check == 'PFAM':
-						if val[:4] != 'pfam':
-							user_df.loc[user_df[check] == val, check] = 'pfam' + val[2:]
-					elif check == 'EC_NUMBER':
-						if val[:3] != 'EC:':
-							user_df.loc[user_df[check] == val, check] = 'EC:' + val
+			for str(val) in user_df[check]:
+				if check == 'KEGG':
+					if str(val)[:3] != 'KO:':
+						user_df.loc[user_df[check] == str(val), check] = 'KO:' + str(val)
+				elif check == 'PFAM':
+					if str(val)[:4] != 'pfam':
+						user_df.loc[user_df[check] == str(val), check] = 'pfam' + str(val)[2:]
+				elif check == 'EC_NUMBER':
+					if str(val)[:3] != 'EC:':
+						user_df.loc[user_df[check] == str(val), check] = 'EC:' + str(val)
 	user_df = user_df.reset_index().drop(columns=['index'])
 
 	print('Beginning to extract pathway information.')
