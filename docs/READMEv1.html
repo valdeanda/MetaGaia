@@ -912,20 +912,17 @@
 <li><p>One requirement must be met to run the <code>pathway_extraction.py</code> script, which is that the user-defined database must be created (see “Defining metabolic database” for more information).</p></li>
 <li><p>To extract and analyze specific metabolic pathways, run the <code>pathway_extraction.py</code> script. These are the arguments for the script:</p></li>
 </ol>
-<div class="sourceCode" id="cb30"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="ex">usage:</span> pathway_extraction.py [-h] <span class="at">-c</span> CUSTOMDATA <span class="at">-p</span> PATHWAY_DATABASE <span class="at">-d</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>                             <span class="ex">DATABASE</span></span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="ex">optional</span> arguments:</span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-h,</span> <span class="at">--help</span>            show this help message and exit</span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-c</span> CUSTOMDATA, <span class="at">--customdata</span> CUSTOMDATA</span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> file in tsv format with at least one column with</span>
-<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">the</span> header containing the pathways of interest.</span>
-<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-p</span> PATHWAY_DATABASE, <span class="at">--pathway_database</span> PATHWAY_DATABASE</span>
-<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> file in tsv format that contains the counts of</span>
-<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">each</span> pathways per bin.</span>
-<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-d</span> DATABASE, <span class="at">--database</span> DATABASE</span>
-<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Database</span><span class="er">(</span><span class="ex">s</span><span class="kw">)</span> <span class="ex">of</span> interest to merge together. Input as a</span>
-<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">list.</span></span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="ex">usage:</span> pathway_extraction.py [-h] <span class="at">-c</span> CUSTOMDATA <span class="at">-p</span> PATHWAY_DATABASE <span class="at">-d</span> DATABASE</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="ex">optional</span> arguments:</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-h,</span> <span class="at">--help</span>            show this help message and exit</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-c</span> CUSTOMDATA, <span class="at">--customdata</span> CUSTOMDATA</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> file in tsv format with at least one column with the header containing the pathways of interest. The headers of the metabolic pathway must correspond with its</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">respective</span> database <span class="er">(</span><span class="ex">eg.</span> KEGG, COG, PFAM, or EC_NUMBER<span class="kw">)</span><span class="bu">.</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-p</span> PATHWAY_DATABASE, <span class="at">--pathway_database</span> PATHWAY_DATABASE</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> file in tsv format that contains the counts of each pathways per bin.</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-d</span> DATABASE, <span class="at">--database</span> DATABASE</span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Database</span><span class="er">(</span><span class="ex">s</span><span class="kw">)</span> <span class="ex">of</span> interest to merge together. Input as a list.</span></code></pre></div>
 <p>Example of customdata file (can have other descriptive columns if needed):</p>
 <div class="sourceCode" id="cb31"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> custom_database.tsv</span></code></pre></div>
 <table style="width:100%;">
@@ -1363,7 +1360,7 @@ Table_9_-_3300033141.functional_diversity.txt</code></pre>
 </div>
 <div id="jgi-method" class="section level3">
 <h3>JGI method</h3>
-<p>The script, <code>jgi_summarize_bam_contig_depths.pl</code>, must be used to create the depth file needed in <code>files_prep.py</code> and can be found <a href="https://bitbucket.org/berkeleylab/metabat/src/master/">here</a> along with its usage notes.</p>
+<p>The script, <code>jgi_summarize_bam_contig_depths.cpp</code>, must be used to create the depth file needed in <code>files_prep.py</code> and can be found <a href="https://bitbucket.org/berkeleylab/metabat/src/master/">here</a> along with its usage notes.</p>
 <p>Here is an example of how to create the depth txt files using JGI:</p>
 <ol style="list-style-type: decimal">
 <li>Index bin.</li>

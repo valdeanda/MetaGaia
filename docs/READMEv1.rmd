@@ -505,20 +505,17 @@ python3 merge_database.py -p ../../../output/ -d [KEGG, COG, PFAM, EC_NUMBER]
 2. To extract and analyze specific metabolic pathways, run the `pathway_extraction.py` script. These are the arguments for the script:
 
 ```{bash,eval=FALSE}
-usage: pathway_extraction.py [-h] -c CUSTOMDATA -p PATHWAY_DATABASE -d
-                             DATABASE
+usage: pathway_extraction.py [-h] -c CUSTOMDATA -p PATHWAY_DATABASE -d DATABASE
 
 optional arguments:
   -h, --help            show this help message and exit
   -c CUSTOMDATA, --customdata CUSTOMDATA
-                        Input file in tsv format with at least one column with
-                        the header containing the pathways of interest.
+                        Input file in tsv format with at least one column with the header containing the pathways of interest. The headers of the metabolic pathway must correspond with its
+                        respective database (eg. KEGG, COG, PFAM, or EC_NUMBER).
   -p PATHWAY_DATABASE, --pathway_database PATHWAY_DATABASE
-                        Input file in tsv format that contains the counts of
-                        each pathways per bin.
+                        Input file in tsv format that contains the counts of each pathways per bin.
   -d DATABASE, --database DATABASE
-                        Database(s) of interest to merge together. Input as a
-                        list.
+                        Database(s) of interest to merge together. Input as a list.
 ```
 
 Example of customdata file (can have other descriptive columns if needed):
@@ -748,7 +745,7 @@ for i in *.sam ; do md5sum $i > $i.md5sum ; done
 
 ### JGI method
 
-The script, `jgi_summarize_bam_contig_depths.pl`, must be used to create the depth file needed in `files_prep.py` and can be found [here](https://bitbucket.org/berkeleylab/metabat/src/master/) along with its usage notes.
+The script, `jgi_summarize_bam_contig_depths.cpp`, must be used to create the depth file needed in `files_prep.py` and can be found [here](https://bitbucket.org/berkeleylab/metabat/src/master/) along with its usage notes.
 
 Here is an example of how to create the depth txt files using JGI:
 
