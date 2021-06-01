@@ -74,7 +74,7 @@ def main():
 				del user_df[check]
 				user_df = user_df.join(add_df)
 
-			for str(val) in user_df[check]:
+			for val in user_df[check]:
 				if check == 'KEGG':
 					if str(val)[:3] != 'KO:':
 						user_df.loc[user_df[check] == str(val), check] = 'KO:' + str(val)
