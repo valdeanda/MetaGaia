@@ -31,7 +31,7 @@ class Command_line_args():
 
 		#Command line arguments
 		self.parser = argparse.ArgumentParser()
-		self.parser.add_argument('-c', '--customdata', required=True, help=("Input file in tsv format with at least one column with the header containing the pathways of interest."))
+		self.parser.add_argument('-c', '--customdata', required=True, help=("Input file in tsv format with at least one column with the header containing the pathways of interest. The headers of the metabolic pathway must correspond with its respective database (eg. KEGG, COG, PFAM, or EC_NUMBER)."))
 		self.parser.add_argument('-p', '--pathway_database', required=True, help=("Input file in tsv format that contains the counts of each pathways per bin."))
 		self.parser.add_argument('-d', '--database', required=True, help=("Database(s) of interest to merge together. Input as a list."))
 		self.args = self.parser.parse_args()
@@ -63,23 +63,34 @@ def main():
 			print('Invalid database name was entered!')
 			quit()
 		else:
-			index_cols = [col for col in user_df.columns if col != check]
-			user_df = (user_df.set_index(index_cols)[check].apply(pd.Series).stack().reset_index().drop('level_'+str(len(index_cols)), axis=1).rename(columns={0:check}))
+			#Unstack columns with muliple values if necessary
+			if user_df[check].str.contains(',').sum() > 1:
+				if user_df[check].str.contains(', ').sum() > 1:
+					add_df = user_df[check].str.split(', ').apply(pd.Series,1).stack()
+				else:
+					add_df = user_df[check].str.split(',').apply(pd.Series,1).stack()
+				add_df.index = add_df.index.droplevel(-1)
+				add_df.name = check
+				del user_df[check]
+				user_df = user_df.join(add_df)
+
 			for val in user_df[check]:
-				if check == 'KEGG':
-					if val[:3] != 'KO:':
-						user_df.loc[user_df[check] == val, check] = 'KO:' + val
-				elif check == 'PFAM':
-					if val[:4] != 'pfam':
-						user_df.loc[user_df[check] == val, check] = 'pfam' + val[2:]
-				elif check == 'EC_NUMBER':
-					if val[:3] != 'EC:':
-						user_df.loc[user_df[check] == val, check] = 'EC:' + val
+				if type(val) != float:
+					if check == 'KEGG':
+						if val[:3] != 'KO:':
+							user_df.loc[user_df[check] == val, check] = 'KO:' + val
+					elif check == 'PFAM':
+						if val[:4] != 'pfam':
+							user_df.loc[user_df[check] == val, check] = 'pfam' + val[2:]
+					elif check == 'EC_NUMBER':
+						if val[:3] != 'EC:':
+							user_df.loc[user_df[check] == val, check] = 'EC:' + val
+	user_df = user_df.reset_index().drop(columns=['index'])
 
 	print('Beginning to extract pathway information.')
 	for d in databases_list:
 		#Subset dataframe
-		extracted_df = pathway_df[pathway_df[d].isin(user_df[d])]
+		extracted_df = pathway_df[pathway_df[d].isin(user_df[d].unique())]
 		#If user provided file has multiple columns, map them to the extracted pathway dataframe
 		remove_cols = [col for col in databases_list if col != d]
 		extracted_df = extracted_df.drop(columns=remove_cols)
@@ -89,6 +100,7 @@ def main():
 		cols_list = extracted_df.columns.tolist()
 		cols_list[cols_list.index(d)] = 'Database'
 		extracted_df.columns = cols_list
+		extracted_df = extracted_df.dropna().drop_duplicates()
 		#Add dataframes to list
 		pathways_lst.append(extracted_df)
 
