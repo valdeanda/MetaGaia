@@ -91,7 +91,7 @@ optional arguments:
                         Input directory path containing all the fna files.
 ```
 
-Example of concatenated depth file (NOTE: The Sample_Depth names may need to be edited by the user to match the Sample names in the reads_file.tsv. WARNING: Samples without depth values are removed if present.):
+Example of concatenated depth file (NOTE: The Sample names in the depth file may need to be edited by the user to match the Sample names in the reads_file.tsv. WARNING: Samples without depth values are removed if present.):
 
 ```{bash, eval=FALSE}
 head depth_file.tsv
@@ -148,42 +148,7 @@ python3 files_prep.py -b bin2sample.tsv -f ~/depth_files/ -q ~/fastq_files/ -a ~
 
 2. There should be four files named "reads_file.tsv" (Sample names may need to be edited by user), "mapping_file.tsv", "depth_file", and "binsize_file.tsv" saved in the `output` folder.
 
-## Calculate relative bin abundance
-
-1. The `bin_abundance.py` script then takes in a list of input files (processed from by running the `files_prep.py` script) that need to be created beforehand. Here are the descriptions of each of the input files:
-    + make sure headers of input files are tab separated
-    + make sure are giving absolute paths to files (no symbolic links)
-    + make sure readablenum is large enough to convert all RelativeAbundance values to greater than 1
-
-```{bash, eval=FALSE}
-usage: bin_abundance.py [-h] -r READS -m MAPPING -d DEPTH -s BINSIZE
-                        [-n READABLENUM]
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -r READS, --reads READS
-                        Total number of reads. Rows are samples column are
-                        reads
-  -m MAPPING, --mapping MAPPING
-                        Tabular file containing Original_Contig_Name Bin Sample
-  -d DEPTH, --depth DEPTH
-                        Tabular file depth info Original_Contig_Name contigLen
-                        Saple_Depth Depth
-  -s BINSIZE, --binsize BINSIZE
-                        Tabular file with Bin and corresponding Genome size
-                        (bp) as columns
-  -n READABLENUM, --readablenum READABLENUM
-                        A large number to multiply the relative abundances so
-                        that it is human readable.
-```
-
-Here is an example of how to run the script (using example data provided in the `data` folder): 
-
-```{bash, eval=FALSE}
-python3 bin_abundance.py -r ../../data/example_input_files/example__reads.tsv -m ../../data/example_input_files/example__mapping.tsv -d ../../data/example_input_files/example__depth.tsv -s ../../data/example_input_files/example__size.tsv -n 1000000
-```
-
-2. From this output, you need to rename the reads_file.tsv and depth_file.tsv. These files will look like this:
+3. From this output, you need to rename the reads_file.tsv and depth_file.tsv. These files will look like this:
 ```{bash, eval = FALSE}
 head reads_file.tsv
 ```
@@ -214,7 +179,7 @@ tabl_4 <- "
 cat(tabl_4) # output the table in a format good for HTML/PDF/docx conversion
 ```
 
-3. Rename the reads_file.tsv and depth_file.tsv so that the Sample column from the reads_file.tsv matches the Sample column in the depth_file.tsv. We could not automate this because different projects have unique and specific sample names :
+4. Rename the reads_file.tsv and depth_file.tsv so that the Sample column from the reads_file.tsv matches the Sample column in the depth_file.tsv. We could not automate this because different projects have unique and specific sample names :
 ```{bash, eval = FALSE}
 head reads_file_renamed.tsv
 ```
@@ -271,7 +236,42 @@ cut -f3 depth_file_renamed.tsv | sort | uniq
 cut -f1 reads_file_renamed.tsv | sort
 ```
 
-4. The output will be a file saved in the `output` directory. This file can then be used in the next script: `bin_abundance_viz.py` to visualize the data.
+## Calculate relative bin abundance
+
+1. The `bin_abundance.py` script then takes in a list of input files (processed from by running the `files_prep.py` script) that need to be created beforehand. Here are the descriptions of each of the input files:
+    + make sure headers of input files are tab separated
+    + make sure are giving absolute paths to files (no symbolic links)
+    + make sure readablenum is large enough to convert all RelativeAbundance values to greater than 1
+
+```{bash, eval=FALSE}
+usage: bin_abundance.py [-h] -r READS -m MAPPING -d DEPTH -s BINSIZE
+                        [-n READABLENUM]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -r READS, --reads READS
+                        Total number of reads. Rows are samples column are
+                        reads
+  -m MAPPING, --mapping MAPPING
+                        Tabular file containing Original_Contig_Name Bin Sample
+  -d DEPTH, --depth DEPTH
+                        Tabular file depth info Original_Contig_Name contigLen
+                        Saple_Depth Depth
+  -s BINSIZE, --binsize BINSIZE
+                        Tabular file with Bin and corresponding Genome size
+                        (bp) as columns
+  -n READABLENUM, --readablenum READABLENUM
+                        A large number to multiply the relative abundances so
+                        that it is human readable.
+```
+
+Here is an example of how to run the script (using example data provided in the `data` folder): 
+
+```{bash, eval=FALSE}
+python3 bin_abundance.py -r ../../data/bin_abundance/reads_file_renamed.tsv -m ../../data/bin_abundance/mapping_file.tsv -d ../../data/bin_abundance/depth_file_renamed.tsv -s ../../data/bin_abundance/binsize_file.tsv -n 1000000
+```
+
+2. The output will be a file saved in the `output` directory. This file can then be used in the next script: `bin_abundance_viz.py` to visualize the data.
 
 ## Visualize relative bin abundance
 

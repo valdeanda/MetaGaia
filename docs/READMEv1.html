@@ -313,7 +313,7 @@
 <span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> directory path containing all the fasta files.</span>
 <span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-a</span> FNA_DIR, <span class="at">--fna_dir</span> FNA_DIR</span>
 <span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> directory path containing all the fna files.</span></code></pre></div>
-<p>Example of concatenated depth file (NOTE: The Sample_Depth names may need to be edited by the user to match the Sample names in the reads_file.tsv. WARNING: Samples without depth values are removed if present.):</p>
+<p>Example of concatenated depth file (NOTE: The Sample names in the depth file may need to be edited by the user to match the Sample names in the reads_file.tsv. WARNING: Samples without depth values are removed if present.):</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> depth_file.tsv</span></code></pre></div>
 <table>
 <thead>
@@ -407,44 +407,10 @@
 <p>or (if depth files are not already concatenated):</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> files_prep.py <span class="at">-b</span> bin2sample.tsv <span class="at">-f</span> ~/depth_files/ <span class="at">-q</span> ~/fastq_files/ <span class="at">-a</span> ~/fna_files/</span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
-<li>There should be four files named “reads_file.tsv” (Sample names may need to be edited by user), “mapping_file.tsv”, “depth_file”, and “binsize_file.tsv” saved in the <code>output</code> folder.</li>
+<li><p>There should be four files named “reads_file.tsv” (Sample names may need to be edited by user), “mapping_file.tsv”, “depth_file”, and “binsize_file.tsv” saved in the <code>output</code> folder.</p></li>
+<li><p>From this output, you need to rename the reads_file.tsv and depth_file.tsv. These files will look like this:</p></li>
 </ol>
-</div>
-<div id="calculate-relative-bin-abundance" class="section level2">
-<h2>Calculate relative bin abundance</h2>
-<ol style="list-style-type: decimal">
-<li>The <code>bin_abundance.py</code> script then takes in a list of input files (processed from by running the <code>files_prep.py</code> script) that need to be created beforehand. Here are the descriptions of each of the input files:
-<ul>
-<li>make sure headers of input files are tab separated</li>
-<li>make sure are giving absolute paths to files (no symbolic links)</li>
-<li>make sure readablenum is large enough to convert all RelativeAbundance values to greater than 1</li>
-</ul></li>
-</ol>
-<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">usage:</span> bin_abundance.py [-h] <span class="at">-r</span> READS <span class="at">-m</span> MAPPING <span class="at">-d</span> DEPTH <span class="at">-s</span> BINSIZE</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">[-n</span> READABLENUM]</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="ex">optional</span> arguments:</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-h,</span> <span class="at">--help</span>            show this help message and exit</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-r</span> READS, <span class="at">--reads</span> READS</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Total</span> number of reads. Rows are samples column are</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">reads</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-m</span> MAPPING, <span class="at">--mapping</span> MAPPING</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Tabular</span> file containing Original_Contig_Name Bin Sample</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-d</span> DEPTH, <span class="at">--depth</span> DEPTH</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Tabular</span> file depth info Original_Contig_Name contigLen</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Saple_Depth</span> Depth</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-s</span> BINSIZE, <span class="at">--binsize</span> BINSIZE</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Tabular</span> file with Bin and corresponding Genome size</span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>                        <span class="kw">(</span><span class="ex">bp</span><span class="kw">)</span> <span class="fu">as</span> columns</span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-n</span> READABLENUM, <span class="at">--readablenum</span> READABLENUM</span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">A</span> large number to multiply the relative abundances so</span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">that</span> it is human readable.</span></code></pre></div>
-<p>Here is an example of how to run the script (using example data provided in the <code>data</code> folder):</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> bin_abundance.py <span class="at">-r</span> ../../data/example_input_files/example__reads.tsv <span class="at">-m</span> ../../data/example_input_files/example__mapping.tsv <span class="at">-d</span> ../../data/example_input_files/example__depth.tsv <span class="at">-s</span> ../../data/example_input_files/example__size.tsv <span class="at">-n</span> 1000000</span></code></pre></div>
-<ol start="2" style="list-style-type: decimal">
-<li>From this output, you need to rename the reads_file.tsv and depth_file.tsv. These files will look like this:</li>
-</ol>
-<div class="sourceCode" id="cb9"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> reads_file.tsv</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> reads_file.tsv</span></code></pre></div>
 <table>
 <colgroup>
 <col width="51%" />
@@ -467,7 +433,7 @@
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb10"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> depth_file_renamed.tsv</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> depth_file_renamed.tsv</span></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -495,10 +461,10 @@
 </tr>
 </tbody>
 </table>
-<ol start="3" style="list-style-type: decimal">
+<ol start="4" style="list-style-type: decimal">
 <li>Rename the reads_file.tsv and depth_file.tsv so that the Sample column from the reads_file.tsv matches the Sample column in the depth_file.tsv. We could not automate this because different projects have unique and specific sample names :</li>
 </ol>
-<div class="sourceCode" id="cb11"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> reads_file_renamed.tsv</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> reads_file_renamed.tsv</span></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -517,7 +483,7 @@
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb12"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> depth_file_renamed.tsv</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> depth_file_renamed.tsv</span></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -548,26 +514,58 @@
 <div id="the-following-examples-show-how-you-could-potentially-rename-these-files" class="section level3">
 <h3>The following examples show how you could potentially rename these files:</h3>
 <p>To rename the Sample column in the reads_file.tsv, example</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sed</span> <span class="st">&#39;s/\/fastq\//\t/g&#39;</span> reads_file.tsv <span class="kw">|</span> <span class="fu">cut</span> <span class="at">-f2,3</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">&#39;s/_filter-METAGENOME.fastq.gz//g&#39;</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">&#39;s/Reads/Sample\tReads/g&#39;</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">&#39;s/sed_//g&#39;</span> <span class="op">&gt;</span> reads_file_renamed.tsv</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sed</span> <span class="st">&#39;s/\/fastq\//\t/g&#39;</span> reads_file.tsv <span class="kw">|</span> <span class="fu">cut</span> <span class="at">-f2,3</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">&#39;s/_filter-METAGENOME.fastq.gz//g&#39;</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">&#39;s/Reads/Sample\tReads/g&#39;</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">&#39;s/sed_//g&#39;</span> <span class="op">&gt;</span> reads_file_renamed.tsv</span></code></pre></div>
 <p>To rename the Sample column in the depth_file.tsv, example:</p>
 <ol style="list-style-type: decimal">
 <li>View unique names that need to be renamed</li>
 </ol>
-<div class="sourceCode" id="cb14"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cut</span> <span class="at">-f3</span> depth_file.tsv <span class="kw">|</span> <span class="fu">sort</span> <span class="kw">|</span> <span class="fu">uniq</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cut</span> <span class="at">-f3</span> depth_file.tsv <span class="kw">|</span> <span class="fu">sort</span> <span class="kw">|</span> <span class="fu">uniq</span></span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li>Rename</li>
 </ol>
-<div class="sourceCode" id="cb15"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sed</span> <span class="st">&#39;s/-sorted.bam//g&#39;</span> depth_file.tsv <span class="kw">|</span> <span class="fu">sed</span> <span class="st">&#39;s/\.fasta.2000kb//g&#39;</span> <span class="op">&gt;</span> depth_file_renamed.tsv</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sed</span> <span class="st">&#39;s/-sorted.bam//g&#39;</span> depth_file.tsv <span class="kw">|</span> <span class="fu">sed</span> <span class="st">&#39;s/\.fasta.2000kb//g&#39;</span> <span class="op">&gt;</span> depth_file_renamed.tsv</span></code></pre></div>
 <ol start="3" style="list-style-type: decimal">
 <li>Make sure the names in the Sample colum of depth_file_renamed.tsv match the names of Sample in reads_file_renamed.tsv</li>
 </ol>
-<div class="sourceCode" id="cb16"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cut</span> <span class="at">-f3</span> depth_file_renamed.tsv <span class="kw">|</span> <span class="fu">sort</span> <span class="kw">|</span> <span class="fu">uniq</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cut</span> <span class="at">-f1</span> reads_file_renamed.tsv <span class="kw">|</span> <span class="fu">sort</span></span></code></pre></div>
-<ol start="4" style="list-style-type: decimal">
+<div class="sourceCode" id="cb14"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cut</span> <span class="at">-f3</span> depth_file_renamed.tsv <span class="kw">|</span> <span class="fu">sort</span> <span class="kw">|</span> <span class="fu">uniq</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cut</span> <span class="at">-f1</span> reads_file_renamed.tsv <span class="kw">|</span> <span class="fu">sort</span></span></code></pre></div>
+</div>
+</div>
+<div id="calculate-relative-bin-abundance" class="section level2">
+<h2>Calculate relative bin abundance</h2>
+<ol style="list-style-type: decimal">
+<li>The <code>bin_abundance.py</code> script then takes in a list of input files (processed from by running the <code>files_prep.py</code> script) that need to be created beforehand. Here are the descriptions of each of the input files:
+<ul>
+<li>make sure headers of input files are tab separated</li>
+<li>make sure are giving absolute paths to files (no symbolic links)</li>
+<li>make sure readablenum is large enough to convert all RelativeAbundance values to greater than 1</li>
+</ul></li>
+</ol>
+<div class="sourceCode" id="cb15"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">usage:</span> bin_abundance.py [-h] <span class="at">-r</span> READS <span class="at">-m</span> MAPPING <span class="at">-d</span> DEPTH <span class="at">-s</span> BINSIZE</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">[-n</span> READABLENUM]</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="ex">optional</span> arguments:</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-h,</span> <span class="at">--help</span>            show this help message and exit</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-r</span> READS, <span class="at">--reads</span> READS</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Total</span> number of reads. Rows are samples column are</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">reads</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-m</span> MAPPING, <span class="at">--mapping</span> MAPPING</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Tabular</span> file containing Original_Contig_Name Bin Sample</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-d</span> DEPTH, <span class="at">--depth</span> DEPTH</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Tabular</span> file depth info Original_Contig_Name contigLen</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Saple_Depth</span> Depth</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-s</span> BINSIZE, <span class="at">--binsize</span> BINSIZE</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Tabular</span> file with Bin and corresponding Genome size</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>                        <span class="kw">(</span><span class="ex">bp</span><span class="kw">)</span> <span class="fu">as</span> columns</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-n</span> READABLENUM, <span class="at">--readablenum</span> READABLENUM</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">A</span> large number to multiply the relative abundances so</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">that</span> it is human readable.</span></code></pre></div>
+<p>Here is an example of how to run the script (using example data provided in the <code>data</code> folder):</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> bin_abundance.py <span class="at">-r</span> ../../data/bin_abundance/reads_file_renamed.tsv <span class="at">-m</span> ../../data/bin_abundance/mapping_file.tsv <span class="at">-d</span> ../../data/bin_abundance/depth_file_renamed.tsv <span class="at">-s</span> ../../data/bin_abundance/binsize_file.tsv <span class="at">-n</span> 1000000</span></code></pre></div>
+<ol start="2" style="list-style-type: decimal">
 <li>The output will be a file saved in the <code>output</code> directory. This file can then be used in the next script: <code>bin_abundance_viz.py</code> to visualize the data.</li>
 </ol>
-</div>
 </div>
 <div id="visualize-relative-bin-abundance" class="section level2">
 <h2>Visualize relative bin abundance</h2>

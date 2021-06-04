@@ -12,6 +12,7 @@
 import argparse
 import copy
 import glob
+import numpy as np
 import os
 import pandas as pd
 import re
@@ -158,11 +159,16 @@ def create_mapping_file(arguments, bin_sample):
 	#Get bin names for mapping
 	for c in range(len(contig_lst)):
 		idx = re.search("_scaffold", contig_lst[c])
-		bin_lst.append(contig_lst[c][:idx.start()])
+		if idx != None:
+			bin_lst.append(contig_lst[c][:idx.start()])
+		else:
+			bin_lst.append(np.nan)
 
 	#Add each contig name to each bin name in bin_sample
 	mapping_df = pd.DataFrame(zip(contig_lst, bin_lst), columns=["Original_Contig_Name", "Bin"])
 	mapping_df = mapping_df.merge(bin_sample, on="Bin", how="left")
+	mapping_df = mapping_df.dropna()
+	
 	#Edit names in Original_Contig_Name column
 	i = 0
 	for sample in mapping_df['Original_Contig_Name']:
