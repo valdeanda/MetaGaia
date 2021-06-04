@@ -111,9 +111,9 @@ def create_depth_file(arguments, depth_format, depth_dir):
 					depth_df = pd.read_csv(file, sep='\t')
 				if 'totalAvgDepth' in depth_df.columns:
 					depth_df = depth_df.drop(columns=['totalAvgDepth'])
+				depth_df = depth_df[depth_df.columns.drop(list(depth_df.filter(regex='var')))]
 				#If each bin was mapped to all assemblies
 				if len(depth_df.columns) > 3:
-					depth_df = depth_df[depth_df.columns.drop(list(depth_df.filter(regex='var')))]
 					depth_df = format_depth_df(depth_df)
 					concat_flag = True
 				depth_list.append(depth_df)
