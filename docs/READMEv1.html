@@ -289,30 +289,22 @@
 <ol style="list-style-type: decimal">
 <li>To create all the input files necessary, run the <code>files_prep.py</code> script. Two input files (concatenated <code>depth</code> file is optional) are necessary and the directories where the <code>fastq</code> and <code>fna</code> (and optional <code>depth</code>) files are located are needed to run this script (see “Download fastqs” for more information on where to obtain these). One of the depth arguments must be present: depth or depth_dir. These are the arguments necessary to run this script:</li>
 </ol>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">usage:</span> files_prep.py [-h] <span class="at">-b</span> BIN_SAMPLES [-d DEPTH] [-f DEPTH_DIR] <span class="at">-q</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                     <span class="ex">FASTQ_DIR</span> <span class="at">-a</span> FNA_DIR</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="ex">optional</span> arguments:</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-h,</span> <span class="at">--help</span>            show this help message and exit</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-b</span> BIN_SAMPLES, <span class="at">--bin_samples</span> BIN_SAMPLES</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> file containing 2 columns: 1st column contains</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">bin</span> names and 2nd column contains sample names.</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Requires</span> header for each column, <span class="st">&quot;Bin&quot;</span> and <span class="st">&quot;Sample&quot;</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">respectively.</span> File must have tsv or csv file</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">extension.</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-d</span> DEPTH, <span class="at">--depth</span> DEPTH</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> file containing 5 columns: contigName,</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">contigLen,</span> totalAvgDepth, Sample_Depth, and Depth.</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">This</span> file can be created with</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">jgi_summarize_bam_contig_depths.</span> File must have tsv or</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">csv</span> file extension.</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-f</span> DEPTH_DIR, <span class="at">--depth_dir</span> DEPTH_DIR</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> directory path containing all the depth txt</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">files</span> that must be concatenated.</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-q</span> FASTQ_DIR, <span class="at">--fastq_dir</span> FASTQ_DIR</span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> directory path containing all the fasta files.</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-a</span> FNA_DIR, <span class="at">--fna_dir</span> FNA_DIR</span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> directory path containing all the fna files.</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">usage:</span> files_prep.py [-h] <span class="at">-b</span> BIN_SAMPLES [-d DEPTH] [-f DEPTH_DIR] <span class="at">-q</span> FASTQ_DIR <span class="at">-a</span> FNA_DIR</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">optional</span> arguments:</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-h,</span> <span class="at">--help</span>            show this help message and exit</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-b</span> BIN_SAMPLES, <span class="at">--bin_samples</span> BIN_SAMPLES</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> file containing 2 columns: 1st column contains bin names and 2nd column contains sample names. Requires header for each column, <span class="st">&quot;Bin&quot;</span> and <span class="st">&quot;Sampling_Site&quot;</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">respectively.</span> File must have tsv, csv, or txt file extension.</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-d</span> DEPTH, <span class="at">--depth</span> DEPTH</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> file containing 5 columns: contigName, contigLen, totalAvgDepth, Sample_Depth, and Depth. This file can be created with jgi_summarize_bam_contig_depths. File must</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">have</span> tsv, csv, or txt file extension.</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-f</span> DEPTH_DIR, <span class="at">--depth_dir</span> DEPTH_DIR</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> directory path containing all the depth txt files that must be concatenated. No other txt files should be present within the directory!</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-q</span> FASTQ_DIR, <span class="at">--fastq_dir</span> FASTQ_DIR</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> directory path containing all the fasta files.</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-a</span> FNA_DIR, <span class="at">--fna_dir</span> FNA_DIR</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> directory path containing all the fna files.</span></code></pre></div>
 <p>Example of concatenated depth file (NOTE: The Sample names in the depth file may need to be edited by the user to match the Sample names in the reads_file.tsv. WARNING: Samples without depth values are removed if present.):</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> depth_file.tsv</span></code></pre></div>
 <table>

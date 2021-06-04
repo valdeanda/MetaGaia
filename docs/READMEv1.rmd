@@ -65,26 +65,18 @@ To install seaborn, run `pip install seaborn`.
 1. To create all the input files necessary, run the `files_prep.py` script. Two input files (concatenated `depth` file is optional) are necessary and the directories where the `fastq` and `fna ` (and optional `depth`) files are located are needed to run this script (see "Download fastqs" for more information on where to obtain these). One of the depth arguments must be present: depth or depth_dir. These are the arguments necessary to run this script:
 
 ```{bash, eval=FALSE}
-usage: files_prep.py [-h] -b BIN_SAMPLES [-d DEPTH] [-f DEPTH_DIR] -q
-                     FASTQ_DIR -a FNA_DIR
+usage: files_prep.py [-h] -b BIN_SAMPLES [-d DEPTH] [-f DEPTH_DIR] -q FASTQ_DIR -a FNA_DIR
 
 optional arguments:
   -h, --help            show this help message and exit
   -b BIN_SAMPLES, --bin_samples BIN_SAMPLES
-                        Input file containing 2 columns: 1st column contains
-                        bin names and 2nd column contains sample names.
-                        Requires header for each column, "Bin" and "Sample"
-                        respectively. File must have tsv or csv file
-                        extension.
+                        Input file containing 2 columns: 1st column contains bin names and 2nd column contains sample names. Requires header for each column, "Bin" and "Sampling_Site"
+                        respectively. File must have tsv, csv, or txt file extension.
   -d DEPTH, --depth DEPTH
-                        Input file containing 5 columns: contigName,
-                        contigLen, totalAvgDepth, Sample_Depth, and Depth.
-                        This file can be created with
-                        jgi_summarize_bam_contig_depths. File must have tsv or
-                        csv file extension.
+                        Input file containing 5 columns: contigName, contigLen, totalAvgDepth, Sample_Depth, and Depth. This file can be created with jgi_summarize_bam_contig_depths. File must
+                        have tsv, csv, or txt file extension.
   -f DEPTH_DIR, --depth_dir DEPTH_DIR
-                        Input directory path containing all the depth txt
-                        files that must be concatenated.
+                        Input directory path containing all the depth txt files that must be concatenated. No other txt files should be present within the directory!
   -q FASTQ_DIR, --fastq_dir FASTQ_DIR
                         Input directory path containing all the fasta files.
   -a FNA_DIR, --fna_dir FNA_DIR

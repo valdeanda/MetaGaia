@@ -31,9 +31,9 @@ class Command_line_args():
 
 		#Command line arguments
 		self.parser = argparse.ArgumentParser()
-		self.parser.add_argument('-b', '--bin_samples', required=True, type=str, help='Input file containing 2 columns: 1st column contains bin names and 2nd column contains sample names. Requires header for each column, \"Bin\" and \"Sampling_Site\" respectively. File must have tsv or csv file extension.')
-		self.parser.add_argument('-d', '--depth', required=False, default="", type=str, help='Input file containing 5 columns: contigName, contigLen, totalAvgDepth, Sample_Depth, and Depth. This file can be created with jgi_summarize_bam_contig_depths. File must have tsv or csv file extension.')
-		self.parser.add_argument('-f', '--depth_dir', required=False, default="", type=str, help='Input directory path containing all the depth txt files that must be concatenated. ')
+		self.parser.add_argument('-b', '--bin_samples', required=True, type=str, help='Input file containing 2 columns: 1st column contains bin names and 2nd column contains sample names. Requires header for each column, \"Bin\" and \"Sampling_Site\" respectively. File must have tsv, csv, or txt file extension.')
+		self.parser.add_argument('-d', '--depth', required=False, default="", type=str, help='Input file containing 5 columns: contigName, contigLen, totalAvgDepth, Sample_Depth, and Depth. This file can be created with jgi_summarize_bam_contig_depths. File must have tsv, csv, or txt file extension.')
+		self.parser.add_argument('-f', '--depth_dir', required=False, default="", type=str, help='Input directory path containing all the depth txt files that must be concatenated. No other txt files should be present within the directory!')
 		self.parser.add_argument('-q', '--fastq_dir', required=True, type=str, help='Input directory path containing all the fasta files.')
 		self.parser.add_argument('-a', '--fna_dir', required=True, type=str, help='Input directory path containing all the fna files.')
 		self.args = self.parser.parse_args()
@@ -96,6 +96,8 @@ def create_depth_file(arguments, depth_format, depth_dir):
 	A file containing the depth information is saved in the "output" folder.
 	"""
 
+	concat_flag = False
+
 	#If depth txt files are not concatenated already
 	if depth_dir:
 		depth_list = []
@@ -107,19 +109,45 @@ def create_depth_file(arguments, depth_format, depth_dir):
 					depth_df = pd.read_csv(file, sep='\s+')
 				elif 'tsv' in file:
 					depth_df = pd.read_csv(file, sep='\t')
-				depth_df = depth_df.drop(columns=['totalAvgDepth'])
+				if 'totalAvgDepth' in depth_df.columns:
+					depth_df = depth_df.drop(columns=['totalAvgDepth'])
+				#If each bin was mapped to all assemblies
+				if len(depth_df.columns) > 3:
+					depth_df = format_depth_df(depth_df)
+					concat_flag = True
 				depth_list.append(depth_df)
-		i = 1
-		for df in depth_list:
-			if i == 1:
-				depth_df = copy.deepcopy(df)
-			else:
-				depth_df = depth_df.merge(df, on=['contigName', 'contigLen'], how='outer')
-			i+=1
+
+		if concat_flag:
+			depth_df = pd.concat(depth_list)
+		else:
+			i = 1
+			for df in depth_list:
+				if i == 1:
+					depth_df = copy.deepcopy(df)
+				else:
+					depth_df = depth_df.merge(df, on=['contigName', 'contigLen'], how='outer')
+				i+=1
+			depth_df = format_depth_df(depth_df)
 	else:
 		depth_df = depth_format
 		if 'totalAvgDepth' in depth_df.columns:
 			depth_df = depth_df.drop(columns=['totalAvgDepth'])
+		depth_df = format_depth_df(depth_df)
+
+	#Save dataframe to file
+	depth_df.to_csv(os.path.dirname(os.path.abspath(__file__)) + "/../../output/depth_file.tsv", sep="\t", index=False)
+	print("Depth file has been created! Samples containing no depth information were removed.")
+	print("WARNING: If sample names in the \"Sample\" column does not match the other input files, it must be manually edited!")
+
+
+def format_depth_df(depth_df):
+	"""
+	This function formats the depth dataframe accordingly.
+	Input(s):
+	depth_df is a pandas dataframe that contains all the depth information for each of the bins.
+	Output(s):
+	depth_df is a pandas dataframe that contains all the depth information for each of the bins.
+	"""
 
 	#Rename certain columns
 	depth_df = depth_df.rename(columns=lambda x: re.sub('_S\d+','',x))
@@ -128,10 +156,8 @@ def create_depth_file(arguments, depth_format, depth_dir):
 	#Rename a column
 	depth_df = depth_df.rename(columns={"contigName": "Original_Contig_Name"})
 	depth_df = depth_df.dropna()
-	#Save dataframe to file
-	depth_df.to_csv(os.path.dirname(os.path.abspath(__file__)) + "/../../output/depth_file.tsv", sep="\t", index=False)
-	print("Depth file has been created! Samples containing no depth information were removed.")
-	print("WARNING: If sample names in the \"Sample\" column does not match the other input files, it must be manually edited!")
+
+	return depth_df
 
 
 def create_mapping_file(arguments, bin_sample):
@@ -201,6 +227,8 @@ def main():
 		bin_sample_df = pd.read_csv(arguments.args.bin_samples, sep="\t")
 	elif ".csv" in arguments.args.bin_samples:
 		bin_sample_df = pd.read_csv(arguments.args.bin_samples)
+	elif ".txt" in arguments.args.bin_samples:
+		bin_sample_df = pd.read_csv(arguments.args.bin_samples, sep='\s+')
 	else:
 		print("Bin to sample file is not in tsv or csv format!")
 		quit()
@@ -212,8 +240,10 @@ def main():
 			depth_df = pd.read_csv(arguments.args.depth, sep="\t")
 		elif ".csv" in arguments.args.depth:
 			depth_df = pd.read_csv(arguments.args.depth)
+		elif ".txt" in arguments.args.depth:
+			depth_df = pd.read_csv(arguments.args.depth, sep='\s+')
 		else:
-			print("Depth file is not in tsv or csv format!")
+			print("Depth file is not in tsv, csv, or txt format!")
 			quit()
 		create_depth_file(arguments, depth_df, False)
 	elif arguments.args.depth_dir:
