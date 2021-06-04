@@ -113,6 +113,7 @@ def create_depth_file(arguments, depth_format, depth_dir):
 					depth_df = depth_df.drop(columns=['totalAvgDepth'])
 				#If each bin was mapped to all assemblies
 				if len(depth_df.columns) > 3:
+					depth_df = depth_df[depth_df.columns.drop(list(depth_df.filter(regex='var')))]
 					depth_df = format_depth_df(depth_df)
 					concat_flag = True
 				depth_list.append(depth_df)
@@ -132,6 +133,7 @@ def create_depth_file(arguments, depth_format, depth_dir):
 		depth_df = depth_format
 		if 'totalAvgDepth' in depth_df.columns:
 			depth_df = depth_df.drop(columns=['totalAvgDepth'])
+		depth_df = depth_df[depth_df.columns.drop(list(depth_df.filter(regex='var')))]
 		depth_df = format_depth_df(depth_df)
 
 	#Save dataframe to file
