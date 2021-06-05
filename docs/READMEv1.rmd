@@ -131,11 +131,11 @@ cat(tabl2)
 Here is an example of how to run this script:
 
 ```{bash, eval=FALSE}
-python3 files_prep.py -b bin2sample.tsv -d depth.tsv -q ~/fastq_files/ -a ~/fna_files/
+python3 files_prep.py -b ../../data/example_input_files/files_prep/bin_sample.tsv -d ../../data/example_input_files/files_prep/depth.tsv -q ~/fastq_files/ -a ~/fna_files/
 ```
 or (if depth files are not already concatenated):
 ```{bash, eval=FALSE}
-python3 files_prep.py -b bin2sample.tsv -f ~/depth_files/ -q ~/fastq_files/ -a ~/fna_files/
+python3 files_prep.py -b ../../data/example_input_files/files_prep/bin_sample.tsv -f ~/depth_files/ -q ~/fastq_files/ -a ~/fna_files/
 ```
 
 2. There should be four files named "reads_file.tsv" (Sample names may need to be edited by user), "mapping_file.tsv", "depth_file", and "binsize_file.tsv" saved in the `output` folder.
@@ -260,7 +260,7 @@ optional arguments:
 Here is an example of how to run the script (using example data provided in the `data` folder): 
 
 ```{bash, eval=FALSE}
-python3 bin_abundance.py -r ../../data/bin_abundance/reads_file_renamed.tsv -m ../../data/bin_abundance/mapping_file.tsv -d ../../data/bin_abundance/depth_file_renamed.tsv -s ../../data/bin_abundance/binsize_file.tsv -n 1000000
+python3 bin_abundance.py -r ../../data/example_input_files/bin_abundance/reads_file_renamed.tsv -m ../../data/example_input_files/bin_abundance/mapping_file.tsv -d ../../data/example_input_files/bin_abundance/depth_file_renamed.tsv -s ../../data/example_input_files/bin_abundance/binsize_file.tsv -n 1000000
 ```
 
 2. The output will be a file saved in the `output` directory. This file can then be used in the next script: `bin_abundance_viz.py` to visualize the data.
@@ -381,7 +381,7 @@ cat(tabl10)
 Here is an example of how to run this script:
 
 ```{bash, eval=FALSE}
-python3 bin_abundance_viz.py -b ../output/bin_abundance_output.tsv -t ~/tax2bin.tsv -p 10 -w 8 -l 5 -d 500 -o figure1.jpg -c ~/tax2color.tsv
+python3 bin_abundance_viz.py -b ../output/bin_abundance_output.tsv -t ~/tax2bin.tsv -p 10 -w 8 -l 5 -d 500 -o figure1.jpg -c ~/taxa_color.tsv
 ```
 
 2. Outputs will be saved in the `output` directory containing the user-specified name.
@@ -453,13 +453,13 @@ cat(tabl12)
 Here is an example of how to run this script with a single IMG annotation file:
 
 ```{bash, highlight=TRUE, eval=FALSE}
-python3 metabolic_profile.py -i imgannotation.tsv -m ../../../output/mapping_file.tsv -d [KEGG, COG, PFAM, EC_NUMBER] -c True
+python3 metabolic_profile.py -i imgannotation.tsv -m ../../data/example_input_files/bin_abundance/mapping_file.tsv -d [KEGG, COG, PFAM, EC_NUMBER] -c True
 ```
 
 Here is an example of how to run this script with multiple IMG annotation files (escape character needed for the asterisk *):
 
 ```{bash, highlight=TRUE, eval=FALSE}
-python3 metabolic_profile.py -i /\*_imgannotation.tsv -m ../../../output/mapping_file.tsv -d [KEGG, COG, PFAM, EC_NUMBER] -c True
+python3 metabolic_profile.py -i /\*_imgannotation.tsv -m ../../data/example_input_files/bin_abundance/mapping_file.tsv -d [KEGG, COG, PFAM, EC_NUMBER] -c True
 ```
 
 2. Outputs will be saved in the `output` directory containing name formats: "mapped_scaffolds.tsv" and the database name followed by "metabolic_profile.tsv". NOTE: Old files will NOT be removed as each output is uniquely named.
@@ -485,7 +485,7 @@ optional arguments:
 Here is an example of how to run this script:
 
 ```{bash,eval=FALSE}
-python3 merge_database.py -p ../../../output/ -d [KEGG, COG, PFAM, EC_NUMBER]
+python3 merge_database.py -p ../../output/ -d [KEGG, COG, PFAM, EC_NUMBER]
 ```
 
 2. Outputs will be places in the `output` directory containing the name formats: "merged_" database name "_metabolic_profile.tsv" and "final_merged_metabolic_profile.tsv".
@@ -554,7 +554,7 @@ cat(tabl14)
 Here is an example of how to run this script:
 
 ```{bash, eval=FALSE}
-python3 pathway_extraction.py -c user-defined_database.tsv -p ../../../output/final_merged_metabolic_profile.tsv -d [KEGG, COG, PFAM, EC_NUMBER]
+python3 pathway_extraction.py -c user-defined_database.tsv -p ../../output/final_merged_metabolic_profile.tsv -d [KEGG, COG, PFAM, EC_NUMBER]
 ```
 
 3. Outputs will be places in the `output` directory containing the name "extracted_pathways.tsv".

@@ -109,6 +109,8 @@ def create_depth_file(arguments, depth_format, depth_dir):
 					depth_df = pd.read_csv(file, sep='\s+')
 				elif 'tsv' in file:
 					depth_df = pd.read_csv(file, sep='\t')
+				elif 'csv' in file:
+					depth_df = pd.read_csv(file)
 				if 'totalAvgDepth' in depth_df.columns:
 					depth_df = depth_df.drop(columns=['totalAvgDepth'])
 				depth_df = depth_df[depth_df.columns.drop(list(depth_df.filter(regex='var')))]

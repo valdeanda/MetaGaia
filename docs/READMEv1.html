@@ -395,9 +395,9 @@
 </tbody>
 </table>
 <p>Here is an example of how to run this script:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> files_prep.py <span class="at">-b</span> bin2sample.tsv <span class="at">-d</span> depth.tsv <span class="at">-q</span> ~/fastq_files/ <span class="at">-a</span> ~/fna_files/</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> files_prep.py <span class="at">-b</span> ../../data/example_input_files/files_prep/bin_sample.tsv <span class="at">-d</span> ../../data/example_input_files/files_prep/depth.tsv <span class="at">-q</span> ~/fastq_files/ <span class="at">-a</span> ~/fna_files/</span></code></pre></div>
 <p>or (if depth files are not already concatenated):</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> files_prep.py <span class="at">-b</span> bin2sample.tsv <span class="at">-f</span> ~/depth_files/ <span class="at">-q</span> ~/fastq_files/ <span class="at">-a</span> ~/fna_files/</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> files_prep.py <span class="at">-b</span> ../../data/example_input_files/files_prep/bin_sample.tsv <span class="at">-f</span> ~/depth_files/ <span class="at">-q</span> ~/fastq_files/ <span class="at">-a</span> ~/fna_files/</span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li><p>There should be four files named “reads_file.tsv” (Sample names may need to be edited by user), “mapping_file.tsv”, “depth_file”, and “binsize_file.tsv” saved in the <code>output</code> folder.</p></li>
 <li><p>From this output, you need to rename the reads_file.tsv and depth_file.tsv. These files will look like this:</p></li>
@@ -554,7 +554,7 @@
 <span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">A</span> large number to multiply the relative abundances so</span>
 <span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">that</span> it is human readable.</span></code></pre></div>
 <p>Here is an example of how to run the script (using example data provided in the <code>data</code> folder):</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> bin_abundance.py <span class="at">-r</span> ../../data/bin_abundance/reads_file_renamed.tsv <span class="at">-m</span> ../../data/bin_abundance/mapping_file.tsv <span class="at">-d</span> ../../data/bin_abundance/depth_file_renamed.tsv <span class="at">-s</span> ../../data/bin_abundance/binsize_file.tsv <span class="at">-n</span> 1000000</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> bin_abundance.py <span class="at">-r</span> ../../data/example_input_files/bin_abundance/reads_file_renamed.tsv <span class="at">-m</span> ../../data/example_input_files/bin_abundance/mapping_file.tsv <span class="at">-d</span> ../../data/example_input_files/bin_abundance/depth_file_renamed.tsv <span class="at">-s</span> ../../data/example_input_files/bin_abundance/binsize_file.tsv <span class="at">-n</span> 1000000</span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li>The output will be a file saved in the <code>output</code> directory. This file can then be used in the next script: <code>bin_abundance_viz.py</code> to visualize the data.</li>
 </ol>
@@ -708,7 +708,7 @@
 #fff5e5<br />
 #ffefd5</div>
 <p>Here is an example of how to run this script:</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> bin_abundance_viz.py <span class="at">-b</span> ../output/bin_abundance_output.tsv <span class="at">-t</span> ~/tax2bin.tsv <span class="at">-p</span> 10 <span class="at">-w</span> 8 <span class="at">-l</span> 5 <span class="at">-d</span> 500 <span class="at">-o</span> figure1.jpg <span class="at">-c</span> ~/tax2color.tsv</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> bin_abundance_viz.py <span class="at">-b</span> ../output/bin_abundance_output.tsv <span class="at">-t</span> ~/tax2bin.tsv <span class="at">-p</span> 10 <span class="at">-w</span> 8 <span class="at">-l</span> 5 <span class="at">-d</span> 500 <span class="at">-o</span> figure1.jpg <span class="at">-c</span> ~/taxa_color.tsv</span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li>Outputs will be saved in the <code>output</code> directory containing the user-specified name.</li>
 </ol>
@@ -868,9 +868,9 @@
 </tbody>
 </table>
 <p>Here is an example of how to run this script with a single IMG annotation file:</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> metabolic_profile.py <span class="at">-i</span> imgannotation.tsv <span class="at">-m</span> ../../../output/mapping_file.tsv <span class="at">-d</span> [KEGG, COG, PFAM, EC_NUMBER] <span class="at">-c</span> True</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> metabolic_profile.py <span class="at">-i</span> imgannotation.tsv <span class="at">-m</span> ../../data/example_input_files/bin_abundance/mapping_file.tsv <span class="at">-d</span> [KEGG, COG, PFAM, EC_NUMBER] <span class="at">-c</span> True</span></code></pre></div>
 <p>Here is an example of how to run this script with multiple IMG annotation files (escape character needed for the asterisk *):</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> metabolic_profile.py <span class="at">-i</span> /\*_imgannotation.tsv <span class="at">-m</span> ../../../output/mapping_file.tsv <span class="at">-d</span> [KEGG, COG, PFAM, EC_NUMBER] <span class="at">-c</span> True</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> metabolic_profile.py <span class="at">-i</span> /\*_imgannotation.tsv <span class="at">-m</span> ../../data/example_input_files/bin_abundance/mapping_file.tsv <span class="at">-d</span> [KEGG, COG, PFAM, EC_NUMBER] <span class="at">-c</span> True</span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li>Outputs will be saved in the <code>output</code> directory containing name formats: “mapped_scaffolds.tsv” and the database name followed by “metabolic_profile.tsv”. NOTE: Old files will NOT be removed as each output is uniquely named.</li>
 </ol>
@@ -891,7 +891,7 @@
 <span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Database</span><span class="er">(</span><span class="ex">s</span><span class="kw">)</span> <span class="ex">of</span> interest to merge together. Input as a</span>
 <span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">list.</span></span></code></pre></div>
 <p>Here is an example of how to run this script:</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> merge_database.py <span class="at">-p</span> ../../../output/ <span class="at">-d</span> [KEGG, COG, PFAM, EC_NUMBER]</span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> merge_database.py <span class="at">-p</span> ../../output/ <span class="at">-d</span> [KEGG, COG, PFAM, EC_NUMBER]</span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li>Outputs will be places in the <code>output</code> directory containing the name formats: “merged_” database name &quot;_metabolic_profile.tsv&quot; and “final_merged_metabolic_profile.tsv”.</li>
 </ol>
@@ -1068,7 +1068,7 @@
 </tbody>
 </table>
 <p>Here is an example of how to run this script:</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> pathway_extraction.py <span class="at">-c</span> user-defined_database.tsv <span class="at">-p</span> ../../../output/final_merged_metabolic_profile.tsv <span class="at">-d</span> [KEGG, COG, PFAM, EC_NUMBER]</span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> pathway_extraction.py <span class="at">-c</span> user-defined_database.tsv <span class="at">-p</span> ../../output/final_merged_metabolic_profile.tsv <span class="at">-d</span> [KEGG, COG, PFAM, EC_NUMBER]</span></code></pre></div>
 <ol start="3" style="list-style-type: decimal">
 <li>Outputs will be places in the <code>output</code> directory containing the name “extracted_pathways.tsv”.</li>
 </ol>
