@@ -185,14 +185,8 @@ def create_mapping_file(arguments, bin_sample):
 		for l in lines:
 			if ">" in l:
 				contig_lst.append(l[1:-1])
-
-	#Get bin names for mapping
-	for c in range(len(contig_lst)):
-		idx = re.search("_scaffold", contig_lst[c])
-		if idx != None:
-			bin_lst.append(contig_lst[c][:idx.start()])
-		else:
-			bin_lst.append(np.nan)
+				#Get bin names for mapping
+				bin_lst.append(os.path.basename(file)[:-4])
 
 	#Add each contig name to each bin name in bin_sample
 	mapping_df = pd.DataFrame(zip(contig_lst, bin_lst), columns=["Original_Contig_Name", "Bin"])
@@ -203,9 +197,13 @@ def create_mapping_file(arguments, bin_sample):
 	i = 0
 	for sample in mapping_df['Original_Contig_Name']:
 		idx = re.search("_scaffold", sample)
-		og_contig_lst.append(mapping_df['Sampling_Site'].iloc[i]+sample[idx.start():])
+		if idx != None:
+			og_contig_lst.append(mapping_df['Sampling_Site'].iloc[i]+sample[idx.start():])
+		else:
+			og_contig_lst.append(np.nan)
 		i+=1
 	mapping_df['Original_Contig_Name'] = og_contig_lst
+	mapping_df = mapping_df.dropna()
 	#Save dataframe to file
 	mapping_df.to_csv(os.path.dirname(os.path.abspath(__file__)) + "/../../output/mapping_file.tsv", sep="\t", index=False)
 	print("Mapping file has been created!")
