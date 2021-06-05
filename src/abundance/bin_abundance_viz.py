@@ -87,7 +87,7 @@ def format_dataframe(arguments, bin_abundances, taxonomy_info):
 	#Left join bin abundance file with taxanomy information
 	bin_abundances = bin_abundances.merge(taxonomy_info, on='Bin', how='left').set_index('Bin')
 	#Order dataframe by Taxa
-	bin_abundances = bin_abundances.sort_values('Taxa')
+	bin_abundances = bin_abundances.replace(np.nan, 'Unknown').sort_values('Taxa')
 	#Sort columns
 	bin_abundances = bin_abundances.reindex(sorted(bin_abundances.columns), axis=1)
 	#Replace underscore with space in taxa names
@@ -133,7 +133,7 @@ def filter_top_sites(arguments, bin_abundances):
 	#List to keep dataframes together
 	df_list = []
 	#Get list of columns
-	col_list = bin_abundances.drop(columns = 'Taxa').columns.tolist()
+	col_list = bin_abundances.drop(columns=['Taxa']).columns.tolist()
 	#Number of rows to keep for each bin
 	num_filter = math.floor((arguments.args.percent / 100) * len(bin_abundances))
 
@@ -195,7 +195,7 @@ def create_clustermap(arguments, bin_abundances, palette, row_colors, heatmp = F
 	#Save or show plot
 	if arguments.args.out_fig:
 		if heatmp:
-			plt.savefig(os.path.dirname(os.path.abspath(__file__)) + "/../../output/heatmap_top_" + arguments.args.out_fig, dpi=arguments.args.dpi, bbox_inches="tight")
+			plt.savefig(os.path.dirname(os.path.abspath(__file__)) + "/../../output/heatmap_top_" + str(arguments.args.percent) + "%_" + arguments.args.out_fig, dpi=arguments.args.dpi, bbox_inches="tight")
 		else:
 			plt.savefig(os.path.dirname(os.path.abspath(__file__)) + "/../../output/clustermap_" + arguments.args.out_fig, dpi=arguments.args.dpi, bbox_inches="tight")
 	else:
@@ -253,7 +253,7 @@ def main():
 
 	#Get dataframe with highest abundances in each column
 	merged_df = filter_top_sites(arguments, bin_abundance_df)
-	merged_df.to_csv(os.path.dirname(os.path.abspath(__file__)) + '/../../output/top_sample_abundances.tsv', sep='\t')
+	merged_df.to_csv(os.path.dirname(os.path.abspath(__file__)) + '/../../output/top_' + str(arguments.args.percent) + '%_' + 'sample_abundances.tsv', sep='\t')
 
 	#Set color palette
 	my_palette = dict(zip(merged_df.Taxa.unique(), final_colors))
@@ -262,7 +262,7 @@ def main():
 	#Outputs final heatmap
 	create_clustermap(arguments, merged_df, my_palette, row_colors, True)
 
-	print("Success!\nThe following files have been saved in the \"output\" directory:\n\ntop_sample_abundances.tsv\n" + "heatmap_top_" + arguments.args.out_fig + "\nclustermap_" + arguments.args.out_fig)
+	print("Success!\nThe following files have been saved in the \"output\" directory:\n\ntop_" + str(arguments.args.percent) + "%_" + "sample_abundances.tsv\n" + "heatmap_top_" + str(arguments.args.percent) + "%_" + arguments.args.out_fig + "\nclustermap_" + arguments.args.out_fig)
 
 if __name__ == "__main__":
 	main()
