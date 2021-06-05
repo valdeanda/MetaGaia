@@ -259,6 +259,7 @@ def main():
 	create_binsize_file(arguments)
 	create_mapping_file(arguments, bin_sample_df)
 	print("Success!\nThe following files have been saved in the \"output\" directory:\n\ndepth_file.tsv\nreads_file.tsv\nbinsize_file.tsv\nmapping_file.tsv\n")
+	print("WARNING: Verify that all the scaffold names in the depth and mapping files under the \"Original_Contig_Name\" column are formatted the same. If not, double check the headers in the initial depth file(s) used.\n")
 	
 
 if __name__ == "__main__":
