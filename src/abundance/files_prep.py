@@ -96,13 +96,16 @@ def create_depth_file(arguments, depth_format, depth_dir):
 	A file containing the depth information is saved in the "output" folder.
 	"""
 
-	concat_flag = False
-
 	#If depth txt files are not concatenated already
 	if depth_dir:
-		depth_list = []
+		depth_list_1 = []
+		depth_list_2 = []
+		depth_concat_list = []
+
+		#Format directory
 		if depth_format[-1] != '/':
 			depth_format = depth_format + '/'
+		#Iterate through depth files in directory
 		for file in glob.glob(depth_format+'*'):
 			if 'depth' in file:
 				if 'txt' in file:
@@ -111,26 +114,33 @@ def create_depth_file(arguments, depth_format, depth_dir):
 					depth_df = pd.read_csv(file, sep='\t')
 				elif 'csv' in file:
 					depth_df = pd.read_csv(file)
+				##If column exists, drop it
 				if 'totalAvgDepth' in depth_df.columns:
 					depth_df = depth_df.drop(columns=['totalAvgDepth'])
+				#Remove all columns containing var in them
 				depth_df = depth_df[depth_df.columns.drop(list(depth_df.filter(regex='var')))]
 				#If each bin was mapped to all assemblies
 				if len(depth_df.columns) > 3:
 					depth_df = format_depth_df(depth_df)
-					concat_flag = True
-				depth_list.append(depth_df)
+					depth_list_1.append(depth_df)
+				else:
+					depth_list_2.append(depth_df)
 
-		if concat_flag:
-			depth_df = pd.concat(depth_list)
-		else:
+		if len(depth_list_2) > 0:
 			i = 1
-			for df in depth_list:
+			for df in depth_list_2:
 				if i == 1:
 					depth_df = copy.deepcopy(df)
 				else:
 					depth_df = depth_df.merge(df, on=['contigName', 'contigLen'], how='outer')
 				i+=1
 			depth_df = format_depth_df(depth_df)
+			depth_concat_list.append(depth_df)
+		if len(depth_list_1) > 0:
+			depth_df = pd.concat(depth_list_1)
+			depth_concat_list.append(depth_df)
+		if len(depth_list_1) > 0 and len(depth_list_2) > 0:
+			depth_df = pd.concat(depth_concat_list)
 	else:
 		depth_df = depth_format
 		if 'totalAvgDepth' in depth_df.columns:
