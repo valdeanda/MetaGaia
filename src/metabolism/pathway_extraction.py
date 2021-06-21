@@ -93,6 +93,10 @@ def main():
 		#If user provided file has multiple columns, map them to the extracted pathway dataframe
 		remove_cols = [col for col in databases_list if col != d]
 		extracted_df = extracted_df.drop(columns=remove_cols)
+		#Double check all necessary column are removed
+		for check in ['KEGG', 'COG', 'PFAM', 'EC_NUMBER']:
+			if check != d and check in extracted_df.columns.tolist():
+				extracted_df = extracted_df.drop(columns=[check])
 		if len(user_df.drop(columns=databases_list).columns.tolist()) > 1:
 			extracted_df = extracted_df.merge(user_df.drop(columns=remove_cols), on=d, how='left')
 		#Rename datbase column so that concatenation can occur

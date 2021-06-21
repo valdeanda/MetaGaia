@@ -55,7 +55,7 @@ To install seaborn, run `pip install seaborn`.
 
 ## Finding commonalities between phages and their hosts (host-virus)
 
-1. The "database_counts" file from the `merge_databases.py` script that contains only one of the following databases: KEGG, COG, PFAM, or EC_NUMBER.
+1. The "database_counts" (complete_metabolic_profile.tsv) file from the `metabolic_profile.py` script that contains only one of the following databases: KEGG, COG, PFAM, or EC_NUMBER.
 2. The output from Vibrant that maps phage scaffolds to metabolic pathways.
 
 # Running abundance
@@ -397,12 +397,14 @@ python3 bin_abundance_viz.py -b ../output/bin_abundance_output.tsv -t ~/tax2bin.
 2. To get the pathways mapped to each scaffold and the number of times each pathway is found within a bin, run the `metabolic_profile.py` script. These are the arguments for this script:
 
 ```{bash, highlight=TRUE, eval=FALSE}
-usage: metabolic_profile.py [-h] -i IMGANNO -m MAPPING -d DATABASE [-c CONSISTENCY]
+usage: metabolic_profile.py [-h] [-i IMGANNO_FILE] [-p IMGANNO_PATH] -m MAPPING -d DATABASE [-c CONSISTENCY]
 
 optional arguments:
   -h, --help            show this help message and exit
-  -i IMGANNO, --imganno IMGANNO
+  -i IMGANNO_FILE, --imganno_file IMGANNO_FILE
                         Input file or files in tsv format. Rows are genes columns are IMG annotations.
+  -p IMGANNO_PATH, --imganno_path IMGANNO_PATH
+                        Input path containing only the IMG files. Rows are genes columns are IMG annotations in each file.
   -m MAPPING, --mapping MAPPING
                         A tsv file containing original contig name, sample, and bin columns. Created from the files_prep.py script.
   -d DATABASE, --database DATABASE
@@ -456,39 +458,13 @@ Here is an example of how to run this script with a single IMG annotation file:
 python3 metabolic_profile.py -i imgannotation.tsv -m ../../data/example_input_files/bin_abundance/mapping_file.tsv -d [KEGG, COG, PFAM, EC_NUMBER] -c True
 ```
 
-Here is an example of how to run this script with multiple IMG annotation files (escape character needed for the asterisk *):
+Here is an example of how to run this script with multiple IMG annotation files:
 
 ```{bash, highlight=TRUE, eval=FALSE}
-python3 metabolic_profile.py -i /\*_imgannotation.tsv -m ../../data/example_input_files/bin_abundance/mapping_file.tsv -d [KEGG, COG, PFAM, EC_NUMBER] -c True
+python3 metabolic_profile.py -p /img_annofiles/ -m ../../data/example_input_files/bin_abundance/mapping_file.tsv -d [KEGG, COG, PFAM, EC_NUMBER] -c True
 ```
 
-2. Outputs will be saved in the `output` directory containing name formats: "mapped_scaffolds.tsv" and the database name followed by "metabolic_profile.tsv". NOTE: Old files will NOT be removed as each output is uniquely named.
-
-## Optional step: Merge databases into one file
-
-*This step is optional if the user has multiple databases that they need to merge into one file for the next step.*
-
-1. To merge each of the databases, run the `merge_database.py` script. These are the arguments for the script:
-
-```{bash, eval=FALSE}
-usage: merge_databases.py [-h] -p DATABASES_PATH -d DATABASE
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -p DATABASES_PATH, --databases_path DATABASES_PATH
-                        Path for directory containing all the database files.
-  -d DATABASE, --database DATABASE
-                        Database(s) of interest to merge together. Input as a
-                        list.
-```
-
-Here is an example of how to run this script:
-
-```{bash,eval=FALSE}
-python3 merge_database.py -p ../../output/ -d [KEGG, COG, PFAM, EC_NUMBER]
-```
-
-2. Outputs will be places in the `output` directory containing the name formats: "merged_" database name "_metabolic_profile.tsv" and "final_merged_metabolic_profile.tsv".
+2. Outputs will be saved in the `output` directory containing name formats: "mapped_scaffolds.tsv" and the database name followed by "complete_metabolic_profile.tsv". NOTE: Old files will NOT be removed as each output is uniquely named.
 
 ## Extract specific pathways to analyze
 
@@ -563,7 +539,7 @@ python3 pathway_extraction.py -c user-defined_database.tsv -p ../../output/final
 
 ## Compare phage and host metabolisms to identify commonalities
 
-1. There are two requirements needed to run this script: 1) the "database_counts" file outputted using the `merge_databases.py` script from the "metabolism" portion of this pipeline and 2) the Vibrant output file mapping scaffolds to metabolic pathways.
+1. There are two requirements needed to run this script: 1) the "database_counts" (complete_metabolic_profile.tsv) file outputted using the `metabolic_profile` script from the "metabolism" portion of this pipeline and 2) the Vibrant output file mapping scaffolds to metabolic pathways.
 
 2. To analyze the unique and shared metabolic pathways between the two organisms, run the `amg_hostvi.py` script. These are the arguments for the script:
 
@@ -629,7 +605,7 @@ cat(tabl16)
 Here is an example of how to run this script:
 
 ```{bash,eval=FALSE}
-python3 amg_hostvi.py -p ../../output/KEGG_database_counts.tsv -v ~/vibrant_output.tsv -d KEGG
+python3 amg_hostvi.py -p ../../output/complete_metabolic_profile.tsv -v ~/vibrant_output.tsv -d KEGG
 ```
 
 3. Outputs will be places in the `output` directory containing the names "phage_host_metabolism.tsv" and "phage_host_mapping.tsv".

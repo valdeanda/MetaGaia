@@ -200,7 +200,6 @@
             <li><a href="#running-metabolism">Running metabolism</a>
             <ul>
             <li><a href="#map-metabolic-pathways-to-the-scaffold-containing-them-and-get-the-counts-of-each-pathway-per-bin">Map metabolic pathways to the scaffold containing them and get the counts of each pathway per bin</a></li>
-            <li><a href="#optional-step-merge-databases-into-one-file">Optional step: Merge databases into one file</a></li>
             <li><a href="#extract-specific-pathways-to-analyze">Extract specific pathways to analyze</a></li>
             </ul></li>
             <li><a href="#running-host-virus">Running host-virus</a>
@@ -277,7 +276,7 @@
 <div id="finding-commonalities-between-phages-and-their-hosts-host-virus" class="section level2">
 <h2>Finding commonalities between phages and their hosts (host-virus)</h2>
 <ol style="list-style-type: decimal">
-<li>The “database_counts” file from the <code>merge_databases.py</code> script that contains only one of the following databases: KEGG, COG, PFAM, or EC_NUMBER.</li>
+<li>The “database_counts” (complete_metabolic_profile.tsv) file from the <code>metabolic_profile.py</code> script that contains only one of the following databases: KEGG, COG, PFAM, or EC_NUMBER.</li>
 <li>The output from Vibrant that maps phage scaffolds to metabolic pathways.</li>
 </ol>
 </div>
@@ -723,18 +722,20 @@
 <li><p>One requirement must be met before running the <code>metabolic_profile.py</code> script, which is that the IMG annotation files must be combined into one (see “Creating IMG annotation” for more information).</p></li>
 <li><p>To get the pathways mapped to each scaffold and the number of times each pathway is found within a bin, run the <code>metabolic_profile.py</code> script. These are the arguments for this script:</p></li>
 </ol>
-<div class="sourceCode" id="cb23"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="ex">usage:</span> metabolic_profile.py [-h] <span class="at">-i</span> IMGANNO <span class="at">-m</span> MAPPING <span class="at">-d</span> DATABASE [-c CONSISTENCY]</span>
+<div class="sourceCode" id="cb23"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="ex">usage:</span> metabolic_profile.py [-h] [-i IMGANNO_FILE] [-p IMGANNO_PATH] <span class="at">-m</span> MAPPING <span class="at">-d</span> DATABASE [-c CONSISTENCY]</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="ex">optional</span> arguments:</span>
 <span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-h,</span> <span class="at">--help</span>            show this help message and exit</span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-i</span> IMGANNO, <span class="at">--imganno</span> IMGANNO</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-i</span> IMGANNO_FILE, <span class="at">--imganno_file</span> IMGANNO_FILE</span>
 <span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> file or files in tsv format. Rows are genes columns are IMG annotations.</span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-m</span> MAPPING, <span class="at">--mapping</span> MAPPING</span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">A</span> tsv file containing original contig name, sample, and bin columns. Created from the files_prep.py script.</span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-d</span> DATABASE, <span class="at">--database</span> DATABASE</span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Database</span><span class="er">(</span><span class="ex">s</span><span class="kw">)</span> <span class="ex">of</span> interest to merge together. Input as a list.</span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-c</span> CONSISTENCY, <span class="at">--consistency</span> CONSISTENCY</span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Boolean</span> value that determines if scaffolds not containing a value for each database should be kept. Leave blank if consistency check is not needed.</span></code></pre></div>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-p</span> IMGANNO_PATH, <span class="at">--imganno_path</span> IMGANNO_PATH</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> path containing only the IMG files. Rows are genes columns are IMG annotations in each file.</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-m</span> MAPPING, <span class="at">--mapping</span> MAPPING</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">A</span> tsv file containing original contig name, sample, and bin columns. Created from the files_prep.py script.</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-d</span> DATABASE, <span class="at">--database</span> DATABASE</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Database</span><span class="er">(</span><span class="ex">s</span><span class="kw">)</span> <span class="ex">of</span> interest to merge together. Input as a list.</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-c</span> CONSISTENCY, <span class="at">--consistency</span> CONSISTENCY</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Boolean</span> value that determines if scaffolds not containing a value for each database should be kept. Leave blank if consistency check is not needed.</span></code></pre></div>
 <p>Example of imganno file:</p>
 <div class="sourceCode" id="cb24"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> imganno1.tsv</span></code></pre></div>
 <table>
@@ -869,31 +870,10 @@
 </table>
 <p>Here is an example of how to run this script with a single IMG annotation file:</p>
 <div class="sourceCode" id="cb26"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> metabolic_profile.py <span class="at">-i</span> imgannotation.tsv <span class="at">-m</span> ../../data/example_input_files/bin_abundance/mapping_file.tsv <span class="at">-d</span> [KEGG, COG, PFAM, EC_NUMBER] <span class="at">-c</span> True</span></code></pre></div>
-<p>Here is an example of how to run this script with multiple IMG annotation files (escape character needed for the asterisk *):</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> metabolic_profile.py <span class="at">-i</span> /\*_imgannotation.tsv <span class="at">-m</span> ../../data/example_input_files/bin_abundance/mapping_file.tsv <span class="at">-d</span> [KEGG, COG, PFAM, EC_NUMBER] <span class="at">-c</span> True</span></code></pre></div>
+<p>Here is an example of how to run this script with multiple IMG annotation files:</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> metabolic_profile.py <span class="at">-p</span> /img_annofiles/ <span class="at">-m</span> ../../data/example_input_files/bin_abundance/mapping_file.tsv <span class="at">-d</span> [KEGG, COG, PFAM, EC_NUMBER] <span class="at">-c</span> True</span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
-<li>Outputs will be saved in the <code>output</code> directory containing name formats: “mapped_scaffolds.tsv” and the database name followed by “metabolic_profile.tsv”. NOTE: Old files will NOT be removed as each output is uniquely named.</li>
-</ol>
-</div>
-<div id="optional-step-merge-databases-into-one-file" class="section level2">
-<h2>Optional step: Merge databases into one file</h2>
-<p><em>This step is optional if the user has multiple databases that they need to merge into one file for the next step.</em></p>
-<ol style="list-style-type: decimal">
-<li>To merge each of the databases, run the <code>merge_database.py</code> script. These are the arguments for the script:</li>
-</ol>
-<div class="sourceCode" id="cb28"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="ex">usage:</span> merge_databases.py [-h] <span class="at">-p</span> DATABASES_PATH <span class="at">-d</span> DATABASE</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="ex">optional</span> arguments:</span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-h,</span> <span class="at">--help</span>            show this help message and exit</span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-p</span> DATABASES_PATH, <span class="at">--databases_path</span> DATABASES_PATH</span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Path</span> for directory containing all the database files.</span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-d</span> DATABASE, <span class="at">--database</span> DATABASE</span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Database</span><span class="er">(</span><span class="ex">s</span><span class="kw">)</span> <span class="ex">of</span> interest to merge together. Input as a</span>
-<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">list.</span></span></code></pre></div>
-<p>Here is an example of how to run this script:</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> merge_database.py <span class="at">-p</span> ../../output/ <span class="at">-d</span> [KEGG, COG, PFAM, EC_NUMBER]</span></code></pre></div>
-<ol start="2" style="list-style-type: decimal">
-<li>Outputs will be places in the <code>output</code> directory containing the name formats: “merged_” database name &quot;_metabolic_profile.tsv&quot; and “final_merged_metabolic_profile.tsv”.</li>
+<li>Outputs will be saved in the <code>output</code> directory containing name formats: “mapped_scaffolds.tsv” and the database name followed by “complete_metabolic_profile.tsv”. NOTE: Old files will NOT be removed as each output is uniquely named.</li>
 </ol>
 </div>
 <div id="extract-specific-pathways-to-analyze" class="section level2">
@@ -902,19 +882,19 @@
 <li><p>One requirement must be met to run the <code>pathway_extraction.py</code> script, which is that the user-defined database must be created (see “Defining metabolic database” for more information).</p></li>
 <li><p>To extract and analyze specific metabolic pathways, run the <code>pathway_extraction.py</code> script. These are the arguments for the script:</p></li>
 </ol>
-<div class="sourceCode" id="cb30"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="ex">usage:</span> pathway_extraction.py [-h] <span class="at">-c</span> CUSTOMDATA <span class="at">-p</span> PATHWAY_DATABASE <span class="at">-d</span> DATABASE</span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="ex">optional</span> arguments:</span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-h,</span> <span class="at">--help</span>            show this help message and exit</span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-c</span> CUSTOMDATA, <span class="at">--customdata</span> CUSTOMDATA</span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> file in tsv format with at least one column with the header containing the pathways of interest. The headers of the metabolic pathway must correspond with its</span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">respective</span> database <span class="er">(</span><span class="ex">eg.</span> KEGG, COG, PFAM, or EC_NUMBER<span class="kw">)</span><span class="bu">.</span></span>
-<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-p</span> PATHWAY_DATABASE, <span class="at">--pathway_database</span> PATHWAY_DATABASE</span>
-<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> file in tsv format that contains the counts of each pathways per bin.</span>
-<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-d</span> DATABASE, <span class="at">--database</span> DATABASE</span>
-<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Database</span><span class="er">(</span><span class="ex">s</span><span class="kw">)</span> <span class="ex">of</span> interest to merge together. Input as a list.</span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="ex">usage:</span> pathway_extraction.py [-h] <span class="at">-c</span> CUSTOMDATA <span class="at">-p</span> PATHWAY_DATABASE <span class="at">-d</span> DATABASE</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="ex">optional</span> arguments:</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-h,</span> <span class="at">--help</span>            show this help message and exit</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-c</span> CUSTOMDATA, <span class="at">--customdata</span> CUSTOMDATA</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> file in tsv format with at least one column with the header containing the pathways of interest. The headers of the metabolic pathway must correspond with its</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">respective</span> database <span class="er">(</span><span class="ex">eg.</span> KEGG, COG, PFAM, or EC_NUMBER<span class="kw">)</span><span class="bu">.</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-p</span> PATHWAY_DATABASE, <span class="at">--pathway_database</span> PATHWAY_DATABASE</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> file in tsv format that contains the counts of each pathways per bin.</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-d</span> DATABASE, <span class="at">--database</span> DATABASE</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Database</span><span class="er">(</span><span class="ex">s</span><span class="kw">)</span> <span class="ex">of</span> interest to merge together. Input as a list.</span></code></pre></div>
 <p>Example of customdata file (can have other descriptive columns if needed):</p>
-<div class="sourceCode" id="cb31"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> custom_database.tsv</span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> custom_database.tsv</span></code></pre></div>
 <table style="width:100%;">
 <colgroup>
 <col width="15%" />
@@ -970,7 +950,7 @@
 </tbody>
 </table>
 <p>Example of pathway_database file:</p>
-<div class="sourceCode" id="cb32"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> final_merged_metabolic_profile.tsv</span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> final_merged_metabolic_profile.tsv</span></code></pre></div>
 <table>
 <colgroup>
 <col width="11%" />
@@ -1068,7 +1048,7 @@
 </tbody>
 </table>
 <p>Here is an example of how to run this script:</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> pathway_extraction.py <span class="at">-c</span> user-defined_database.tsv <span class="at">-p</span> ../../output/final_merged_metabolic_profile.tsv <span class="at">-d</span> [KEGG, COG, PFAM, EC_NUMBER]</span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> pathway_extraction.py <span class="at">-c</span> user-defined_database.tsv <span class="at">-p</span> ../../output/final_merged_metabolic_profile.tsv <span class="at">-d</span> [KEGG, COG, PFAM, EC_NUMBER]</span></code></pre></div>
 <ol start="3" style="list-style-type: decimal">
 <li>Outputs will be places in the <code>output</code> directory containing the name “extracted_pathways.tsv”.</li>
 </ol>
@@ -1079,26 +1059,26 @@
 <div id="compare-phage-and-host-metabolisms-to-identify-commonalities" class="section level2">
 <h2>Compare phage and host metabolisms to identify commonalities</h2>
 <ol style="list-style-type: decimal">
-<li><p>There are two requirements needed to run this script: 1) the “database_counts” file outputted using the <code>merge_databases.py</code> script from the “metabolism” portion of this pipeline and 2) the Vibrant output file mapping scaffolds to metabolic pathways.</p></li>
+<li><p>There are two requirements needed to run this script: 1) the “database_counts” (complete_metabolic_profile.tsv) file outputted using the <code>metabolic_profile</code> script from the “metabolism” portion of this pipeline and 2) the Vibrant output file mapping scaffolds to metabolic pathways.</p></li>
 <li><p>To analyze the unique and shared metabolic pathways between the two organisms, run the <code>amg_hostvi.py</code> script. These are the arguments for the script:</p></li>
 </ol>
-<div class="sourceCode" id="cb34"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="ex">usage:</span> amg_hostvi.py [-h] <span class="at">-p</span> PATHWAY_DATABASE <span class="at">-v</span> VIBRANT_OUTOUT <span class="at">-d</span></span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>                               <span class="ex">DATABASE</span></span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="ex">optional</span> arguments:</span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-h,</span> <span class="at">--help</span>            show this help message and exit</span>
-<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-p</span> PATHWAY_DATABASE, <span class="at">--pathway_database</span> PATHWAY_DATABASE</span>
-<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> file in tsv format that contains the counts of</span>
-<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">each</span> pathways per bin.</span>
-<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-v</span> VIBRANT_OUTOUT, <span class="at">--vibrant_outout</span> VIBRANT_OUTOUT</span>
-<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> file from Vibrant in tsv format that contains</span>
-<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">phage</span> scaffolds mapped to metabolic pathways.</span>
-<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-d</span> DATABASE, <span class="at">--database</span> DATABASE</span>
-<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> only one of the following database names the</span>
-<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">user</span> is interested in analyzing: KEGG, COG, PFAM, or</span>
-<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">EC_NUMBER.</span></span></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="ex">usage:</span> amg_hostvi.py [-h] <span class="at">-p</span> PATHWAY_DATABASE <span class="at">-v</span> VIBRANT_OUTOUT <span class="at">-d</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>                               <span class="ex">DATABASE</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="ex">optional</span> arguments:</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-h,</span> <span class="at">--help</span>            show this help message and exit</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-p</span> PATHWAY_DATABASE, <span class="at">--pathway_database</span> PATHWAY_DATABASE</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> file in tsv format that contains the counts of</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">each</span> pathways per bin.</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-v</span> VIBRANT_OUTOUT, <span class="at">--vibrant_outout</span> VIBRANT_OUTOUT</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> file from Vibrant in tsv format that contains</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">phage</span> scaffolds mapped to metabolic pathways.</span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-d</span> DATABASE, <span class="at">--database</span> DATABASE</span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> only one of the following database names the</span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">user</span> is interested in analyzing: KEGG, COG, PFAM, or</span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">EC_NUMBER.</span></span></code></pre></div>
 <p>Example of pathway_database file:</p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> final_merged_metabolic_profile.tsv</span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> final_merged_metabolic_profile.tsv</span></code></pre></div>
 <table>
 <colgroup>
 <col width="11%" />
@@ -1196,7 +1176,7 @@
 </tbody>
 </table>
 <p>Example of vibrant_output file</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> vibrant_output.tsv</span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> vibrant_output.tsv</span></code></pre></div>
 <table style="width:100%;">
 <colgroup>
 <col width="15%" />
@@ -1252,7 +1232,7 @@
 </tbody>
 </table>
 <p>Here is an example of how to run this script:</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> amg_hostvi.py <span class="at">-p</span> ../../output/KEGG_database_counts.tsv <span class="at">-v</span> ~/vibrant_output.tsv <span class="at">-d</span> KEGG</span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> amg_hostvi.py <span class="at">-p</span> ../../output/complete_metabolic_profile.tsv <span class="at">-v</span> ~/vibrant_output.tsv <span class="at">-d</span> KEGG</span></code></pre></div>
 <ol start="3" style="list-style-type: decimal">
 <li>Outputs will be places in the <code>output</code> directory containing the names “phage_host_metabolism.tsv” and “phage_host_mapping.tsv”.</li>
 </ol>
@@ -1306,44 +1286,44 @@ Table_9_-_3300033141.functional_diversity.txt</code></pre>
 <ol style="list-style-type: decimal">
 <li>Prep samples one at time for mapping.</li>
 </ol>
-<div class="sourceCode" id="cb40"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Copy fq files from yggshare to folder</span></span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> 4998_22_23_H2_S10_fastp_bb.fastq.gz /home/keappler/07_Lab_Protocols/Binning/Guaymas_2018_Samples/mapping_bwa/</span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="co">#Run mdsum</span></span>
-<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="pp">*</span>.gz <span class="kw">;</span> <span class="cf">do</span> <span class="ex">md5sum</span> <span class="va">$i</span> <span class="op">&gt;</span> <span class="va">$i</span>.md5sum <span class="kw">;</span> <span class="cf">done</span></span></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Copy fq files from yggshare to folder</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> 4998_22_23_H2_S10_fastp_bb.fastq.gz /home/keappler/07_Lab_Protocols/Binning/Guaymas_2018_Samples/mapping_bwa/</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="co">#Run mdsum</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="pp">*</span>.gz <span class="kw">;</span> <span class="cf">do</span> <span class="ex">md5sum</span> <span class="va">$i</span> <span class="op">&gt;</span> <span class="va">$i</span>.md5sum <span class="kw">;</span> <span class="cf">done</span></span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li>Run script example for one sample below.</li>
 </ol>
-<div class="sourceCode" id="cb41"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co">#STARTED 10:39 4/5/2021</span></span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="va">fq=</span>/home/keappler/07_Lab_Protocols/Binning/Guaymas_2018_Samples/mapping_bwa/4998_22_23_H2_S10_fastp_bb.fastq.gz</span>
-<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a><span class="va">assembly=</span>/home/keappler/07_Lab_Protocols/Binning/Guaymas_2018_Samples/mapping_bwa/2.5kb/renamed/2.5kb_4998_22_23_H2_S10.headers.removed.fa</span>
-<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a><span class="co">#Index contigs &gt;=2.5kb assembly subset created in previous steps</span></span>
-<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a><span class="ex">bwa</span> index <span class="va">$assembly</span> </span>
-<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">&quot;Done index&quot;</span> </span>
-<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Align contigs &gt;=2.5kb against concatenated, interleaved, and trimmed R1 and R2</span></span>
-<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a><span class="ex">bwa</span> mem <span class="at">-t</span> 70 <span class="va">$assembly</span> <span class="at">-p</span> <span class="va">$fq</span> <span class="op">&gt;</span> 4998_22_23_H2_S10.sam</span>
-<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">&quot;Done mapping&quot;</span> </span>
-<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a><span class="co">#samtools create bam files- needed for binning</span></span>
-<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> view <span class="at">-bS</span> <span class="at">-F</span> 4 <span class="at">-@10</span> 4998_22_23_H2_S10.sam <span class="at">-o</span> 4998_22_23_H2_S10.bam</span>
-<span id="cb41-17"><a href="#cb41-17" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">&quot;Done bam&quot;</span> </span>
-<span id="cb41-18"><a href="#cb41-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-19"><a href="#cb41-19" aria-hidden="true" tabindex="-1"></a><span class="co">#samtools create sorted bam files- needed for jgi_summarize_bam_contig_depths</span></span>
-<span id="cb41-20"><a href="#cb41-20" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> sort <span class="at">-@10</span> 4998_22_23_H2_S10.bam <span class="at">-o</span> 4998_22_23_H2_S10_sorted.bam</span>
-<span id="cb41-21"><a href="#cb41-21" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">&quot;Done sorted bam&quot;</span></span>
-<span id="cb41-22"><a href="#cb41-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-23"><a href="#cb41-23" aria-hidden="true" tabindex="-1"></a><span class="co">#The file to put the contig by bam depth matrix &gt; depth.txt</span></span>
-<span id="cb41-24"><a href="#cb41-24" aria-hidden="true" tabindex="-1"></a><span class="co">#Do not include variance from mean depth along the contig</span></span>
-<span id="cb41-25"><a href="#cb41-25" aria-hidden="true" tabindex="-1"></a><span class="ex">jgi_summarize_bam_contig_depths</span>  <span class="at">--outputDepth</span> depth.txt 4998_22_23_H2_S10_sorted.bam <span class="at">--noIntraDepthVariance</span></span>
-<span id="cb41-26"><a href="#cb41-26" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">&quot;Done depth file&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co">#STARTED 10:39 4/5/2021</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="va">fq=</span>/home/keappler/07_Lab_Protocols/Binning/Guaymas_2018_Samples/mapping_bwa/4998_22_23_H2_S10_fastp_bb.fastq.gz</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="va">assembly=</span>/home/keappler/07_Lab_Protocols/Binning/Guaymas_2018_Samples/mapping_bwa/2.5kb/renamed/2.5kb_4998_22_23_H2_S10.headers.removed.fa</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a><span class="co">#Index contigs &gt;=2.5kb assembly subset created in previous steps</span></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a><span class="ex">bwa</span> index <span class="va">$assembly</span> </span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">&quot;Done index&quot;</span> </span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Align contigs &gt;=2.5kb against concatenated, interleaved, and trimmed R1 and R2</span></span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a><span class="ex">bwa</span> mem <span class="at">-t</span> 70 <span class="va">$assembly</span> <span class="at">-p</span> <span class="va">$fq</span> <span class="op">&gt;</span> 4998_22_23_H2_S10.sam</span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">&quot;Done mapping&quot;</span> </span>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a><span class="co">#samtools create bam files- needed for binning</span></span>
+<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> view <span class="at">-bS</span> <span class="at">-F</span> 4 <span class="at">-@10</span> 4998_22_23_H2_S10.sam <span class="at">-o</span> 4998_22_23_H2_S10.bam</span>
+<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">&quot;Done bam&quot;</span> </span>
+<span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-19"><a href="#cb39-19" aria-hidden="true" tabindex="-1"></a><span class="co">#samtools create sorted bam files- needed for jgi_summarize_bam_contig_depths</span></span>
+<span id="cb39-20"><a href="#cb39-20" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> sort <span class="at">-@10</span> 4998_22_23_H2_S10.bam <span class="at">-o</span> 4998_22_23_H2_S10_sorted.bam</span>
+<span id="cb39-21"><a href="#cb39-21" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">&quot;Done sorted bam&quot;</span></span>
+<span id="cb39-22"><a href="#cb39-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-23"><a href="#cb39-23" aria-hidden="true" tabindex="-1"></a><span class="co">#The file to put the contig by bam depth matrix &gt; depth.txt</span></span>
+<span id="cb39-24"><a href="#cb39-24" aria-hidden="true" tabindex="-1"></a><span class="co">#Do not include variance from mean depth along the contig</span></span>
+<span id="cb39-25"><a href="#cb39-25" aria-hidden="true" tabindex="-1"></a><span class="ex">jgi_summarize_bam_contig_depths</span>  <span class="at">--outputDepth</span> depth.txt 4998_22_23_H2_S10_sorted.bam <span class="at">--noIntraDepthVariance</span></span>
+<span id="cb39-26"><a href="#cb39-26" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">&quot;Done depth file&quot;</span></span></code></pre></div>
 <ol start="3" style="list-style-type: decimal">
 <li>Run md5sum and delete .sam file (large) before starting next sample.</li>
 </ol>
-<div class="sourceCode" id="cb42"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="pp">*</span>.sam <span class="kw">;</span> <span class="cf">do</span> <span class="ex">md5sum</span> <span class="va">$i</span> <span class="op">&gt;</span> <span class="va">$i</span>.md5sum <span class="kw">;</span> <span class="cf">done</span></span></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="pp">*</span>.sam <span class="kw">;</span> <span class="cf">do</span> <span class="ex">md5sum</span> <span class="va">$i</span> <span class="op">&gt;</span> <span class="va">$i</span>.md5sum <span class="kw">;</span> <span class="cf">done</span></span></code></pre></div>
 <ol start="4" style="list-style-type: decimal">
 <li>Repeat process for each sample.</li>
 </ol>
@@ -1355,23 +1335,23 @@ Table_9_-_3300033141.functional_diversity.txt</code></pre>
 <ol style="list-style-type: decimal">
 <li>Index bin.</li>
 </ol>
-<div class="sourceCode" id="cb43"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="ex">bwa</span> index 13_Jan_SF_Bin5.fna</span></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="ex">bwa</span> index 13_Jan_SF_Bin5.fna</span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li>BWA MEM to obtain SAM files.</li>
 </ol>
-<div class="sourceCode" id="cb44"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> sample <span class="kw">in</span> <span class="kw">`</span><span class="fu">cat</span> names.txt<span class="kw">`;</span> <span class="cf">do</span> <span class="ex">bwa</span> mem <span class="at">-t</span> 30 13_Jan_SF_Bin5.fna <span class="at">-p</span> /home/mlangwig/Working_Dir/SF_Bay/fastq/<span class="va">$sample</span>.fastq.gz <span class="op">&gt;</span> <span class="va">$sample</span>.sam<span class="kw">;</span> <span class="cf">done</span></span></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> sample <span class="kw">in</span> <span class="kw">`</span><span class="fu">cat</span> names.txt<span class="kw">`;</span> <span class="cf">do</span> <span class="ex">bwa</span> mem <span class="at">-t</span> 30 13_Jan_SF_Bin5.fna <span class="at">-p</span> /home/mlangwig/Working_Dir/SF_Bay/fastq/<span class="va">$sample</span>.fastq.gz <span class="op">&gt;</span> <span class="va">$sample</span>.sam<span class="kw">;</span> <span class="cf">done</span></span></code></pre></div>
 <ol start="3" style="list-style-type: decimal">
 <li>Samtools view to convert SAM to BAM.</li>
 </ol>
-<div class="sourceCode" id="cb45"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> sample <span class="kw">in</span> <span class="kw">`</span><span class="fu">cat</span> names.txt<span class="kw">`;</span> <span class="cf">do</span> <span class="ex">samtools</span> view <span class="at">-bS</span> <span class="at">-F</span> 4 <span class="at">-@10</span>  <span class="va">$sample</span>.sam <span class="at">-o</span> <span class="va">$sample</span>.bam<span class="kw">;</span> <span class="cf">done</span></span></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> sample <span class="kw">in</span> <span class="kw">`</span><span class="fu">cat</span> names.txt<span class="kw">`;</span> <span class="cf">do</span> <span class="ex">samtools</span> view <span class="at">-bS</span> <span class="at">-F</span> 4 <span class="at">-@10</span>  <span class="va">$sample</span>.sam <span class="at">-o</span> <span class="va">$sample</span>.bam<span class="kw">;</span> <span class="cf">done</span></span></code></pre></div>
 <ol start="4" style="list-style-type: decimal">
 <li>Obtain sorted bams.</li>
 </ol>
-<div class="sourceCode" id="cb46"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> sample <span class="kw">in</span> <span class="kw">`</span><span class="fu">cat</span> names.txt<span class="kw">`;</span> <span class="cf">do</span> <span class="ex">samtools</span> sort <span class="at">-@10</span> <span class="va">$sample</span>.bam <span class="at">-o</span> <span class="va">$sample</span>-sorted.bam<span class="kw">;</span> <span class="cf">done</span></span></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> sample <span class="kw">in</span> <span class="kw">`</span><span class="fu">cat</span> names.txt<span class="kw">`;</span> <span class="cf">do</span> <span class="ex">samtools</span> sort <span class="at">-@10</span> <span class="va">$sample</span>.bam <span class="at">-o</span> <span class="va">$sample</span>-sorted.bam<span class="kw">;</span> <span class="cf">done</span></span></code></pre></div>
 <ol start="5" style="list-style-type: decimal">
 <li>Use sorted bams to get Cov_ files for mmgenome2.</li>
 </ol>
-<div class="sourceCode" id="cb47"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="ex">jgi_summarize_bam_contig_depths</span> <span class="at">--outputDepth</span> depth.txt <span class="pp">*</span>sorted.bam <span class="at">--noIntraDepthVariance</span></span></code></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="ex">jgi_summarize_bam_contig_depths</span> <span class="at">--outputDepth</span> depth.txt <span class="pp">*</span>sorted.bam <span class="at">--noIntraDepthVariance</span></span></code></pre></div>
 <ol start="6" style="list-style-type: decimal">
 <li>Repeat process for each sample.</li>
 </ol>
@@ -1388,10 +1368,10 @@ Table_9_-_3300033141.functional_diversity.txt</code></pre>
 <div id="defining-metabolic-database" class="section level2">
 <h2>Defining metabolic database</h2>
 <p>When creating a user-defined database, there are multiple format requirements. The metabolic databases of interest should contain one or multiple headers (KEGG, COG, PFAM, EC_NUMBER) depending on which database the user wants to analyze. All other auxiliary columns will be mapped to the bins and added to the final outputted file. Lastly, in each of the database columns, please format each pathway name as it is in the IMG annotation file:</p>
-<div class="sourceCode" id="cb48"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="ex">KEGG</span> <span class="at">-</span> KO:K12345</span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="ex">COG</span> <span class="at">-</span> COG12345</span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="ex">PFAM</span> <span class="at">-</span> pfam12345</span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a><span class="ex">EC_NUMBER</span> <span class="at">-</span> EC:EC12345</span></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="ex">KEGG</span> <span class="at">-</span> KO:K12345</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="ex">COG</span> <span class="at">-</span> COG12345</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="ex">PFAM</span> <span class="at">-</span> pfam12345</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="ex">EC_NUMBER</span> <span class="at">-</span> EC:EC12345</span></code></pre></div>
 </div>
 <div id="creating-vibrant-mapping" class="section level2">
 <h2>Creating Vibrant mapping</h2>

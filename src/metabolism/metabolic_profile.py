@@ -31,7 +31,8 @@ class Command_line_args():
 
 		#Command line arguments
 		self.parser = argparse.ArgumentParser()
-		self.parser.add_argument('-i', '--imganno', required=True, help=("Input file or files in tsv format. Rows are genes columns are IMG annotations."))
+		self.parser.add_argument('-i', '--imganno_file', required=False, help=("Input file or files in tsv format. Rows are genes columns are IMG annotations."))
+		self.parser.add_argument('-p', '--imganno_path', required=False, help=("Input path containing only the IMG files. Rows are genes columns are IMG annotations in each file."))
 		self.parser.add_argument('-m', '--mapping', required=True, help=("A tsv file containing original contig name, sample, and bin columns. Created from the files_prep.py script."))
 		self.parser.add_argument('-d', '--database', required=True, help=("Database(s) of interest to merge together. Input as a list."))
 		self.parser.add_argument('-c', '--consistency', required=False, default="", help=('Boolean value that determines if scaffolds not containing a value for each database should be kept. Leave blank if consistency check is not needed.'))
@@ -47,12 +48,15 @@ def map_scaffolds(arguments, img_df, mapping_df):
 	mapping_df is a pandas dataframe mapping the original contig name to its corresponding bin and sample.
 	Output(s):
 	databases_df is a pandas dataframe that maps each scaffold to metabolic pathways that are found for it.
+	files_list is a list containing all the files created in this function.
 	"""
+
+	files_list = []
 
 	#Map scaffolds 
 	mapping_df = mapping_df[['Original_Contig_Name', 'Bin']]
 	if 'Bin' not in img_df.columns:
-		scaff_df = pd.merge(img_df, mapping_df, on='Original_Contig_Name')
+		scaff_df = pd.merge(img_df, mapping_df, on='Original_Contig_Name', how='left')
 	else:
 		scaff_df = copy.deepcopy(img_df)
 	#Rename columns
@@ -91,10 +95,11 @@ def map_scaffolds(arguments, img_df, mapping_df):
 	#Fill bin NaNs as NoBin
 	databases_df = databases_df.fillna({'Bin': 'NoBin'})
 
+	files_list.append(uniquify(os.path.dirname(os.path.abspath(__file__)) + "/../../output/mapped_scaffolds.tsv").split('/')[-1])
 	#Save file in output folder
 	databases_df.to_csv(uniquify(os.path.dirname(os.path.abspath(__file__)) + "/../../output/mapped_scaffolds.tsv"), index=False, sep="\t")
 
-	return databases_df
+	return [databases_df, files_list]
 
 
 def uniquify(path):
@@ -123,10 +128,11 @@ def get_database_counts(extract_list, databases_df):
 	extract_list is a list of the desired databases to analyze.
 	databases_df is a pandas dataframe that maps each scaffold to metabolic pathway that are found for it.
 	Output(s):
-	count_df is a pandas dataframe that tracks the count of each metabolic pathway per bin.
+	files_list is a list containing all the files created in this function.
 	"""
 
 	files_list = []
+	dfs_list = []
 
 	#For each database the user wants to analyze
 	for d in extract_list:
@@ -154,12 +160,51 @@ def get_database_counts(extract_list, databases_df):
 		count_df = count_df.fillna(0)
 		#Create a total columns
 		count_df['Total'] = count_df.sum(axis=1)
+		#Rename index
+		count_df.index.names = [d]
+		count_df = count_df.reset_index()
 
-		files_list.append(d + '_metabolic_profile.tsv')
-		#Save file in the output folder
-		count_df.to_csv(uniquify(os.path.dirname(os.path.abspath(__file__)) + '/../../output/' + d + '_metabolic_profile.tsv'), index=True, sep='\t')
+		dfs_list.append(count_df)
+
+	#Combine multiple database dataframes into one
+	final_df = pd.concat(dfs_list)
+	final_df = final_df.set_index(extract_list)
+	final_df = final_df.fillna(0.0)
+	#Save dataframe containing multiple database columns
+	files_list.append(uniquify(os.path.dirname(os.path.abspath(__file__)) + '/../../output/complete_metabolic_profile.tsv').split('/')[-1])
+	final_df.to_csv(uniquify(os.path.dirname(os.path.abspath(__file__)) + '/../../output/complete_metabolic_profile.tsv'), sep='\t', index=True)
 
 	return files_list
+
+def concat_img(img_path):
+	"""
+	This function will concatenate the IMG files if there are more than one present within a directory.
+	Input(s):
+	img_path is a string containing the path to the img files needed for concatenation.
+	Output(s):
+	img_file is a pandas dataframe that contains all the IMG information in one file.
+	"""
+
+	files_list = []
+	img_list = []
+
+	if img_path[-1] != '/':
+		img_path = img_path + '/'
+
+	for img in glob.glob(img_path + '*'):
+		if '.tsv' in img:
+			img_df = pd.read_csv(img, sep='\t')
+		if '.csv' in img:
+			img_df = pd.read_csv(img)
+		if '.txt' in img:
+			img_df = pd.read_csv(img, sep='\s+')
+		img_list.append(img_df)
+
+	img_file = pd.concat(img_list)
+	files_list.append(uniquify(os.path.dirname(os.path.abspath(__file__)) + '/../../output/IMG_consolidated_master.tsv').split('/')[-1])
+	img_file.to_csv(uniquify(os.path.dirname(os.path.abspath(__file__)) + '/../../output/IMG_consolidated_master.tsv'), sep='\t')
+
+	return [img_file, files_list]
 
 
 def main():
@@ -167,7 +212,7 @@ def main():
 	#Command line arguments
 	arguments = Command_line_args()
 
-	saved_files = ['mapped_scaffolds.tsv']
+	saved_files = []
 
 	#Create output directory if not already present
 	if not os.path.exists(os.path.dirname(os.path.abspath(__file__)) + "/../../output"):
@@ -186,14 +231,24 @@ def main():
 	#Read mapping file created previously (bin_abundance step)
 	mapping_df = pd.read_csv(arguments.args.mapping, sep="\t")
 
+	print('Creating a consolidated IMG file containing all the IMG information for ALL sample(s).')
 	#Read in IMG annotated file
+	if arguments.args.imganno_file:
+		img_df = pd.read_csv(arguments.args.imganno_file)
+	else:
+		img_concat = concat_img(arguments.args.imganno_path)
+		img_df = img_concat[0]
+		saved_files = img_concat[1]
 	print('Beginning to map scaffolds to bins and database values. Getting count of each database value in each bin. This may take a while.')
-	for img in glob.glob(arguments.args.imganno):
-		img_df = pd.read_csv(img, sep="\t")
-		#Map scaffolds to each of the databases
-		databases_df = map_scaffolds(arguments, img_df, mapping_df)
-		#Get the counts of each metabolic pathway in each bin
-		saved_files = saved_files + get_database_counts(databases_list, databases_df)
+	#Map scaffolds to each of the databases
+	scaffold_mapping = map_scaffolds(arguments, img_df, mapping_df)
+	databases_df = scaffold_mapping[0]
+	if len(saved_files) == 0:
+		saved_files = scaffold_mapping[1]
+	else:
+		saved_files = saved_files + scaffold_mapping[1]
+	#Get the counts of each metabolic pathway in each bin
+	saved_files = saved_files + get_database_counts(databases_list, databases_df)
 	
 	print("Success!\nThe following files have been saved in the \"output\" directory:\n")
 	for f in saved_files:
