@@ -285,6 +285,7 @@
 <h1>Running abundance</h1>
 <div id="creating-bin-abundance-input-files" class="section level2">
 <h2>Creating bin abundance input files</h2>
+<p>NOTE: To create the <code>bin_sample</code> file, read the “Mapping bins to samples” section below. To create the <code>depth</code> file, read the “Create initial depth file” section below as well.</p>
 <ol style="list-style-type: decimal">
 <li>To create all the input files necessary, run the <code>files_prep.py</code> script. Two input files (concatenated <code>depth</code> file is optional) are necessary and the directories where the <code>fastq</code> and <code>fna</code> (and optional <code>depth</code>) files are located are needed to run this script (see “Download fastqs” for more information on where to obtain these). One of the depth arguments must be present: depth or depth_dir. These are the arguments necessary to run this script:</li>
 </ol>
@@ -360,7 +361,6 @@
 </tr>
 </tbody>
 </table>
-<p>To create the <code>bin_sample</code> file, read the “Mapping bins to samples” section below. To create the <code>depth</code> file, read the “Create initial depth file” section below as well.</p>
 <p>Example of bin_sample file:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> bin_sample.tsv</span></code></pre></div>
 <table>
@@ -719,7 +719,7 @@
 <div id="map-metabolic-pathways-to-the-scaffold-containing-them-and-get-the-counts-of-each-pathway-per-bin" class="section level2">
 <h2>Map metabolic pathways to the scaffold containing them and get the counts of each pathway per bin</h2>
 <ol style="list-style-type: decimal">
-<li><p>One requirement must be met before running the <code>metabolic_profile.py</code> script, which is that the IMG annotation files must be combined into one (see “Creating IMG annotation” for more information).</p></li>
+<li><p>One requirement must be met before running the <code>metabolic_profile.py</code> script, which is that each of the IMG annotation files must be downloaded (see “Creating IMG annotation” for more information) and contain the “Original_Contig_Name” column (created by merging the IMG file with a user-created mapping file containing the columns: “IMG_Contig_Name” and “Original_Contig_Name”).</p></li>
 <li><p>To get the pathways mapped to each scaffold and the number of times each pathway is found within a bin, run the <code>metabolic_profile.py</code> script. These are the arguments for this script:</p></li>
 </ol>
 <div class="sourceCode" id="cb23"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="ex">usage:</span> metabolic_profile.py [-h] [-i IMGANNO_FILE] [-p IMGANNO_PATH] <span class="at">-m</span> MAPPING <span class="at">-d</span> DATABASE [-c CONSISTENCY]</span>

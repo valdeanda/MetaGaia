@@ -62,6 +62,8 @@ To install seaborn, run `pip install seaborn`.
 
 ## Creating bin abundance input files
 
+NOTE: To create the `bin_sample` file, read the "Mapping bins to samples" section below. To create the `depth` file, read the "Create initial depth file" section below as well.
+
 1. To create all the input files necessary, run the `files_prep.py` script. Two input files (concatenated `depth` file is optional) are necessary and the directories where the `fastq` and `fna ` (and optional `depth`) files are located are needed to run this script (see "Download fastqs" for more information on where to obtain these). One of the depth arguments must be present: depth or depth_dir. These are the arguments necessary to run this script:
 
 ```{bash, eval=FALSE}
@@ -104,8 +106,6 @@ tabl_1 <- "
 "
 cat(tabl_1) # output the table in a format good for HTML/PDF/docx conversion
 ```
-
-To create the `bin_sample` file, read the "Mapping bins to samples" section below. To create the `depth` file, read the "Create initial depth file" section below as well.
 
 Example of bin_sample file:
 
@@ -392,7 +392,7 @@ python3 bin_abundance_viz.py -b ../output/bin_abundance_output.tsv -t ~/tax2bin.
 
 ## Map metabolic pathways to the scaffold containing them and get the counts of each pathway per bin
 
-1. One requirement must be met before running the `metabolic_profile.py` script, which is that the IMG annotation files must be combined into one (see "Creating IMG annotation" for more information).
+1. One requirement must be met before running the `metabolic_profile.py` script, which is that each of the IMG annotation files must be downloaded (see "Creating IMG annotation" for more information) and contain the "Original_Contig_Name" column (created by merging the IMG file with a user-created mapping file containing the columns: "IMG_Contig_Name" and "Original_Contig_Name").
 
 2. To get the pathways mapped to each scaffold and the number of times each pathway is found within a bin, run the `metabolic_profile.py` script. These are the arguments for this script:
 
