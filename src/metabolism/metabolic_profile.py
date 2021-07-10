@@ -231,9 +231,10 @@ def main():
 	#Read mapping file created previously (bin_abundance step)
 	mapping_df = pd.read_csv(arguments.args.mapping, sep="\t")
 
-	print('Creating a consolidated IMG file containing all the IMG information for ALL sample(s).')
+	
 	#Read in IMG annotated file
 	if arguments.args.imganno_file:
+		print('Reading in consolidated IMG file.')
 		if arguments.args.imganno_file.endswith('.tsv'):
 			img_df = pd.read_csv(arguments.args.imganno_file, sep='\t')
 		elif arguments.args.imganno_file.endswith('.csv'):
@@ -241,6 +242,7 @@ def main():
 		elif arguments.args.imganno_file.endswith('.txt'):
 			img_df = pd.read_csv(arguments.args.imganno_file, sep='\s+')
 	else:
+		print('Creating a consolidated IMG file containing all the IMG information for ALL sample(s).')
 		img_concat = concat_img(arguments.args.imganno_path)
 		img_df = img_concat[0]
 		saved_files = img_concat[1]
