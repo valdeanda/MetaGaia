@@ -235,11 +235,11 @@ def main():
 		arguments.args.fna_dir = arguments.args.fna_dir + "/"
 
 	#Check if files are tsv or csv
-	if ".tsv" in arguments.args.bin_samples:
+	if arguments.args.bin_samples.endswith('.tsv'):
 		bin_sample_df = pd.read_csv(arguments.args.bin_samples, sep="\t")
-	elif ".csv" in arguments.args.bin_samples:
+	elif arguments.args.bin_samples.endswith('.csv'):
 		bin_sample_df = pd.read_csv(arguments.args.bin_samples)
-	elif ".txt" in arguments.args.bin_samples:
+	elif arguments.args.bin_samples.endswith('.txt'):
 		bin_sample_df = pd.read_csv(arguments.args.bin_samples, sep='\s+')
 	else:
 		print("Bin to sample file is not in tsv or csv format!")
@@ -248,11 +248,11 @@ def main():
 	#Create depth file
 	print("Beginning to create input files. This may take a while.")
 	if arguments.args.depth:
-		if ".tsv" in arguments.args.depth:
+		if arguments.args.depth.endswith('.tsv'):
 			depth_df = pd.read_csv(arguments.args.depth, sep="\t")
-		elif ".csv" in arguments.args.depth:
+		elif arguments.args.depth.endswith('.csv'):
 			depth_df = pd.read_csv(arguments.args.depth)
-		elif ".txt" in arguments.args.depth:
+		elif arguments.args.depth.endswith('.txt'):
 			depth_df = pd.read_csv(arguments.args.depth, sep='\s+')
 		else:
 			print("Depth file is not in tsv, csv, or txt format!")

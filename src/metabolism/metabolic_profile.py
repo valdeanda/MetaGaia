@@ -192,11 +192,11 @@ def concat_img(img_path):
 		img_path = img_path + '/'
 
 	for img in glob.glob(img_path + '*'):
-		if '.tsv' in img:
+		if img.endswith('.tsv'):
 			img_df = pd.read_csv(img, sep='\t')
-		if '.csv' in img:
+		elif img.endswith('.csv'):
 			img_df = pd.read_csv(img)
-		if '.txt' in img:
+		elif img.endswith('.txt'):
 			img_df = pd.read_csv(img, sep='\s+')
 		img_list.append(img_df)
 
@@ -234,7 +234,12 @@ def main():
 	print('Creating a consolidated IMG file containing all the IMG information for ALL sample(s).')
 	#Read in IMG annotated file
 	if arguments.args.imganno_file:
-		img_df = pd.read_csv(arguments.args.imganno_file)
+		if arguments.args.imganno_file.endwith('.tsv'):
+			img_df = pd.read_csv(arguments.args.imganno_file, sep='\t')
+		elif arguments.args.imganno_file.endwith('.csv'):
+			img_df = pd.read_csv(arguments.args.imganno_file)
+		elif arguments.args.imganno_file.endwith('.txt'):
+			img_df = pd.read_csv(arguments.args.imganno_file, sep='\s+')
 	else:
 		img_concat = concat_img(arguments.args.imganno_path)
 		img_df = img_concat[0]
