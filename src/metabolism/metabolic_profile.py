@@ -234,11 +234,11 @@ def main():
 	print('Creating a consolidated IMG file containing all the IMG information for ALL sample(s).')
 	#Read in IMG annotated file
 	if arguments.args.imganno_file:
-		if arguments.args.imganno_file.endwith('.tsv'):
+		if arguments.args.imganno_file.endswith('.tsv'):
 			img_df = pd.read_csv(arguments.args.imganno_file, sep='\t')
-		elif arguments.args.imganno_file.endwith('.csv'):
+		elif arguments.args.imganno_file.endswith('.csv'):
 			img_df = pd.read_csv(arguments.args.imganno_file)
-		elif arguments.args.imganno_file.endwith('.txt'):
+		elif arguments.args.imganno_file.endswith('.txt'):
 			img_df = pd.read_csv(arguments.args.imganno_file, sep='\s+')
 	else:
 		img_concat = concat_img(arguments.args.imganno_path)
