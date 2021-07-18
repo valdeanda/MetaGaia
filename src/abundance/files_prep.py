@@ -32,7 +32,7 @@ class Command_line_args():
 		#Command line arguments
 		self.parser = argparse.ArgumentParser()
 		self.parser.add_argument('-b', '--bin_samples', required=True, type=str, help='Input file containing 2 columns: 1st column contains bin names and 2nd column contains sample names. Requires header for each column, \"Bin\" and \"Sampling_Site\" respectively. File must have tsv, csv, or txt file extension.')
-		self.parser.add_argument('-d', '--depth', required=False, default="", type=str, help='Input file containing 5 columns: contigName, contigLen, totalAvgDepth, Sample_Depth, and Depth. This file can be created with jgi_summarize_bam_contig_depths. File must have tsv, csv, or txt file extension.')
+		self.parser.add_argument('-d', '--depth', required=False, default="", type=str, help='Input file containing 5 columns: contigName, contigLen, totalAvgDepth, Sample, and Depth. This file can be created with jgi_summarize_bam_contig_depths. File must have tsv, csv, or txt file extension.')
 		self.parser.add_argument('-f', '--depth_dir', required=False, default="", type=str, help='Input directory path containing all the depth txt files that must be concatenated. No other txt files should be present within the directory!')
 		self.parser.add_argument('-q', '--fastq_dir', required=True, type=str, help='Input directory path containing all the fasta files.')
 		self.parser.add_argument('-a', '--fna_dir', required=True, type=str, help='Input directory path containing all the fna files.')

@@ -38,7 +38,7 @@ def main():
 
   parser.add_argument('-d', '--depth', required=True,
                       help=("Tabular file depth info"
-                          "Original_Contig_Name  contigLen  Saple_Depth Depth"))
+                          "Original_Contig_Name  contigLen  Sample Depth"))
 
   parser.add_argument('-s', '--binsize', required=True,
                       help=("Tabular file with Bin and corresponding Genome size (bp) as columns"))
