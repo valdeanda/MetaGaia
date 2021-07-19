@@ -69,7 +69,7 @@ def format_dataframe(arguments, bin_abundances, taxonomy_info):
 	bin_abundances = bin_abundances.drop(columns=['Sample']).rename(columns={'Site': 'Sample'})
 
     #Drop unneeded columns
-	bin_abundances = bin_abundances.drop(columns=['RelativeAbundance', 'Sampling_Site'])
+	bin_abundances = bin_abundances.drop(columns=['RelativeAbundance', 'Sampling_Site', 'Coverage', 'NormalizedCoverage'])
 	#Log abundances
 	bin_abundances['RelativeAbundanceReadable'] = np.log10(bin_abundances['RelativeAbundanceReadable'])
 	#Check if NaN in RelativeAbundanceReadable

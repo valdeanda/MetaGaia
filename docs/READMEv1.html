@@ -287,7 +287,7 @@
 <h2>Creating bin abundance input files</h2>
 <p>NOTE: To create the <code>bin_sample</code> file, read the “Mapping bins to samples” section below. To create the <code>depth</code> file, read the “Create initial depth file” section below as well.</p>
 <ol style="list-style-type: decimal">
-<li>To create all the input files necessary, run the <code>files_prep.py</code> script. Two input files (concatenated <code>depth</code> file is optional) are necessary and the directories where the <code>fastq</code> and <code>fna</code> (and optional <code>depth</code>) files are located are needed to run this script (see “Download fastqs” for more information on where to obtain these). One of the depth arguments must be present: depth or depth_dir. These are the arguments necessary to run this script:</li>
+<li>To create all the input files necessary, run the <code>files_prep.py</code> script. Two input files (concatenated <code>depth</code> file is optional) are necessary and the directories where the <code>fastq</code> and <code>fna</code> (and optional <code>depth</code>) files are located are needed to run this script (see “Download fastqs” for more information on where to obtain these). All fastq files must end with “.fastq.gz”. One of the depth arguments must be present: depth or depth_dir. These are the arguments necessary to run this script:</li>
 </ol>
 <div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">usage:</span> files_prep.py [-h] <span class="at">-b</span> BIN_SAMPLES [-d DEPTH] [-f DEPTH_DIR] <span class="at">-q</span> FASTQ_DIR <span class="at">-a</span> FNA_DIR</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -394,7 +394,7 @@
 </tbody>
 </table>
 <p>Here is an example of how to run this script:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> files_prep.py <span class="at">-b</span> ../../data/example_input_files/files_prep/bin_sample.tsv <span class="at">-d</span> ../../data/example_input_files/files_prep/depth.tsv <span class="at">-q</span> ~/fastq_files/ <span class="at">-a</span> ~/fna_files/</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> files_prep.py <span class="at">-b</span> ../../data/example_input_files/files_prep/bin_sample.tsv <span class="at">-d</span> ../../data/example_input_files/files_prep/depth_file.tsv <span class="at">-q</span> ~/fastq_files/ <span class="at">-a</span> ~/fna_files/</span></code></pre></div>
 <p>or (if depth files are not already concatenated):</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> files_prep.py <span class="at">-b</span> ../../data/example_input_files/files_prep/bin_sample.tsv <span class="at">-f</span> ~/depth_files/ <span class="at">-q</span> ~/fastq_files/ <span class="at">-a</span> ~/fna_files/</span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">

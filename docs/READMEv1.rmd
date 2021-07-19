@@ -64,7 +64,7 @@ To install seaborn, run `pip install seaborn`.
 
 NOTE: To create the `bin_sample` file, read the "Mapping bins to samples" section below. To create the `depth` file, read the "Create initial depth file" section below as well.
 
-1. To create all the input files necessary, run the `files_prep.py` script. Two input files (concatenated `depth` file is optional) are necessary and the directories where the `fastq` and `fna ` (and optional `depth`) files are located are needed to run this script (see "Download fastqs" for more information on where to obtain these). One of the depth arguments must be present: depth or depth_dir. These are the arguments necessary to run this script:
+1. To create all the input files necessary, run the `files_prep.py` script. Two input files (concatenated `depth` file is optional) are necessary and the directories where the `fastq` and `fna ` (and optional `depth`) files are located are needed to run this script (see "Download fastqs" for more information on where to obtain these). All fastq files must end with ".fastq.gz". One of the depth arguments must be present: depth or depth_dir. These are the arguments necessary to run this script:
 
 ```{bash, eval=FALSE}
 usage: files_prep.py [-h] -b BIN_SAMPLES [-d DEPTH] [-f DEPTH_DIR] -q FASTQ_DIR -a FNA_DIR
@@ -131,7 +131,7 @@ cat(tabl2)
 Here is an example of how to run this script:
 
 ```{bash, eval=FALSE}
-python3 files_prep.py -b ../../data/example_input_files/files_prep/bin_sample.tsv -d ../../data/example_input_files/files_prep/depth.tsv -q ~/fastq_files/ -a ~/fna_files/
+python3 files_prep.py -b ../../data/example_input_files/files_prep/bin_sample.tsv -d ../../data/example_input_files/files_prep/depth_file.tsv -q ~/fastq_files/ -a ~/fna_files/
 ```
 or (if depth files are not already concatenated):
 ```{bash, eval=FALSE}

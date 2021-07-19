@@ -82,23 +82,23 @@ def main():
   # Calculate coverage
 
 
-  mapping_size_depth_new_reads['cov']=mapping_size_depth_new_reads['contigLen'].astype(float) * mapping_size_depth_new_reads['Depth'].astype(float)
+  mapping_size_depth_new_reads['Coverage']=mapping_size_depth_new_reads['contigLen'].astype(float) * mapping_size_depth_new_reads['Depth'].astype(float)
 
   # Sum the coverage values by Bin
 
-  mapping_size_depth_new_reads['Sum_cov'] = mapping_size_depth_new_reads.groupby(by=['Bin',"Sample"])['cov'].transform('sum')
+  mapping_size_depth_new_reads['Sum_cov'] = mapping_size_depth_new_reads.groupby(by=['Bin',"Sample"])['Coverage'].transform('sum')
 
   # Normalize coverage values by Bin size
-  mapping_size_depth_new_reads['NormalizedCov'] = mapping_size_depth_new_reads['Sum_cov'].astype(float) / mapping_size_depth_new_reads['Size'].astype(float)
+  mapping_size_depth_new_reads['NormalizedCoverage'] = mapping_size_depth_new_reads['Sum_cov'].astype(float) / mapping_size_depth_new_reads['Size'].astype(float)
 
   #Normalize by total number of reads of the mapped sample
-  mapping_size_depth_new_reads['RelativeAbundance'] = mapping_size_depth_new_reads['NormalizedCov'].astype(float) / mapping_size_depth_new_reads['Reads'].astype(float)
+  mapping_size_depth_new_reads['RelativeAbundance'] = mapping_size_depth_new_reads['NormalizedCoverage'].astype(float) / mapping_size_depth_new_reads['Reads'].astype(float)
 
   #Multiply by a big number to make the abundance readable
   mapping_size_depth_new_reads['RelativeAbundanceReadable'] = mapping_size_depth_new_reads['RelativeAbundance'].astype(float) * readablenum
 
   #Drop duplicates
-  finaldf=mapping_size_depth_new_reads[['Bin', 'Sample', 'Sampling_Site', 'RelativeAbundance', 'RelativeAbundanceReadable']]
+  finaldf=mapping_size_depth_new_reads[['Bin', 'Sample', 'Sampling_Site', 'Coverage', 'NormalizedCoverage', 'RelativeAbundance', 'RelativeAbundanceReadable']]
   finaldf=finaldf.drop_duplicates()
 
   #Output files
