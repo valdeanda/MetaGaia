@@ -107,7 +107,7 @@ tabl_1 <- "
 cat(tabl_1) # output the table in a format good for HTML/PDF/docx conversion
 ```
 
-Example of bin_sample file:
+Example of bin_sample file ("Sampling_Site" is a column with names of the physical location samples were extracted from):
 
 ```{bash, eval=FALSE}
 head bin_sample.tsv
@@ -544,21 +544,18 @@ python3 pathway_extraction.py -c user-defined_database.tsv -p ../../output/final
 2. To analyze the unique and shared metabolic pathways between the two organisms, run the `amg_hostvi.py` script. These are the arguments for the script:
 
 ```{bash,eval=FALSE}
-usage: amg_hostvi.py [-h] -p PATHWAY_DATABASE -v VIBRANT_OUTOUT -d
-                               DATABASE
+usage: amg_hostvi.py [-h] -p PATHWAY_DATABASE [-vf VIBRANT_FILE] [-vp VIBRANT_PATH] -d DATABASE
 
 optional arguments:
   -h, --help            show this help message and exit
   -p PATHWAY_DATABASE, --pathway_database PATHWAY_DATABASE
-                        Input file in tsv format that contains the counts of
-                        each pathways per bin.
-  -v VIBRANT_OUTOUT, --vibrant_outout VIBRANT_OUTOUT
-                        Input file from Vibrant in tsv format that contains
-                        phage scaffolds mapped to metabolic pathways.
+                        Input file in tsv format that contains the counts of each pathway per bin.
+  -vf VIBRANT_FILE, --vibrant_file VIBRANT_FILE
+                        Input file from Vibrant in tsv format that contains phage scaffolds mapped to metabolic pathways.
+  -vp VIBRANT_PATH, --vibrant_path VIBRANT_PATH
+                        Input path from Vibrant files in tsv format that contains phage scaffolds mapped to metabolic pathways.
   -d DATABASE, --database DATABASE
-                        Input only one of the following database names the
-                        user is interested in analyzing: KEGG, COG, PFAM, or
-                        EC_NUMBER.
+                        Input only one of the following database names the user is interested in analyzing: KEGG or PFAM.
 ```
 
 Example of pathway_database file:
@@ -602,13 +599,19 @@ tabl16 <- "
 cat(tabl16)
 ```
 
-Here is an example of how to run this script:
+Here is an example of how to run this script with one file:
 
 ```{bash,eval=FALSE}
-python3 amg_hostvi.py -p ../../output/complete_metabolic_profile.tsv -v ~/vibrant_output.tsv -d KEGG
+python3 amg_hostvi.py -p ../../output/complete_metabolic_profile.tsv -vf ~/vibrant_output.tsv -d KEGG
 ```
 
-3. Outputs will be places in the `output` directory containing the names "phage_host_metabolism.tsv" and "phage_host_mapping.tsv".
+Here is an example of how to run this script with multiple files in a directory:
+
+```{bash,eval=FALSE}
+python3 amg_hostvi.py -p ../../output/complete_metabolic_profile.tsv -vp ~/vibrant_outputs/ -d KEGG
+```
+
+3. Outputs will be placed in the `output` directory containing the names "phage_host_metabolism.tsv" and "phage_host_mapping.tsv".
 
 # Additional commands
 
@@ -769,7 +772,7 @@ EC_NUMBER - EC:EC12345
 ```
 ## Creating Vibrant mapping
 
-I need help with this.
+To create the Vibrant mapping file, please follow the instructions [here](https://github.com/AnantharamanLab/VIBRANT). When using Vibrant, please place the sample name of where each scaffold is found within the file name between specific characters (eg. "VIBRANT_AMG_**individuals_SF_Jul11_USGS_4_1_scaffold**_2kb.tsv").
 
 # Support and Development
 
