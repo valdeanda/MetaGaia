@@ -66,6 +66,8 @@ def main():
 	elif 'KEGG' in host_df.columns.tolist() and database != 'KEGG':
 		host_df = host_df.drop(columns=['KEGG'])
 	host_df = host_df.drop(columns=['NoBin', 'Total'])
+	host_df = host_df.dropna()
+
 	#Read in vibrant output
 	if args.vibrant_file:
 		phage_df = pd.read_csv(args.vibrant_file, sep='\t')
@@ -84,8 +86,12 @@ def main():
 			vibrant_list.append(vibrant_df)
 		phage_df = pd.concat(vibrant_list)
 
+	#Format metabolic profile into two columns: KEGG pathways and Bins
 	host_df = pd.melt(host_df, id_vars=database, value_vars=host_df.columns.tolist()[1:])
 	host_df = host_df.rename(columns={'variable': 'Bin'}).drop(columns=['value'])
+
+	#Add Sample column to metabolic profile (host dataframe)
+	host_df['Sample'] = host_df['Bin'].str.extract('(.+?)_Bin', expand=False)
 
 	#Rename database columns
 	if database == 'KEGG':
@@ -102,10 +108,11 @@ def main():
 				phage_df.loc[phage_df[database] == val, database] = 'pfam' + val[2:]
 
 	#Join the two dataframes
-	phage_host_df = host_df.merge(phage_df[['scaffold', database]], on=database, how='outer')
+	phage_host_df = host_df.merge(phage_df[['scaffold', 'Sample', database]], on=['Sample', database], how='outer')
 	phage_host_df = phage_host_df.fillna(np.nan)
 
 	print('Determining if phages and hosts have common metabolic pathways. This may take a while. Ignore any warnings.')
+	phage_host_df = phage_host_df.drop(columns=['Sample'])
 	#Create new column determining presence of metabolic pathway
 	phage_host_df['Presence'] = np.nan
 	#Subset dataframe to alter "Presence" column accordingly
@@ -116,7 +123,7 @@ def main():
 	dfh = phage_host_df[(phage_host_df['scaffold'].isnull()) & (phage_host_df['Bin'].notnull())]
 	dfh['Presence'] = 'host'
 	#Dataframe containing both bins and scaffolds
-	dfb = phage_host_df[(phage_host_df['scaffold'].isnull()) & (phage_host_df['Bin'].isnull())]
+	dfb = phage_host_df[(phage_host_df['scaffold'].notnull()) & (phage_host_df['Bin'].notnull())]
 	dfb['Presence'] = 'both'
 	phage_host_df = pd.concat([dfp, dfh, dfb])
 

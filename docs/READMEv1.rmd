@@ -85,7 +85,7 @@ optional arguments:
                         Input directory path containing all the fna files.
 ```
 
-Example of concatenated depth file (NOTE: The Sample names in the depth file may need to be edited by the user to match the Sample names in the reads_file.tsv. WARNING: Samples without depth values are removed if present.):
+Example of concatenated depth file (NOTE: The Sample names in the depth file may need to be edited by the user to match the Sample names in the reads_file.tsv. Also, the "Original_Contig_Name" column in both the depth and mapping files must match by appending the respective "Sampling_Site" prefix to each scaffold in the depth file prior to running the script [See "Create initial depth files" for more information]. WARNING: Samples without depth values are removed if present.):
 
 ```{bash, eval=FALSE}
 head depth_file.tsv
@@ -107,8 +107,7 @@ tabl_1 <- "
 cat(tabl_1) # output the table in a format good for HTML/PDF/docx conversion
 ```
 
-Example of bin_sample file ("Sampling_Site" is a column with names of the physical location samples were extracted from):
-
+Example of bin_sample file ("Sampling_Site" is a column with the IMG names that identifies the sample where each scaffold originates)
 ```{bash, eval=FALSE}
 head bin_sample.tsv
 ```
@@ -749,6 +748,8 @@ for sample in `cat names.txt`; do samtools sort -@10 $sample.bam -o $sample-sort
 ```{bash, eval=FALSE}
 jgi_summarize_bam_contig_depths --outputDepth depth.txt *sorted.bam --noIntraDepthVariance
 ```
+
+7. Append "Sampling_Site" prefix to all the scaffolds in a sample. "Sampling_Site" is a column with the IMG names that identifies the sample where each scaffold originates.
 
 6. Repeat process for each sample.
 
