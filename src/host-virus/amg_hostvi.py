@@ -88,7 +88,10 @@ def main():
 
 	#Format metabolic profile into two columns: KEGG pathways and Bins
 	host_df = pd.melt(host_df, id_vars=database, value_vars=host_df.columns.tolist()[1:])
-	host_df = host_df.rename(columns={'variable': 'Bin'}).drop(columns=['value'])
+	host_df = host_df.rename(columns={'variable': 'Bin'})
+	#Drop rows that do not have KEGG pathways in bins
+	host_df = host_df[host_df.value != 0]
+	host_df = host_df.drop(columns=['value'])
 
 	#Add Sample column to metabolic profile (host dataframe)
 	host_df['Sample'] = host_df['Bin'].str.extract('(.+?)_Bin', expand=False)
