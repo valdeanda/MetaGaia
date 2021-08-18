@@ -98,7 +98,7 @@ def main():
   mapping_size_depth_new_reads['RelativeAbundanceReadable'] = mapping_size_depth_new_reads['RelativeAbundance'].astype(float) * readablenum
 
   #Drop duplicates
-  finaldf=mapping_size_depth_new_reads[['Bin', 'Sample', 'Sampling_Site', 'Coverage', 'NormalizedCoverage', 'RelativeAbundance', 'RelativeAbundanceReadable']]
+  finaldf=mapping_size_depth_new_reads[['Bin', 'Sample', 'Sampling_Site', 'NormalizedCoverage', 'RelativeAbundance', 'RelativeAbundanceReadable']]
   finaldf=finaldf.drop_duplicates()
 
   #Output files

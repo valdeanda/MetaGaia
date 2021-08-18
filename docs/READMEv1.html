@@ -305,7 +305,7 @@
 <span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> directory path containing all the fasta files.</span>
 <span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-a</span> FNA_DIR, <span class="at">--fna_dir</span> FNA_DIR</span>
 <span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> directory path containing all the fna files.</span></code></pre></div>
-<p>Example of concatenated depth file (NOTE: The Sample names in the depth file may need to be edited by the user to match the Sample names in the reads_file.tsv. Also, the “Original_Contig_Name” column in both the depth and mapping files must match by appending the respective “Sampling_Site” prefix to each scaffold in the depth file prior to running the script [See “Create initial depth files” for more information]. WARNING: Samples without depth values are removed if present.):</p>
+<p>Example of concatenated depth file (NOTE: Please make sure the scaffold names in the depth file(s) contain the unique identifier corresponding to the bin that the scaffold originates from. The Sample names in the depth file may need to be edited by the user to match the Sample names in the reads_file.tsv. Also, the “Original_Contig_Name” column in both the depth and mapping files must match by appending the respective “Sampling_Site” prefix to each scaffold in the depth file prior to running the script [See “Create initial depth files” for more information]. WARNING: Samples without depth values are removed if present.):</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> depth_file.tsv</span></code></pre></div>
 <table>
 <thead>
@@ -361,7 +361,7 @@
 </tr>
 </tbody>
 </table>
-<p>Example of bin_sample file (“Sampling_Site” is a column with the IMG names that identifies the sample where each scaffold originates)</p>
+<p>Example of bin_sample file (“Sampling_Site” is a column with unique identifiers that identifies the sample where each scaffold originates)</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> bin_sample.tsv</span></code></pre></div>
 <table>
 <thead>
@@ -373,23 +373,23 @@
 <tbody>
 <tr class="odd">
 <td>NoBin</td>
-<td align="center">4.1</td>
+<td align="center">S0A</td>
 </tr>
 <tr class="even">
 <td>13_Jan_SF_Bin44</td>
-<td align="center">8.1</td>
+<td align="center">S4B</td>
 </tr>
 <tr class="odd">
 <td>14_Jan_SF_Bin36</td>
-<td align="center">13</td>
+<td align="center">S5A</td>
 </tr>
 <tr class="even">
 <td>21_Jan_SF_Bin21</td>
-<td align="center">24</td>
+<td align="center">S2C</td>
 </tr>
 <tr class="odd">
 <td>24_Jan_SF_Bin43</td>
-<td align="center">21</td>
+<td align="center">S4D</td>
 </tr>
 </tbody>
 </table>
@@ -1352,7 +1352,7 @@ Table_9_-_3300033141.functional_diversity.txt</code></pre>
 </ol>
 <div class="sourceCode" id="cb46"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="ex">jgi_summarize_bam_contig_depths</span> <span class="at">--outputDepth</span> depth.txt <span class="pp">*</span>sorted.bam <span class="at">--noIntraDepthVariance</span></span></code></pre></div>
 <ol start="7" style="list-style-type: decimal">
-<li><p>Append “Sampling_Site” prefix to all the scaffolds in a sample. “Sampling_Site” is a column with the IMG names that identifies the sample where each scaffold originates.</p></li>
+<li><p>Append “Sampling_Site” prefix to all the scaffolds in a sample. “Sampling_Site” is a column with unique identifiers that identifies the sample where each scaffold originates.</p></li>
 <li><p>Repeat process for each sample.</p></li>
 </ol>
 </div>

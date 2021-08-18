@@ -206,9 +206,9 @@ def create_mapping_file(arguments, bin_sample):
 	#Edit names in Original_Contig_Name column
 	i = 0
 	for sample in mapping_df['Original_Contig_Name']:
-		idx = re.search("_scaffold", sample)
+		idx = re.search("scaffold", sample)
 		if idx != None:
-			og_contig_lst.append(mapping_df['Sampling_Site'].iloc[i]+sample[idx.start():])
+			og_contig_lst.append(mapping_df['Sampling_Site'].iloc[i]+'_'+sample[idx.start():])
 		else:
 			og_contig_lst.append(np.nan)
 		i+=1
