@@ -132,9 +132,12 @@ def main():
     args = parser.parse_args()
 
     print('reading CRT input...')
+
     crispr_dict = read_crt(args.crt_file)
     ncrispr = len(crispr_dict.keys())
+
     print('{} CRISPR arrays identified'.format(ncrispr))
+    
     if not args.quality_off:
         print('filtering poor-quality CRISPRs:')
         print('miminum spacer length: {}'.format(args.min_spacer_length))
