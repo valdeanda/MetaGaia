@@ -3,10 +3,13 @@
 """
 Author: Ian Rambo - ian.rambo@utexas.edu
 Created: August 17, 2021
-Last updated: August 23, 2021
+Last updated: August 24, 2021
+License: GNU GENERAL PUBLIC LICENSE, Version 3, 29 June 2007
 
-Purpose: Parse CRISPR Recognition Tool (CRT) output from IMG 5.0 and
-output a FASTA file of spacer sequences.
+Purpose:
+Parse CRISPR Recognition Tool (CRT) output from IMG 5.0
+Perform optional CRISPR quality filtering
+Output a FASTA file of spacer sequences.
 """
 import argparse
 import os
@@ -99,7 +102,7 @@ def write_spacer_fasta(crispr_dict, spacer_fasta):
     try:
         fasta_handle = open(spacer_fasta, 'w')
     except IOError:
-        print('could not open output FASTA file {}'.format(spacer_fasta))
+        print('ERROR: could not open output FASTA file {}'.format(spacer_fasta))
 
     nspacers = 0
 
@@ -112,7 +115,7 @@ def write_spacer_fasta(crispr_dict, spacer_fasta):
                 fasta_handle.write(spacer_entry)
             nspacers += len(spacers)
         else:
-            print('ERROR - CRISPR dictionary does not contain nested feature dict')
+            print('ERROR: CRISPR dictionary does not contain nested feature dict')
             print('Cannot write to output FASTA, exiting...')
             sys.exit(1)
     print('{} spacers written to {}'.format(nspacers, spacer_fasta))
@@ -137,7 +140,7 @@ def main():
     ncrispr = len(crispr_dict.keys())
 
     print('{} CRISPR arrays identified'.format(ncrispr))
-    
+
     if not args.quality_off:
         print('filtering poor-quality CRISPRs:')
         print('miminum spacer length: {}'.format(args.min_spacer_length))
