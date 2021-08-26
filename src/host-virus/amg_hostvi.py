@@ -12,18 +12,37 @@
 # ------------------------------
 
 import argparse
+import glob
 import numpy as np
 import os
 import pandas as pd
+import re
+
+def format_vibrant(vibrant_df, vibrant_name):
+	"""
+	This function formats the Vibrant scaffold names by adding the sampling_site name as a prefix.
+	Input(s):
+	vibrant_df is a pandas dataframe of the Vibrant output.
+	vibrant_name is a string of the name of the vibrant file.
+	Output(s):
+	vibrant_df is a pandas datafrmae that has been modified to include a Sample column and an altered scaffold column.
+	"""
+
+	sample_name = re.search('individuals_(.+?)_scaffold', vibrant_name).group(1)
+	vibrant_df['Sample'] = sample_name
+	vibrant_df['scaffold'] = sample_name + '_' + vibrant_df['scaffold']
+
+	return vibrant_df
 
 
 def main():
 
 	#Command line arguments
 	parser = argparse.ArgumentParser()
-	parser.add_argument('-p','--pathway_database', required=True, help="Input file in tsv format that contains the counts of each pathways per bin.")
-	parser.add_argument('-v', '--vibrant_outout', required=True, help="Input file from Vibrant in tsv format that contains phage scaffolds mapped to metabolic pathways.")
-	parser.add_argument('-d', '--database', required=True, help="Input only one of the following database names the user is interested in analyzing: KEGG, COG, PFAM, or EC_NUMBER.")
+	parser.add_argument('-p','--pathway_database', required=True, help="Input file in tsv format that contains the counts of each pathway per bin.")
+	parser.add_argument('-vf', '--vibrant_file', required=False, help="Input file from Vibrant in tsv format that contains phage scaffolds mapped to metabolic pathways.")
+	parser.add_argument('-vp', '--vibrant_path', required=False, help="Input path from Vibrant files in tsv format that contains phage scaffolds mapped to metabolic pathways.")
+	parser.add_argument('-d', '--database', required=True, help="Input only one of the following database names the user is interested in analyzing: KEGG or PFAM.")
 	args = parser.parse_args()
 
 	#Create output directory if not already present
@@ -35,13 +54,47 @@ def main():
 	print("Beginning to analyze phage and host metabolisms.")
 
 	#Read in input files
-	host_df = pd.read_csv(args.pathway_database, sep='\t')
-	host_df = host_df.drop(columns=['NoBin'])
-	phage_df = pd.read_csv(args.vibrant_outout, sep='\t')
 	database = args.database.upper()
+	host_df = pd.read_csv(args.pathway_database, sep='\t', index_col=False)
+	#Drop unneeded database columns
+	if 'EC_NUMBER' in host_df.columns.tolist():
+		host_df = host_df.drop(columns=['EC_NUMBER'])
+	if 'COG' in host_df.columns.tolist():
+		host_df = host_df.drop(columns=['COG'])
+	if 'PFAM' in host_df.columns.tolist() and database != 'PFAM':
+		host_df = host_df.drop(columns=['PFAM'])
+	elif 'KEGG' in host_df.columns.tolist() and database != 'KEGG':
+		host_df = host_df.drop(columns=['KEGG'])
+	host_df = host_df.drop(columns=['NoBin', 'Total'])
+	host_df = host_df.dropna()
 
-	host_df = pd.melt(host_df, id_vars=database, value_vars=host.columns.tolist()[1:])
-	host_df = host_df.rename(columns={'variable': 'Bin'}).drop(columns=['value'])
+	#Read in vibrant output
+	if args.vibrant_file:
+		phage_df = pd.read_csv(args.vibrant_file, sep='\t')
+		phage_df = format_vibrant(phage_df, args.vibrant_file.split('/')[-1])
+	else:
+		vibrant_list = []
+
+		if args.vibrant_path[-1] != '/':
+			vibrant_path = args.vibrant_path + '/'
+		else:
+			vibrant_path = args.vibrant_path
+		#Format each vibrant file in directory and concatenate
+		for vibrant in glob.glob(vibrant_path + "VIBRANT_AMG*"):
+			vibrant_df = pd.read_csv(vibrant, sep='\t', index_col=False)
+			vibrant_df = format_vibrant(vibrant_df, vibrant.split('/')[-1])
+			vibrant_list.append(vibrant_df)
+		phage_df = pd.concat(vibrant_list)
+
+	#Format metabolic profile into two columns: KEGG pathways and Bins
+	host_df = pd.melt(host_df, id_vars=database, value_vars=host_df.columns.tolist()[1:])
+	host_df = host_df.rename(columns={'variable': 'Bin'})
+	#Drop rows that do not have KEGG pathways in bins
+	host_df = host_df[host_df.value != 0]
+	host_df = host_df.drop(columns=['value'])
+
+	#Add Sample column to metabolic profile (host dataframe)
+	host_df['Sample'] = host_df['Bin'].str.extract('(.+?)_Bin', expand=False)
 
 	#Rename database columns
 	if database == 'KEGG':
@@ -58,28 +111,35 @@ def main():
 				phage_df.loc[phage_df[database] == val, database] = 'pfam' + val[2:]
 
 	#Join the two dataframes
-	phage_host_df = host_df.merge(phage_df[['scaffold', database]], on=database, how='outer')
-	phage_host_df = phage_host_df.fillna('None')
+	phage_host_df = host_df.merge(phage_df[['scaffold', 'Sample', database]], on=['Sample', database], how='outer')
+	phage_host_df = phage_host_df.fillna(np.nan)
 
-	print('Determining if phages and hosts have common metabolic pathways.')
+	print('Determining if phages and hosts have common metabolic pathways. This may take a while. Ignore any warnings.')
+	phage_host_df = phage_host_df.drop(columns=['Sample'])
 	#Create new column determining presence of metabolic pathway
 	phage_host_df['Presence'] = np.nan
-	for i in range(len(phage_host_df)):
-		if phage_host_df['Bin'].iloc[i] == 'None' and hage_host_df['scaffold'].iloc[i] == 'None':
-			continue
-		elif phage_host_df['Bin'].iloc[i] == 'None':
-			phage_host_df['Presence'].iloc[i] = 'phage'
-		elif phage_host_df['scaffold'].iloc[i] == 'None':
-			phage_host_df['Presence'].iloc[i] = 'host'
-		else:
-			phage_host_df['Presence'].iloc[i] = 'both'
+	#Subset dataframe to alter "Presence" column accordingly
+	#Scaffold dataframe
+	dfp = phage_host_df[(phage_host_df['Bin'].isnull()) & (phage_host_df['scaffold'].notnull())]
+	dfp['Presence'] = 'phage'
+	#Bins dataframe
+	dfh = phage_host_df[(phage_host_df['scaffold'].isnull()) & (phage_host_df['Bin'].notnull())]
+	dfh['Presence'] = 'host'
+	#Dataframe containing both bins and scaffolds
+	dfb = phage_host_df[(phage_host_df['scaffold'].notnull()) & (phage_host_df['Bin'].notnull())]
+	dfb['Presence'] = 'both'
+	phage_host_df = pd.concat([dfp, dfh, dfb])
+
 	#Drop all rows with NaN in the Presence column
-	phage_host_df = phage_host_df.dropna()
+	phage_host_df = phage_host_df.dropna(subset=['Presence'])
 	#Save file
 	phage_host_df.to_csv(os.path.dirname(os.path.abspath(__file__)) + '/../../output/phage_host_metabolism.tsv', sep='\t', index=False)
 
 	#Only keep the bins mapped to scaffolds
-	phage_host_df = phage_host_df[phage_host_df['Presence'] == 'both'].drop(columns=['Presence', 'KEGG'])
+	if database == 'KEGG':
+		phage_host_df = phage_host_df[phage_host_df['Presence'] == 'both'].drop(columns=['Presence', 'KEGG'])
+	elif database == 'PFAM':
+		phage_host_df = phage_host_df[phage_host_df['Presence'] == 'both'].drop(columns=['Presence', 'PFAM'])
 	#Save file
 	phage_host_df.to_csv(os.path.dirname(os.path.abspath(__file__)) + '/../../output/phage_host_mapping.tsv', sep='\t', index=False)
 	print("Success!\nThe following files have been saved in the \"output\" directory:\n\nphage_host_metabolism.tsv\nphage_host_mapping.tsv\n")

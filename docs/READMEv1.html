@@ -287,7 +287,7 @@
 <h2>Creating bin abundance input files</h2>
 <p>NOTE: To create the <code>bin_sample</code> file, read the “Mapping bins to samples” section below. To create the <code>depth</code> file, read the “Create initial depth file” section below as well.</p>
 <ol style="list-style-type: decimal">
-<li>To create all the input files necessary, run the <code>files_prep.py</code> script. Two input files (concatenated <code>depth</code> file is optional) are necessary and the directories where the <code>fastq</code> and <code>fna</code> (and optional <code>depth</code>) files are located are needed to run this script (see “Download fastqs” for more information on where to obtain these). One of the depth arguments must be present: depth or depth_dir. These are the arguments necessary to run this script:</li>
+<li>To create all the input files necessary, run the <code>files_prep.py</code> script. Two input files (concatenated <code>depth</code> file is optional) are necessary and the directories where the <code>fastq</code> and <code>fna</code> (and optional <code>depth</code>) files are located are needed to run this script (see “Download fastqs” for more information on where to obtain these). All fastq files must end with “.fastq.gz”. One of the depth arguments must be present: depth or depth_dir. These are the arguments necessary to run this script:</li>
 </ol>
 <div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">usage:</span> files_prep.py [-h] <span class="at">-b</span> BIN_SAMPLES [-d DEPTH] [-f DEPTH_DIR] <span class="at">-q</span> FASTQ_DIR <span class="at">-a</span> FNA_DIR</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -305,7 +305,7 @@
 <span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> directory path containing all the fasta files.</span>
 <span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-a</span> FNA_DIR, <span class="at">--fna_dir</span> FNA_DIR</span>
 <span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> directory path containing all the fna files.</span></code></pre></div>
-<p>Example of concatenated depth file (NOTE: The Sample names in the depth file may need to be edited by the user to match the Sample names in the reads_file.tsv. WARNING: Samples without depth values are removed if present.):</p>
+<p>Example of concatenated depth file (NOTE: Please make sure the scaffold names in the depth file(s) contain the unique identifier corresponding to the bin that the scaffold originates from. The Sample names in the depth file may need to be edited by the user to match the Sample names in the reads_file.tsv. Also, the “Original_Contig_Name” column in both the depth and mapping files must match by appending the respective “Sampling_Site” prefix to each scaffold in the depth file prior to running the script [See “Create initial depth files” for more information]. WARNING: Samples without depth values are removed if present.):</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> depth_file.tsv</span></code></pre></div>
 <table>
 <thead>
@@ -361,7 +361,7 @@
 </tr>
 </tbody>
 </table>
-<p>Example of bin_sample file:</p>
+<p>Example of bin_sample file (“Sampling_Site” is a column with unique identifiers that identifies the sample where each scaffold originates)</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> bin_sample.tsv</span></code></pre></div>
 <table>
 <thead>
@@ -373,28 +373,28 @@
 <tbody>
 <tr class="odd">
 <td>NoBin</td>
-<td align="center">4.1</td>
+<td align="center">S0A</td>
 </tr>
 <tr class="even">
 <td>13_Jan_SF_Bin44</td>
-<td align="center">8.1</td>
+<td align="center">S4B</td>
 </tr>
 <tr class="odd">
 <td>14_Jan_SF_Bin36</td>
-<td align="center">13</td>
+<td align="center">S5A</td>
 </tr>
 <tr class="even">
 <td>21_Jan_SF_Bin21</td>
-<td align="center">24</td>
+<td align="center">S2C</td>
 </tr>
 <tr class="odd">
 <td>24_Jan_SF_Bin43</td>
-<td align="center">21</td>
+<td align="center">S4D</td>
 </tr>
 </tbody>
 </table>
 <p>Here is an example of how to run this script:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> files_prep.py <span class="at">-b</span> ../../data/example_input_files/files_prep/bin_sample.tsv <span class="at">-d</span> ../../data/example_input_files/files_prep/depth.tsv <span class="at">-q</span> ~/fastq_files/ <span class="at">-a</span> ~/fna_files/</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> files_prep.py <span class="at">-b</span> ../../data/example_input_files/files_prep/bin_sample.tsv <span class="at">-d</span> ../../data/example_input_files/files_prep/depth_file.tsv <span class="at">-q</span> ~/fastq_files/ <span class="at">-a</span> ~/fna_files/</span></code></pre></div>
 <p>or (if depth files are not already concatenated):</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> files_prep.py <span class="at">-b</span> ../../data/example_input_files/files_prep/bin_sample.tsv <span class="at">-f</span> ~/depth_files/ <span class="at">-q</span> ~/fastq_files/ <span class="at">-a</span> ~/fna_files/</span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
@@ -1062,21 +1062,18 @@
 <li><p>There are two requirements needed to run this script: 1) the “database_counts” (complete_metabolic_profile.tsv) file outputted using the <code>metabolic_profile</code> script from the “metabolism” portion of this pipeline and 2) the Vibrant output file mapping scaffolds to metabolic pathways.</p></li>
 <li><p>To analyze the unique and shared metabolic pathways between the two organisms, run the <code>amg_hostvi.py</code> script. These are the arguments for the script:</p></li>
 </ol>
-<div class="sourceCode" id="cb32"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="ex">usage:</span> amg_hostvi.py [-h] <span class="at">-p</span> PATHWAY_DATABASE <span class="at">-v</span> VIBRANT_OUTOUT <span class="at">-d</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>                               <span class="ex">DATABASE</span></span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="ex">optional</span> arguments:</span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-h,</span> <span class="at">--help</span>            show this help message and exit</span>
-<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-p</span> PATHWAY_DATABASE, <span class="at">--pathway_database</span> PATHWAY_DATABASE</span>
-<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> file in tsv format that contains the counts of</span>
-<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">each</span> pathways per bin.</span>
-<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-v</span> VIBRANT_OUTOUT, <span class="at">--vibrant_outout</span> VIBRANT_OUTOUT</span>
-<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> file from Vibrant in tsv format that contains</span>
-<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">phage</span> scaffolds mapped to metabolic pathways.</span>
-<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-d</span> DATABASE, <span class="at">--database</span> DATABASE</span>
-<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> only one of the following database names the</span>
-<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">user</span> is interested in analyzing: KEGG, COG, PFAM, or</span>
-<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">EC_NUMBER.</span></span></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="ex">usage:</span> amg_hostvi.py [-h] <span class="at">-p</span> PATHWAY_DATABASE [-vf VIBRANT_FILE] [-vp VIBRANT_PATH] <span class="at">-d</span> DATABASE</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="ex">optional</span> arguments:</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-h,</span> <span class="at">--help</span>            show this help message and exit</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-p</span> PATHWAY_DATABASE, <span class="at">--pathway_database</span> PATHWAY_DATABASE</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> file in tsv format that contains the counts of each pathway per bin.</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-vf</span> VIBRANT_FILE, <span class="at">--vibrant_file</span> VIBRANT_FILE</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> file from Vibrant in tsv format that contains phage scaffolds mapped to metabolic pathways.</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-vp</span> VIBRANT_PATH, <span class="at">--vibrant_path</span> VIBRANT_PATH</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> path from Vibrant files in tsv format that contains phage scaffolds mapped to metabolic pathways.</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-d</span> DATABASE, <span class="at">--database</span> DATABASE</span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> only one of the following database names the user is interested in analyzing: KEGG or PFAM.</span></code></pre></div>
 <p>Example of pathway_database file:</p>
 <div class="sourceCode" id="cb33"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> final_merged_metabolic_profile.tsv</span></code></pre></div>
 <table>
@@ -1231,10 +1228,12 @@
 </tr>
 </tbody>
 </table>
-<p>Here is an example of how to run this script:</p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> amg_hostvi.py <span class="at">-p</span> ../../output/complete_metabolic_profile.tsv <span class="at">-v</span> ~/vibrant_output.tsv <span class="at">-d</span> KEGG</span></code></pre></div>
+<p>Here is an example of how to run this script with one file:</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> amg_hostvi.py <span class="at">-p</span> ../../output/complete_metabolic_profile.tsv <span class="at">-vf</span> ~/vibrant_output.tsv <span class="at">-d</span> KEGG</span></code></pre></div>
+<p>Here is an example of how to run this script with multiple files in a directory:</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> amg_hostvi.py <span class="at">-p</span> ../../output/complete_metabolic_profile.tsv <span class="at">-vp</span> ~/vibrant_outputs/ <span class="at">-d</span> KEGG</span></code></pre></div>
 <ol start="3" style="list-style-type: decimal">
-<li>Outputs will be places in the <code>output</code> directory containing the names “phage_host_metabolism.tsv” and “phage_host_mapping.tsv”.</li>
+<li>Outputs will be placed in the <code>output</code> directory containing the names “phage_host_metabolism.tsv” and “phage_host_mapping.tsv”.</li>
 </ol>
 </div>
 </div>
@@ -1286,44 +1285,44 @@ Table_9_-_3300033141.functional_diversity.txt</code></pre>
 <ol style="list-style-type: decimal">
 <li>Prep samples one at time for mapping.</li>
 </ol>
-<div class="sourceCode" id="cb38"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Copy fq files from yggshare to folder</span></span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> 4998_22_23_H2_S10_fastp_bb.fastq.gz /home/keappler/07_Lab_Protocols/Binning/Guaymas_2018_Samples/mapping_bwa/</span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="co">#Run mdsum</span></span>
-<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="pp">*</span>.gz <span class="kw">;</span> <span class="cf">do</span> <span class="ex">md5sum</span> <span class="va">$i</span> <span class="op">&gt;</span> <span class="va">$i</span>.md5sum <span class="kw">;</span> <span class="cf">done</span></span></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Copy fq files from yggshare to folder</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> 4998_22_23_H2_S10_fastp_bb.fastq.gz /home/keappler/07_Lab_Protocols/Binning/Guaymas_2018_Samples/mapping_bwa/</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="co">#Run mdsum</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="pp">*</span>.gz <span class="kw">;</span> <span class="cf">do</span> <span class="ex">md5sum</span> <span class="va">$i</span> <span class="op">&gt;</span> <span class="va">$i</span>.md5sum <span class="kw">;</span> <span class="cf">done</span></span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li>Run script example for one sample below.</li>
 </ol>
-<div class="sourceCode" id="cb39"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co">#STARTED 10:39 4/5/2021</span></span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="va">fq=</span>/home/keappler/07_Lab_Protocols/Binning/Guaymas_2018_Samples/mapping_bwa/4998_22_23_H2_S10_fastp_bb.fastq.gz</span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="va">assembly=</span>/home/keappler/07_Lab_Protocols/Binning/Guaymas_2018_Samples/mapping_bwa/2.5kb/renamed/2.5kb_4998_22_23_H2_S10.headers.removed.fa</span>
-<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a><span class="co">#Index contigs &gt;=2.5kb assembly subset created in previous steps</span></span>
-<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a><span class="ex">bwa</span> index <span class="va">$assembly</span> </span>
-<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">&quot;Done index&quot;</span> </span>
-<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Align contigs &gt;=2.5kb against concatenated, interleaved, and trimmed R1 and R2</span></span>
-<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a><span class="ex">bwa</span> mem <span class="at">-t</span> 70 <span class="va">$assembly</span> <span class="at">-p</span> <span class="va">$fq</span> <span class="op">&gt;</span> 4998_22_23_H2_S10.sam</span>
-<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">&quot;Done mapping&quot;</span> </span>
-<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a><span class="co">#samtools create bam files- needed for binning</span></span>
-<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> view <span class="at">-bS</span> <span class="at">-F</span> 4 <span class="at">-@10</span> 4998_22_23_H2_S10.sam <span class="at">-o</span> 4998_22_23_H2_S10.bam</span>
-<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">&quot;Done bam&quot;</span> </span>
-<span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-19"><a href="#cb39-19" aria-hidden="true" tabindex="-1"></a><span class="co">#samtools create sorted bam files- needed for jgi_summarize_bam_contig_depths</span></span>
-<span id="cb39-20"><a href="#cb39-20" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> sort <span class="at">-@10</span> 4998_22_23_H2_S10.bam <span class="at">-o</span> 4998_22_23_H2_S10_sorted.bam</span>
-<span id="cb39-21"><a href="#cb39-21" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">&quot;Done sorted bam&quot;</span></span>
-<span id="cb39-22"><a href="#cb39-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-23"><a href="#cb39-23" aria-hidden="true" tabindex="-1"></a><span class="co">#The file to put the contig by bam depth matrix &gt; depth.txt</span></span>
-<span id="cb39-24"><a href="#cb39-24" aria-hidden="true" tabindex="-1"></a><span class="co">#Do not include variance from mean depth along the contig</span></span>
-<span id="cb39-25"><a href="#cb39-25" aria-hidden="true" tabindex="-1"></a><span class="ex">jgi_summarize_bam_contig_depths</span>  <span class="at">--outputDepth</span> depth.txt 4998_22_23_H2_S10_sorted.bam <span class="at">--noIntraDepthVariance</span></span>
-<span id="cb39-26"><a href="#cb39-26" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">&quot;Done depth file&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co">#STARTED 10:39 4/5/2021</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="va">fq=</span>/home/keappler/07_Lab_Protocols/Binning/Guaymas_2018_Samples/mapping_bwa/4998_22_23_H2_S10_fastp_bb.fastq.gz</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="va">assembly=</span>/home/keappler/07_Lab_Protocols/Binning/Guaymas_2018_Samples/mapping_bwa/2.5kb/renamed/2.5kb_4998_22_23_H2_S10.headers.removed.fa</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="co">#Index contigs &gt;=2.5kb assembly subset created in previous steps</span></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a><span class="ex">bwa</span> index <span class="va">$assembly</span> </span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">&quot;Done index&quot;</span> </span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Align contigs &gt;=2.5kb against concatenated, interleaved, and trimmed R1 and R2</span></span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a><span class="ex">bwa</span> mem <span class="at">-t</span> 70 <span class="va">$assembly</span> <span class="at">-p</span> <span class="va">$fq</span> <span class="op">&gt;</span> 4998_22_23_H2_S10.sam</span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">&quot;Done mapping&quot;</span> </span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a><span class="co">#samtools create bam files- needed for binning</span></span>
+<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> view <span class="at">-bS</span> <span class="at">-F</span> 4 <span class="at">-@10</span> 4998_22_23_H2_S10.sam <span class="at">-o</span> 4998_22_23_H2_S10.bam</span>
+<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">&quot;Done bam&quot;</span> </span>
+<span id="cb40-18"><a href="#cb40-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-19"><a href="#cb40-19" aria-hidden="true" tabindex="-1"></a><span class="co">#samtools create sorted bam files- needed for jgi_summarize_bam_contig_depths</span></span>
+<span id="cb40-20"><a href="#cb40-20" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> sort <span class="at">-@10</span> 4998_22_23_H2_S10.bam <span class="at">-o</span> 4998_22_23_H2_S10_sorted.bam</span>
+<span id="cb40-21"><a href="#cb40-21" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">&quot;Done sorted bam&quot;</span></span>
+<span id="cb40-22"><a href="#cb40-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-23"><a href="#cb40-23" aria-hidden="true" tabindex="-1"></a><span class="co">#The file to put the contig by bam depth matrix &gt; depth.txt</span></span>
+<span id="cb40-24"><a href="#cb40-24" aria-hidden="true" tabindex="-1"></a><span class="co">#Do not include variance from mean depth along the contig</span></span>
+<span id="cb40-25"><a href="#cb40-25" aria-hidden="true" tabindex="-1"></a><span class="ex">jgi_summarize_bam_contig_depths</span>  <span class="at">--outputDepth</span> depth.txt 4998_22_23_H2_S10_sorted.bam <span class="at">--noIntraDepthVariance</span></span>
+<span id="cb40-26"><a href="#cb40-26" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">&quot;Done depth file&quot;</span></span></code></pre></div>
 <ol start="3" style="list-style-type: decimal">
 <li>Run md5sum and delete .sam file (large) before starting next sample.</li>
 </ol>
-<div class="sourceCode" id="cb40"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="pp">*</span>.sam <span class="kw">;</span> <span class="cf">do</span> <span class="ex">md5sum</span> <span class="va">$i</span> <span class="op">&gt;</span> <span class="va">$i</span>.md5sum <span class="kw">;</span> <span class="cf">done</span></span></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="pp">*</span>.sam <span class="kw">;</span> <span class="cf">do</span> <span class="ex">md5sum</span> <span class="va">$i</span> <span class="op">&gt;</span> <span class="va">$i</span>.md5sum <span class="kw">;</span> <span class="cf">done</span></span></code></pre></div>
 <ol start="4" style="list-style-type: decimal">
 <li>Repeat process for each sample.</li>
 </ol>
@@ -1335,25 +1334,26 @@ Table_9_-_3300033141.functional_diversity.txt</code></pre>
 <ol style="list-style-type: decimal">
 <li>Index bin.</li>
 </ol>
-<div class="sourceCode" id="cb41"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="ex">bwa</span> index 13_Jan_SF_Bin5.fna</span></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="ex">bwa</span> index 13_Jan_SF_Bin5.fna</span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li>BWA MEM to obtain SAM files.</li>
 </ol>
-<div class="sourceCode" id="cb42"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> sample <span class="kw">in</span> <span class="kw">`</span><span class="fu">cat</span> names.txt<span class="kw">`;</span> <span class="cf">do</span> <span class="ex">bwa</span> mem <span class="at">-t</span> 30 13_Jan_SF_Bin5.fna <span class="at">-p</span> /home/mlangwig/Working_Dir/SF_Bay/fastq/<span class="va">$sample</span>.fastq.gz <span class="op">&gt;</span> <span class="va">$sample</span>.sam<span class="kw">;</span> <span class="cf">done</span></span></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> sample <span class="kw">in</span> <span class="kw">`</span><span class="fu">cat</span> names.txt<span class="kw">`;</span> <span class="cf">do</span> <span class="ex">bwa</span> mem <span class="at">-t</span> 30 13_Jan_SF_Bin5.fna <span class="at">-p</span> /home/mlangwig/Working_Dir/SF_Bay/fastq/<span class="va">$sample</span>.fastq.gz <span class="op">&gt;</span> <span class="va">$sample</span>.sam<span class="kw">;</span> <span class="cf">done</span></span></code></pre></div>
 <ol start="3" style="list-style-type: decimal">
 <li>Samtools view to convert SAM to BAM.</li>
 </ol>
-<div class="sourceCode" id="cb43"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> sample <span class="kw">in</span> <span class="kw">`</span><span class="fu">cat</span> names.txt<span class="kw">`;</span> <span class="cf">do</span> <span class="ex">samtools</span> view <span class="at">-bS</span> <span class="at">-F</span> 4 <span class="at">-@10</span>  <span class="va">$sample</span>.sam <span class="at">-o</span> <span class="va">$sample</span>.bam<span class="kw">;</span> <span class="cf">done</span></span></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> sample <span class="kw">in</span> <span class="kw">`</span><span class="fu">cat</span> names.txt<span class="kw">`;</span> <span class="cf">do</span> <span class="ex">samtools</span> view <span class="at">-bS</span> <span class="at">-F</span> 4 <span class="at">-@10</span>  <span class="va">$sample</span>.sam <span class="at">-o</span> <span class="va">$sample</span>.bam<span class="kw">;</span> <span class="cf">done</span></span></code></pre></div>
 <ol start="4" style="list-style-type: decimal">
 <li>Obtain sorted bams.</li>
 </ol>
-<div class="sourceCode" id="cb44"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> sample <span class="kw">in</span> <span class="kw">`</span><span class="fu">cat</span> names.txt<span class="kw">`;</span> <span class="cf">do</span> <span class="ex">samtools</span> sort <span class="at">-@10</span> <span class="va">$sample</span>.bam <span class="at">-o</span> <span class="va">$sample</span>-sorted.bam<span class="kw">;</span> <span class="cf">done</span></span></code></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> sample <span class="kw">in</span> <span class="kw">`</span><span class="fu">cat</span> names.txt<span class="kw">`;</span> <span class="cf">do</span> <span class="ex">samtools</span> sort <span class="at">-@10</span> <span class="va">$sample</span>.bam <span class="at">-o</span> <span class="va">$sample</span>-sorted.bam<span class="kw">;</span> <span class="cf">done</span></span></code></pre></div>
 <ol start="5" style="list-style-type: decimal">
 <li>Use sorted bams to get Cov_ files for mmgenome2.</li>
 </ol>
-<div class="sourceCode" id="cb45"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="ex">jgi_summarize_bam_contig_depths</span> <span class="at">--outputDepth</span> depth.txt <span class="pp">*</span>sorted.bam <span class="at">--noIntraDepthVariance</span></span></code></pre></div>
-<ol start="6" style="list-style-type: decimal">
-<li>Repeat process for each sample.</li>
+<div class="sourceCode" id="cb46"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="ex">jgi_summarize_bam_contig_depths</span> <span class="at">--outputDepth</span> depth.txt <span class="pp">*</span>sorted.bam <span class="at">--noIntraDepthVariance</span></span></code></pre></div>
+<ol start="7" style="list-style-type: decimal">
+<li><p>Append “Sampling_Site” prefix to all the scaffolds in a sample. “Sampling_Site” is a column with unique identifiers that identifies the sample where each scaffold originates.</p></li>
+<li><p>Repeat process for each sample.</p></li>
 </ol>
 </div>
 </div>
@@ -1368,14 +1368,14 @@ Table_9_-_3300033141.functional_diversity.txt</code></pre>
 <div id="defining-metabolic-database" class="section level2">
 <h2>Defining metabolic database</h2>
 <p>When creating a user-defined database, there are multiple format requirements. The metabolic databases of interest should contain one or multiple headers (KEGG, COG, PFAM, EC_NUMBER) depending on which database the user wants to analyze. All other auxiliary columns will be mapped to the bins and added to the final outputted file. Lastly, in each of the database columns, please format each pathway name as it is in the IMG annotation file:</p>
-<div class="sourceCode" id="cb46"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="ex">KEGG</span> <span class="at">-</span> KO:K12345</span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="ex">COG</span> <span class="at">-</span> COG12345</span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="ex">PFAM</span> <span class="at">-</span> pfam12345</span>
-<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="ex">EC_NUMBER</span> <span class="at">-</span> EC:EC12345</span></code></pre></div>
+<div class="sourceCode" id="cb47"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="ex">KEGG</span> <span class="at">-</span> KO:K12345</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="ex">COG</span> <span class="at">-</span> COG12345</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="ex">PFAM</span> <span class="at">-</span> pfam12345</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a><span class="ex">EC_NUMBER</span> <span class="at">-</span> EC:EC12345</span></code></pre></div>
 </div>
 <div id="creating-vibrant-mapping" class="section level2">
 <h2>Creating Vibrant mapping</h2>
-<p>I need help with this.</p>
+<p>To create the Vibrant mapping file, please follow the instructions <a href="https://github.com/AnantharamanLab/VIBRANT">here</a>. When using Vibrant, please place the sample name of where each scaffold is found within the file name between specific characters (eg. “VIBRANT_AMG_<strong>individuals_SF_Jul11_USGS_4_1_scaffold</strong>_2kb.tsv”).</p>
 </div>
 </div>
 <div id="support-and-development" class="section level1">

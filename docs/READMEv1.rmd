@@ -64,7 +64,7 @@ To install seaborn, run `pip install seaborn`.
 
 NOTE: To create the `bin_sample` file, read the "Mapping bins to samples" section below. To create the `depth` file, read the "Create initial depth file" section below as well.
 
-1. To create all the input files necessary, run the `files_prep.py` script. Two input files (concatenated `depth` file is optional) are necessary and the directories where the `fastq` and `fna ` (and optional `depth`) files are located are needed to run this script (see "Download fastqs" for more information on where to obtain these). One of the depth arguments must be present: depth or depth_dir. These are the arguments necessary to run this script:
+1. To create all the input files necessary, run the `files_prep.py` script. Two input files (concatenated `depth` file is optional) are necessary and the directories where the `fastq` and `fna ` (and optional `depth`) files are located are needed to run this script (see "Download fastqs" for more information on where to obtain these). All fastq files must end with ".fastq.gz". One of the depth arguments must be present: depth or depth_dir. These are the arguments necessary to run this script:
 
 ```{bash, eval=FALSE}
 usage: files_prep.py [-h] -b BIN_SAMPLES [-d DEPTH] [-f DEPTH_DIR] -q FASTQ_DIR -a FNA_DIR
@@ -85,7 +85,7 @@ optional arguments:
                         Input directory path containing all the fna files.
 ```
 
-Example of concatenated depth file (NOTE: The Sample names in the depth file may need to be edited by the user to match the Sample names in the reads_file.tsv. WARNING: Samples without depth values are removed if present.):
+Example of concatenated depth file (NOTE: Please make sure the scaffold names in the depth file(s) contain the unique identifier corresponding to the bin that the scaffold originates from. The Sample names in the depth file may need to be edited by the user to match the Sample names in the reads_file.tsv. Also, the "Original_Contig_Name" column in both the depth and mapping files must match by appending the respective "Sampling_Site" prefix to each scaffold in the depth file prior to running the script [See "Create initial depth files" for more information]. WARNING: Samples without depth values are removed if present.):
 
 ```{bash, eval=FALSE}
 head depth_file.tsv
@@ -107,8 +107,7 @@ tabl_1 <- "
 cat(tabl_1) # output the table in a format good for HTML/PDF/docx conversion
 ```
 
-Example of bin_sample file:
-
+Example of bin_sample file ("Sampling_Site" is a column with unique identifiers that identifies the sample where each scaffold originates)
 ```{bash, eval=FALSE}
 head bin_sample.tsv
 ```
@@ -118,11 +117,11 @@ tabl2 <- "
 
 | Bin                 | Sampling_Site
 |---------------|:---------------:|
-| NoBin               | 4.1   |
-| 13_Jan_SF_Bin44     | 8.1   |
-| 14_Jan_SF_Bin36     | 13   |
-| 21_Jan_SF_Bin21     | 24   |
-| 24_Jan_SF_Bin43     | 21   |
+| NoBin               | S0A   |
+| 13_Jan_SF_Bin44     | S4B   |
+| 14_Jan_SF_Bin36     | S5A   |
+| 21_Jan_SF_Bin21     | S2C   |
+| 24_Jan_SF_Bin43     | S4D   |
 "
 
 cat(tabl2)
@@ -131,7 +130,7 @@ cat(tabl2)
 Here is an example of how to run this script:
 
 ```{bash, eval=FALSE}
-python3 files_prep.py -b ../../data/example_input_files/files_prep/bin_sample.tsv -d ../../data/example_input_files/files_prep/depth.tsv -q ~/fastq_files/ -a ~/fna_files/
+python3 files_prep.py -b ../../data/example_input_files/files_prep/bin_sample.tsv -d ../../data/example_input_files/files_prep/depth_file.tsv -q ~/fastq_files/ -a ~/fna_files/
 ```
 or (if depth files are not already concatenated):
 ```{bash, eval=FALSE}
@@ -544,21 +543,18 @@ python3 pathway_extraction.py -c user-defined_database.tsv -p ../../output/final
 2. To analyze the unique and shared metabolic pathways between the two organisms, run the `amg_hostvi.py` script. These are the arguments for the script:
 
 ```{bash,eval=FALSE}
-usage: amg_hostvi.py [-h] -p PATHWAY_DATABASE -v VIBRANT_OUTOUT -d
-                               DATABASE
+usage: amg_hostvi.py [-h] -p PATHWAY_DATABASE [-vf VIBRANT_FILE] [-vp VIBRANT_PATH] -d DATABASE
 
 optional arguments:
   -h, --help            show this help message and exit
   -p PATHWAY_DATABASE, --pathway_database PATHWAY_DATABASE
-                        Input file in tsv format that contains the counts of
-                        each pathways per bin.
-  -v VIBRANT_OUTOUT, --vibrant_outout VIBRANT_OUTOUT
-                        Input file from Vibrant in tsv format that contains
-                        phage scaffolds mapped to metabolic pathways.
+                        Input file in tsv format that contains the counts of each pathway per bin.
+  -vf VIBRANT_FILE, --vibrant_file VIBRANT_FILE
+                        Input file from Vibrant in tsv format that contains phage scaffolds mapped to metabolic pathways.
+  -vp VIBRANT_PATH, --vibrant_path VIBRANT_PATH
+                        Input path from Vibrant files in tsv format that contains phage scaffolds mapped to metabolic pathways.
   -d DATABASE, --database DATABASE
-                        Input only one of the following database names the
-                        user is interested in analyzing: KEGG, COG, PFAM, or
-                        EC_NUMBER.
+                        Input only one of the following database names the user is interested in analyzing: KEGG or PFAM.
 ```
 
 Example of pathway_database file:
@@ -602,13 +598,19 @@ tabl16 <- "
 cat(tabl16)
 ```
 
-Here is an example of how to run this script:
+Here is an example of how to run this script with one file:
 
 ```{bash,eval=FALSE}
-python3 amg_hostvi.py -p ../../output/complete_metabolic_profile.tsv -v ~/vibrant_output.tsv -d KEGG
+python3 amg_hostvi.py -p ../../output/complete_metabolic_profile.tsv -vf ~/vibrant_output.tsv -d KEGG
 ```
 
-3. Outputs will be places in the `output` directory containing the names "phage_host_metabolism.tsv" and "phage_host_mapping.tsv".
+Here is an example of how to run this script with multiple files in a directory:
+
+```{bash,eval=FALSE}
+python3 amg_hostvi.py -p ../../output/complete_metabolic_profile.tsv -vp ~/vibrant_outputs/ -d KEGG
+```
+
+3. Outputs will be placed in the `output` directory containing the names "phage_host_metabolism.tsv" and "phage_host_mapping.tsv".
 
 # Additional commands
 
@@ -747,6 +749,8 @@ for sample in `cat names.txt`; do samtools sort -@10 $sample.bam -o $sample-sort
 jgi_summarize_bam_contig_depths --outputDepth depth.txt *sorted.bam --noIntraDepthVariance
 ```
 
+7. Append "Sampling_Site" prefix to all the scaffolds in a sample. "Sampling_Site" is a column with unique identifiers that identifies the sample where each scaffold originates.
+
 6. Repeat process for each sample.
 
 ## Mapping taxa
@@ -769,7 +773,7 @@ EC_NUMBER - EC:EC12345
 ```
 ## Creating Vibrant mapping
 
-I need help with this.
+To create the Vibrant mapping file, please follow the instructions [here](https://github.com/AnantharamanLab/VIBRANT). When using Vibrant, please place the sample name of where each scaffold is found within the file name between specific characters (eg. "VIBRANT_AMG_**individuals_SF_Jul11_USGS_4_1_scaffold**_2kb.tsv").
 
 # Support and Development
 
