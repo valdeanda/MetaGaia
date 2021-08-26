@@ -14,8 +14,6 @@ where:
    -e --- extension of genome FASTA file(s) - must include full extension - e.g. .fna , NOT fna
     "
 
-novar=1
-
 while getopts ':hg:o:e:' option; do
     case "${option}" in
     h) echo "$usage"
