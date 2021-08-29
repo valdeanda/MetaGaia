@@ -53,7 +53,7 @@ def map_scaffolds(arguments, img_df, mapping_df):
 
 	files_list = []
 
-	#Map scaffolds 
+	#Map scaffolds
 	mapping_df = mapping_df[['Original_Contig_Name', 'Bin']]
 	if 'Bin' not in img_df.columns:
 		scaff_df = pd.merge(img_df, mapping_df, on='Original_Contig_Name', how='left')
@@ -71,7 +71,7 @@ def map_scaffolds(arguments, img_df, mapping_df):
 		taxonomy_df = taxonomy_df.dropna()
 
 
-	#Create a dataframe with bins and kos per bin 
+	#Create a dataframe with bins and kos per bin
 	taxonomy_df = taxonomy_df.groupby('Scaffold')
 	kegg_df = pd.DataFrame(taxonomy_df.apply(lambda x: x['KO_Term'].unique().tolist()), columns=['KEGG'])
 
@@ -231,7 +231,7 @@ def main():
 	#Read mapping file created previously (bin_abundance step)
 	mapping_df = pd.read_csv(arguments.args.mapping, sep="\t")
 
-	
+
 	#Read in IMG annotated file
 	if arguments.args.imganno_file:
 		print('Reading in consolidated IMG file.')
@@ -256,23 +256,12 @@ def main():
 		saved_files = saved_files + scaffold_mapping[1]
 	#Get the counts of each metabolic pathway in each bin
 	saved_files = saved_files + get_database_counts(databases_list, databases_df)
-	
+
 	print("Success!\nThe following files have been saved in the \"output\" directory:\n")
 	for f in saved_files:
 		print(f)
 	print()
-	
+
 
 if __name__ == '__main__':
 	main()
-
-
-
-
-	
-
-
-
-
-
-
