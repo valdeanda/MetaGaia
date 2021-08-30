@@ -81,7 +81,7 @@ def read_crt(crt_file, bin_map_dict=None):
             if bin_map_dict:
                 bin = map_bins(contig_id, bin_map_dict)
                 if bin:
-                crispr_id = '{}|{}|CRISPR-{}'.format(bin, contig_id, crispr_no)
+                    crispr_id = '{}|{}|CRISPR-{}'.format(bin, contig_id, crispr_no)
             else:
                 crispr_id = '{}|CRISPR-{}'.format(contig_id, crispr_no)
 
@@ -183,9 +183,11 @@ def write_spacer_fasta(crispr_dict, spacer_fasta):
                 logging.error('ERROR: CRISPR dictionary does not contain nested feature dict')
                 logging.warning('Cannot write to output FASTA, exiting...')
                 sys.exit(1)
-        print('{} spacers written to {}'.format(nspacers, spacer_fasta))
-        #logger.info('{} spacers written to {}'.format(nspacers, spacer_fasta))
-        logging.info('{} spacers written to {}'.format(nspacers, spacer_fasta))
+                
+        spacer_msg = '{} spacers written to {}'.format(nspacers, spacer_fasta)
+
+        print(spacer_msg)
+        logging.info(spacer_msg)
 
         fasta_handle.close()
 
@@ -232,6 +234,7 @@ def main():
             try:
                 crispr_dict_filter = crispr_quality(crispr_dict, min_spc = args.min_spacer_length,
                     min_rep = args.min_repeat_length, n_rep = args.min_repeats)
+
                 ncrispr_retained = len(crispr_dict_filter.keys())
                 logging.info('{} of {} CRISPRs retained'.format(ncrispr_retained, ncrispr))
 
@@ -255,35 +258,6 @@ def main():
     else:
         logging.error('invalid CRISPR dictionary!')
         sys.exit(1)
-
-    #print('{} CRISPR arrays identified'.format(ncrispr))
-    #logger.info('{} CRISPR arrays identified'.format(ncrispr))
-
-    # if not args.quality_off:
-    #     # print('filtering poor-quality CRISPRs:')
-    #     # print('miminum spacer length: {}'.format(args.min_spacer_length))
-    #     # print('minimum repeat length: {}'.format(args.min_repeat_length))
-    #     # print('minimum number of repeats: {}'.format(args.min_repeats))
-    #
-    #     try:
-    #         crispr_dict_filter = crispr_quality(crispr_dict, min_spc = args.min_spacer_length,
-    #             min_rep = args.min_repeat_length, n_rep = args.min_repeats)
-    #         ncrispr_retained = len(crispr_dict_filter.keys())
-    #         #print('{} of {} CRISPRs retained'.format(ncrispr_retained, ncrispr))
-    #         logging.info('{} of {} CRISPRs retained'.format(ncrispr_retained, ncrispr))
-    #         #
-    #         logging.info('writing CRISPR spacers to output FASTA')
-    #         write_spacer_fasta(crispr_dict_filter, args.output_fasta)
-    #     except:
-    #         logging.exception()
-    # else:
-    #     #print('--quality_off option selected: CRISPR quality control will not be performed')
-    #     #print('writing CRISPR spacers to output FASTA')
-    #     #logger.info('--quality_off option selected: CRISPR quality control will not be performed')
-    #     #logger.info('writing CRISPR spacers to output FASTA')
-    #     write_spacer_fasta(crispr_dict, args.output_fasta)
-    # print('Finished!')
-    # logging.info('Finished')
 #------------------------------------------------------------------------------
 if __name__ == "__main__":
     main()
