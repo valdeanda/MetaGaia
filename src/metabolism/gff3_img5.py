@@ -80,9 +80,6 @@ def gff3_to_df(gff_file, attribute_select, format='img5'):
 
                     else:
                         record_dict[key] = 'NaN'
-                        #missing_attr = [k for k in attribute_select if not k in attributes_dict.keys()]
-                    #missing_msg = 'WARNING: specified attributes "{}" missing from GFF record. Please specify attributes present '.format(' '.join(missing_attr))
-                    #print(missing_msg)
 
         gff_data.append(record_dict)
 
@@ -213,7 +210,7 @@ def main():
 
     #Write to the output TSV file
     try:
-        scaffold_anno_df.to_csv(args.output, index=False, sep='\t', encoding='utf-8')
+        scaffold_anno_df.to_csv(args.output, index=True, sep='\t', encoding='utf-8')
         print('Writing to output tsv {}'.format(args.output))
     except IOError as e:
         print('WARNING - unable to write output tsv file {}'.format(args.output))
