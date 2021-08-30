@@ -10,7 +10,7 @@ output:
 
 ```{r knitr setup, include=FALSE,  eval=TRUE, echo=FALSE, warning=FALSE}
 library(knitr)
-knitr::opts_chunk$set(eval=TRUE, cache=FALSE, message=FALSE, warning=FALSE, 
+knitr::opts_chunk$set(eval=TRUE, cache=FALSE, message=FALSE, warning=FALSE,
                       comment = "", results="markup")
 ```
 
@@ -18,7 +18,7 @@ knitr::opts_chunk$set(eval=TRUE, cache=FALSE, message=FALSE, warning=FALSE,
 
 MetaGaia is a pipeline that streamlines the process of calculating bin abundances, identifying the metabolic pathways present in each bin, and the metabolic pathways found in both phages and their hosts. The importance of performing each of these functions is to better understand microbial communities and the dominant microbes present within a community. This pipeline is divided into three sections that perform different functions: 1) Calculating bin abundances (abundance), 2) Identifying metabolic pathways present in each bin (metabolism), and 3) Finding commonalities between phages and their hosts (host-virus). Multiple requirements are needed and are specified in the "Requirements" section of this protocol.
 
-# MetaGaia installation 
+# MetaGaia installation
 
 The MetaGaia software is available as an open-source package distributed from a GitHub repository. Thus,
 the natural way of installing it is by cloning the repository via the following commands:
@@ -33,6 +33,10 @@ To install pip, run `sudo apt install python3-pip`.
 To install pandas, run `pip install pandas`.
 To install numpy, run `pip install numpy`.
 To install seaborn, run `pip install seaborn`.
+
+# Install dependencies with Conda (Linux)
+
+To install all of the above dependencies with Conda using the supplied .yml file, run `conda env create -f metagaia_conda_noarch.yml`
 
 # MetaGaia requirements
 
@@ -80,7 +84,7 @@ optional arguments:
   -f DEPTH_DIR, --depth_dir DEPTH_DIR
                         Input directory path containing all the depth txt files that must be concatenated. No other txt files should be present within the directory!
   -q FASTQ_DIR, --fastq_dir FASTQ_DIR
-                        Input directory path containing all the fasta files.
+                        Input directory path containing all the fastq files.
   -a FNA_DIR, --fna_dir FNA_DIR
                         Input directory path containing all the fna files.
 ```
@@ -147,7 +151,7 @@ head reads_file.tsv
 ```{r table3, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
 tabl_3 <- "
 
-| Sample      | Reads          | 
+| Sample      | Reads          |
 |---------------|:-------------|
 | /home/mlangwig/Working_Dir/SF_Bay/fastq/SF_Jul11_sed_USGS_4_1_filter-METAGENOME.fastq.gz      | 135081488 |
 | /home/mlangwig/Working_Dir/SF_Bay/fastq/SF_Jan12_sed_USGS_4_1_filter-METAGENOME.fastq.gz      | 140529442   |
@@ -162,8 +166,8 @@ head depth_file_renamed.tsv
 ```{r table4, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
 tabl_4 <- "
 
-| Original_Contig_Name        | contigLen           | totalAvgDepth        | Sample           | Depth       | 
-|---------------|:-------------|:---------------|:-------------|:---------------:| 
+| Original_Contig_Name        | contigLen           | totalAvgDepth        | Sample           | Depth       |
+|---------------|:-------------|:---------------|:-------------|:---------------:|
 |S4C_scaffold_7529_c1 | 6042.0  | 23.1232  | SF_Jul11_USGS_4_1-sorted.bam   | 23.1232  |
 |S4C_scaffold_8778_c1 | 5493.0  | 9.78027  | SF_Jul11_USGS_4_1-sorted.bam   | 9.78027  |
 "
@@ -178,7 +182,7 @@ head reads_file_renamed.tsv
 ```{r table5, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
 tabl_5 <- "
 
-| Sample      | Reads          | 
+| Sample      | Reads          |
 |---------------|:-------------|
 | SF_Jul11_sed_USGS_4_1     | 135081488   |
 | SF_Jan12_sed_USGS_4_1     | 140529442   |
@@ -193,8 +197,8 @@ head depth_file_renamed.tsv
 ```{r table6, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
 tabl_6 <- "
 
-| Original_Contig_Name        | contigLen           | totalAvgDepth        | Sample           | Depth       | 
-|---------------|:-------------|:---------------|:-------------|:---------------:| 
+| Original_Contig_Name        | contigLen           | totalAvgDepth        | Sample           | Depth       |
+|---------------|:-------------|:---------------|:-------------|:---------------:|
 |S4C_scaffold_7529_c1 | 6042.0  | 23.1232  | SF_Jul11_USGS_4_1   | 23.1232  |
 |S4C_scaffold_8778_c1 | 5493.0  | 9.78027  | SF_Jul11_USGS_4_1   | 9.78027  |
 "
@@ -247,7 +251,7 @@ optional arguments:
                         Tabular file containing Original_Contig_Name Bin Sample
   -d DEPTH, --depth DEPTH
                         Tabular file depth info Original_Contig_Name contigLen
-                        Saple_Depth Depth
+                        Sample_Depth Depth
   -s BINSIZE, --binsize BINSIZE
                         Tabular file with Bin and corresponding Genome size
                         (bp) as columns
@@ -256,7 +260,7 @@ optional arguments:
                         that it is human readable.
 ```
 
-Here is an example of how to run the script (using example data provided in the `data` folder): 
+Here is an example of how to run the script (using example data provided in the `data` folder):
 
 ```{bash, eval=FALSE}
 python3 bin_abundance.py -r ../../data/example_input_files/bin_abundance/reads_file_renamed.tsv -m ../../data/example_input_files/bin_abundance/mapping_file.tsv -d ../../data/example_input_files/bin_abundance/depth_file_renamed.tsv -s ../../data/example_input_files/bin_abundance/binsize_file.tsv -n 1000000
@@ -440,12 +444,12 @@ head mapping_file.tsv
 
 ```{r table12, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
 tabl12 <- "
-| Original_Contig_Name    | Bin     | Sampling_Site   | 
+| Original_Contig_Name    | Bin     | Sampling_Site   |
 |---------------|:---------------|:---------------:|
-| S1B_scaffold_1283_c1    | 13_May_SF_Bin93 | S1B     | 
-| S1B_scaffold_1516_c1    | 13_May_SF_Bin93 | S1B     | 
-| S1B_scaffold_1603_c1    | 13_May_SF_Bin93 | S1B     | 
-| S1B_scaffold_1628_c1    | 13_May_SF_Bin93 | S1B     | 
+| S1B_scaffold_1283_c1    | 13_May_SF_Bin93 | S1B     |
+| S1B_scaffold_1516_c1    | 13_May_SF_Bin93 | S1B     |
+| S1B_scaffold_1603_c1    | 13_May_SF_Bin93 | S1B     |
+| S1B_scaffold_1628_c1    | 13_May_SF_Bin93 | S1B     |
 "
 
 cat(tabl12)
@@ -493,12 +497,12 @@ head custom_database.tsv
 
 ```{r table13, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
 tabl13 <- "
-| Pathway    | Subpathway   | KEGG    | COG      | PFAM     | Description   | 
+| Pathway    | Subpathway   | KEGG    | COG      | PFAM     | Description   |
 |---------------|:---------------|:---------------|:---------------|:---------------|:---------------:|
-| Nitrogen   | Annamox      | K20932  | COG3391  | PF18582  | K20932; hydrazine synthase subunit [EC:1.7.2.7]   | 
-| Nitrogen   | Annamox      | K20933  | COG1858  |          | K20933; hydrazine synthase subunit [EC:1.7.2.7]   | 
-| Nitrogen   | Annamox      | K20934  | COG0823  |          | K20934; hydrazine synthase subunit [EC:1.7.2.7]   | 
-| Nitrogen   | Annamox      | K20935  |          |          | hdh; hydrazine dehydrogenase [EC:1.7.2.8]   | 
+| Nitrogen   | Annamox      | K20932  | COG3391  | PF18582  | K20932; hydrazine synthase subunit [EC:1.7.2.7]   |
+| Nitrogen   | Annamox      | K20933  | COG1858  |          | K20933; hydrazine synthase subunit [EC:1.7.2.7]   |
+| Nitrogen   | Annamox      | K20934  | COG0823  |          | K20934; hydrazine synthase subunit [EC:1.7.2.7]   |
+| Nitrogen   | Annamox      | K20935  |          |          | hdh; hydrazine dehydrogenase [EC:1.7.2.8]   |
 "
 
 cat(tabl13)
@@ -512,15 +516,15 @@ head final_merged_metabolic_profile.tsv
 
 ```{r table14, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
 tabl14 <- "
-| KEGG        | 13_Jan_SF_Bin1  | 13_Jan_SF_Bin10  | 13_Jan_SF_Bin12  | 13_Jan_SF_Bin13  | 13_Jan_SF_Bin14  | 13_Jan_SF_Bin2  | 13_Jan_SF_Bin21   | 
+| KEGG        | 13_Jan_SF_Bin1  | 13_Jan_SF_Bin10  | 13_Jan_SF_Bin12  | 13_Jan_SF_Bin13  | 13_Jan_SF_Bin14  | 13_Jan_SF_Bin2  | 13_Jan_SF_Bin21   |
 |---------------|:---------------|:---------------|:---------------|:---------------|:---------------|:---------------|:---------------:|
-| KO:K00001   | 0.0             | 0.0              | 0.0              | 0.0              | 0.0              | 0.0             | 0.0   | 
+| KO:K00001   | 0.0             | 0.0              | 0.0              | 0.0              | 0.0              | 0.0             | 0.0   |
 | KO:K00002   | 1.0             | 0.0              | 0.0              | 0.0              | 0.0              | 0.0             | 0.0   |   
 | KO:K00003   | 2.0             | 0.0              | 1.0              | 1.0              | 0.0              | 0.0             | 1.0   |   
 | KO:K00004   | 0.0             | 0.0              | 0.0              | 0.0              | 0.0              | 0.0             | 0.0   |    
 | KO:K00005   | 0.0             | 0.0              | 0.0              | 0.0              | 0.0              | 0.0             | 0.0   |    
 | KO:K00006   | 0.0             | 0.0              | 0.0              | 0.0              | 0.0              | 0.0             | 0.0   |    
-| KO:K00008   | 0.0             | 0.0              | 0.0              | 0.0              | 0.0              | 0.0             | 0.0   | 
+| KO:K00008   | 0.0             | 0.0              | 0.0              | 0.0              | 0.0              | 0.0             | 0.0   |
 "
 
 cat(tabl14)
@@ -565,15 +569,15 @@ head final_merged_metabolic_profile.tsv
 
 ```{r table15, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
 tabl15 <- "
-| KEGG        | 13_Jan_SF_Bin1  | 13_Jan_SF_Bin10  | 13_Jan_SF_Bin12  | 13_Jan_SF_Bin13  | 13_Jan_SF_Bin14  | 13_Jan_SF_Bin2  | 13_Jan_SF_Bin21   | 
+| KEGG        | 13_Jan_SF_Bin1  | 13_Jan_SF_Bin10  | 13_Jan_SF_Bin12  | 13_Jan_SF_Bin13  | 13_Jan_SF_Bin14  | 13_Jan_SF_Bin2  | 13_Jan_SF_Bin21   |
 |---------------|:---------------|:---------------|:---------------|:---------------|:---------------|:---------------|:---------------:|
-| KO:K00001   | 0.0             | 0.0              | 0.0              | 0.0              | 0.0              | 0.0             | 0.0   | 
+| KO:K00001   | 0.0             | 0.0              | 0.0              | 0.0              | 0.0              | 0.0             | 0.0   |
 | KO:K00002   | 1.0             | 0.0              | 0.0              | 0.0              | 0.0              | 0.0             | 0.0   |   
 | KO:K00003   | 2.0             | 0.0              | 1.0              | 1.0              | 0.0              | 0.0             | 1.0   |   
 | KO:K00004   | 0.0             | 0.0              | 0.0              | 0.0              | 0.0              | 0.0             | 0.0   |    
 | KO:K00005   | 0.0             | 0.0              | 0.0              | 0.0              | 0.0              | 0.0             | 0.0   |    
 | KO:K00006   | 0.0             | 0.0              | 0.0              | 0.0              | 0.0              | 0.0             | 0.0   |    
-| KO:K00008   | 0.0             | 0.0              | 0.0              | 0.0              | 0.0              | 0.0             | 0.0   | 
+| KO:K00008   | 0.0             | 0.0              | 0.0              | 0.0              | 0.0              | 0.0             | 0.0   |
 "
 
 cat(tabl15)
@@ -624,11 +628,11 @@ The user must manually map each bin to its respective sample location.
 
 ## Download and annotate genomes using IMG
 
-Annotate metagenomes at the [IMG JGI platafform](https://img.jgi.doe.gov/cgi-bin/mer/main.cgi) 
+Annotate metagenomes at the [IMG JGI platafform](https://img.jgi.doe.gov/cgi-bin/mer/main.cgi)
 
-After completion, you will download a directory of each of your metagenomic samples containing the following subdirectories: 
+After completion, you will download a directory of each of your metagenomic samples containing the following subdirectories:
 
-1. **IMG Data**: Contanining the following files 
+1. **IMG Data**: Contanining the following files
 
 ```
 207502.assembled.COG
@@ -647,7 +651,7 @@ After completion, you will download a directory of each of your metagenomic samp
 3300033388
 ```
 
-2. **Metagenome Report Tables**: containing the following files 
+2. **Metagenome Report Tables**: containing the following files
 
 ```
 Table_6_-_207017.annotation_parameters.txt
@@ -669,7 +673,7 @@ Here is an example of how to create the depth txt files using BWA:
 ```{bash, eval=FALSE}
 #Copy fq files from yggshare to folder
 cp 4998_22_23_H2_S10_fastp_bb.fastq.gz /home/keappler/07_Lab_Protocols/Binning/Guaymas_2018_Samples/mapping_bwa/
-  
+
 #Run mdsum
 for i in *.gz ; do md5sum $i > $i.md5sum ; done
 ```
@@ -684,16 +688,16 @@ assembly=/home/keappler/07_Lab_Protocols/Binning/Guaymas_2018_Samples/mapping_bw
 
 #Index contigs >=2.5kb assembly subset created in previous steps
 
-bwa index $assembly 
-echo "Done index" 
+bwa index $assembly
+echo "Done index"
 
 # Align contigs >=2.5kb against concatenated, interleaved, and trimmed R1 and R2
 bwa mem -t 70 $assembly -p $fq > 4998_22_23_H2_S10.sam
-echo "Done mapping" 
+echo "Done mapping"
 
 #samtools create bam files- needed for binning
 samtools view -bS -F 4 -@10 4998_22_23_H2_S10.sam -o 4998_22_23_H2_S10.bam
-echo "Done bam" 
+echo "Done bam"
 
 #samtools create sorted bam files- needed for jgi_summarize_bam_contig_depths
 samtools sort -@10 4998_22_23_H2_S10.bam -o 4998_22_23_H2_S10_sorted.bam
@@ -778,9 +782,8 @@ To create the Vibrant mapping file, please follow the instructions [here](https:
 # Support and Development
 
 This pipeline has been developed by the Baker lab at UT Austin. If there are any questions, comments, or concerns, please email us at either sahilbshah@berkeley.edu or valdeanda@utexas.edu.
- 
-# Cite 
-If you find this software useful please cite us as: 
+
+# Cite
+If you find this software useful please cite us as:
 
 Coming soon!
-
