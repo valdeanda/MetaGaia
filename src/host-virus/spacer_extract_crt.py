@@ -17,30 +17,103 @@ import sys
 import logging
 from datetime import datetime
 #------------------------------------------------------------------------------
-def read_bin_map(bin_map):
+# def read_bin_map(bin_map):
+#     """
+#     Read in the bin - scaffold - sample map file.
+#     """
+#     bin_map_dict = dict()
+#     try:
+#         bin_map_handle = open(bin_map, 'r')
+#         bin_map_handle.readline()
+#         for i in bin_map_handle:
+#             i = i.strip()
+#             i_list = i.split('\t')
+#             original_contig_name = i_list[0]
+#             bin = i_list[1]
+#             sampling_site = i_list[2]
+#
+#             bin_map_dict[original_contig_name] = {'bin':bin,
+#                 'sampling_site':sampling_site}
+#
+#         return bin_map_dict
+#
+#         bin_map_handle.close()
+#     except:
+#         logging.exception('could not open {}'.format(bin_map))
+#         return None
+#------------------------------------------------------------------------------
+# def read_contig_map(contig_map):
+#     contig_map_dict = dict()
+#     try:
+#         contig_map_handle = open(contig_map, 'r')
+#         for i in contig_map_handle:
+#             i = i.strip()
+#             i_list = i.split('\t')
+#             img_contig_id = i_list[0]
+#             gold_contig_id = i_list[1]
+#             gold_oid = gold_contig_id.split('_')[0]
+#             contig_map_dict[gold_contig_id] = {'img_contig_id':img_contig_id,
+#             'gold_oid':gold_oid}
+#         return contig_map_dict
+#         contig_map_handle.close()
+#     except:
+#         logging.exception('could not read {}'.format(contig_map))
+#         return None
+# #------------------------------------------------------------------------------
+# def read_gold_map(gold_map):
+#     gold_map_dict = dict()
+#     try:
+#         gold_map_handle = open(gold_map, 'r')
+#         for i in gold_map_handle:
+#             i = i.strip()
+#             i_list = i.split('\t')
+#             gold_oid = i_list[0]
+#             sample_id = i_list[1]
+#             gold_dict[gold_oid] = sample_id
+#
+#         return gold_map_dict
+#         gold_map_handle.close()
+#     except:
+#         logging.exception('could not read {}'.format(gold_map))
+#         return None
+#------------------------------------------------------------------------------
+# def unified_map(bin_map, contig_map, gold_map):
+#     bin_contig_dict = dict()
+#     for key, value in contig_map:
+#         if key in
+#
+#         sample = bin_contig_dict[gold_oid]
+
+
+def map_gold(scaffold_map, sample_map, scaffold_samples=False):
+    import pandas as pd
     """
-    Read in the bin - scaffold - sample map file.
+    Create a unified mapping file for original IMG and Gold scaffolds.
     """
-    bin_map_dict = dict()
     try:
-        bin_map_handle = open(bin_map, 'r')
-        bin_map_handle.readline()
-        for i in bin_map_handle:
-            i = i.strip()
-            i_list = i.split('\t')
-            original_contig_name = i_list[0]
-            bin = i_list[1]
-            sampling_site = i_list[2]
+        print('reading IMG --> GOLD scaffold map to Pandas DF')
+        gold_scaffold_map = pd.read_csv(scaffold_map, sep = '\t',
+            names = ['Original_Contig_Name', 'IMG_Contig_Name'])
+    except IOError as e:
+        print('ERROR: could not open {}'.format(scaffold_map))
 
-            bin_map_dict[original_contig_name] = {'bin':bin,
-                'sampling_site':sampling_site}
+    try:
+        print('reading GOLD --> Sample ID map to Pandas DF')
+        gold_sample_map = pd.read_csv(sample_map, sep = '\t')
+    except IOError as e:
+        print('ERROR: could not open {}'.format(sample_map))
 
-        return bin_map_dict
+    #Extract the IMG GOLD analysis ID
+    gold_scaffold_map['GOLD_OID'] = gold_scaffold_map['IMG_Contig_Name'].str.split('_').str[0].str.strip()
 
-        bin_map_handle.close()
-    except:
-        logging.exception('could not open {}'.format(bin_map))
-        return None
+    gold_scaffold_sample_df = pd.merge(gold_scaffold_map, gold_sample_map, on = 'GOLD_OID', how = 'right')
+
+    if scaffold_samples:
+        gold_scaffold_sample_df['Original_Contig_Name'] = gold_scaffold_sample_df['SAMPLE_ID'].astype(str) + '_' + gold_scaffold_sample_df['Original_Contig_Name'].astype(str)
+    else:
+        pass
+
+    return gold_scaffold_sample_df
 #------------------------------------------------------------------------------
 def map_bins(scaffold_id, bin_map_dict):
     """
@@ -72,18 +145,18 @@ def read_crt(crt_file, bin_map_dict=None):
 
         for feature in crt_handle:
             feature_list = feature.strip().split()
-            contig_id = feature_list[0]
+            gold_contig_id = feature_list[0]
             crispr_no = feature_list[1]
             repeat_seq = feature_list[3]
             spacer_seq = feature_list[4]
 
 
             if bin_map_dict:
-                bin = map_bins(contig_id, bin_map_dict)
+                bin = map_bins(gold_contig_id, bin_map_dict)
                 if bin:
-                    crispr_id = '{}|{}|CRISPR-{}'.format(bin, contig_id, crispr_no)
+                    crispr_id = '{}|{}|CRISPR-{}'.format(bin, gold_contig_id, crispr_no)
             else:
-                crispr_id = '{}|CRISPR-{}'.format(contig_id, crispr_no)
+                crispr_id = '{}|CRISPR-{}'.format(gold_contig_id, crispr_no)
 
 
             if crispr_id in crispr_dict.keys():
@@ -183,7 +256,7 @@ def write_spacer_fasta(crispr_dict, spacer_fasta):
                 logging.error('ERROR: CRISPR dictionary does not contain nested feature dict')
                 logging.warning('Cannot write to output FASTA, exiting...')
                 sys.exit(1)
-                
+
         spacer_msg = '{} spacers written to {}'.format(nspacers, spacer_fasta)
 
         print(spacer_msg)
@@ -208,6 +281,7 @@ def main():
     parser.add_argument('-m', '--min_repeats', required=False, type=int, default=3, help='minimum number of repeats required to retain CRISPR. Default = 3')
     parser.add_argument('-q', '--quality_off', required=False, action='store_true', help='use this option to skip quality control of CRISPRs')
     parser.add_argument('-b', '--bin_map', required=False, action='store', type=str, help='bin-contig-sample map file')
+    parser.add_argument('-c', '--contig_map', required=False, action='store', type=str, help='IMG contig')
     parser.add_argument('-l', '--logfile', required=False, action='store', default=logfile_default, help='path to logfile')
     args = parser.parse_args()
 
