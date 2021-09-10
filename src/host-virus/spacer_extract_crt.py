@@ -77,7 +77,7 @@ def map_gold(scaffold_map, sample_map, bin_map, scaffold_samples=False):
 
     return bin_gold_sample_df
 #------------------------------------------------------------------------------
-def read_crt(crt_file, bin_map_df=None):
+def read_crt(crt_file):
     """
     Read CRISPR Recognition Tool output and return a dictionary.
     """
@@ -85,7 +85,7 @@ def read_crt(crt_file, bin_map_df=None):
         crt_handle = open(crt_file, 'r')
         logging.info('opening CRT input...')
 
-        crispr_dict = {}
+        crispr_dict = dict()
         repeat_no = 0
         spacer_no = 0
 
@@ -96,24 +96,7 @@ def read_crt(crt_file, bin_map_df=None):
             repeat_seq = feature_list[3]
             spacer_seq = feature_list[4]
 
-
-            if not bin_map_df.empty:
-                binned_subset_df = bin_map_df.dropna(subset=['Bin'])
-                #contig_subset = bin_map_df.loc[bin_map_df['Original_Contig_Name'] == gold_contig_id]
-
-                try:
-                    print('binned subset df')
-                    print(binned_subset_df)
-                except:
-                    logging.info('No CRISPRs are mapped to a bin')
-
-                if bin and isinstance(bin, str):
-                    crispr_id = '{}|{}|CRISPR-{}'.format(bin, gold_contig_id, crispr_no)
-                else:
-                    pass
-            else:
-                crispr_id = '{}|CRISPR-{}'.format(gold_contig_id, crispr_no)
-
+            crispr_id = '{}|CRISPR-{}'.format(gold_contig_id, crispr_no)
 
             if crispr_id in crispr_dict.keys():
                 repeat_no += 1
@@ -128,7 +111,9 @@ def read_crt(crt_file, bin_map_df=None):
             repeat_id = 'repeat-{}'.format(repeat_no)
             spacer_id = 'spacer-{}'.format(spacer_no)
 
+            crispr_dict[crispr_id]['gold_contig_id'] = gold_contig_id
             crispr_dict[crispr_id][repeat_id] = repeat_seq
+
             #Exclude entries where the spacer is missing
             if not spacer_seq == 'c':
                 crispr_dict[crispr_id][spacer_id] = spacer_seq
@@ -136,7 +121,6 @@ def read_crt(crt_file, bin_map_df=None):
                 pass
 
         crt_handle.close()
-
 
         return crispr_dict
 
@@ -147,7 +131,7 @@ def read_crt(crt_file, bin_map_df=None):
 #------------------------------------------------------------------------------
 def crispr_quality(crispr_dict, min_spc, min_rep, n_rep, min_rep_warn = 7, n_rep_warn = 2):
     """
-    Filter out poor-quality CRISPRs and return a dictionary.
+    Filter out poor-quality CRISPRs, return a dictionary of retained CRISPR info.
     """
 
     logging.info('filtering poor-quality CRISPRs:')
@@ -158,10 +142,8 @@ def crispr_quality(crispr_dict, min_spc, min_rep, n_rep, min_rep_warn = 7, n_rep
     rm_crispr = []
     spurious = 'Output may be sourced from spurious CRISPRs.'
     if min_rep < min_rep_warn:
-        #print('WARNING: a minimum repeat length >= {} is recommended. {}'.format(min_rep_warn, spurious))
         logging.warning('WARNING: a minimum repeat length >= {} is recommended. {}'.format(min_rep_warn, spurious))
     if n_rep < n_rep_warn:
-        #print('WARNING: CRISPRs should contain >= {} repeats. {}'.format(n_rep_warn, spurious))
         logging.warning('WARNING: CRISPRs should contain >= {} repeats. {}'.format(n_rep_warn, spurious))
 
     for crispr, feature in crispr_dict.items():
@@ -182,15 +164,16 @@ def crispr_quality(crispr_dict, min_spc, min_rep, n_rep, min_rep_warn = 7, n_rep
                 rm_crispr.append(crispr)
             else:
                 pass
+    if rm_crispr:
+        rm_crispr = set(rm_crispr)
+        logging.info('{} CRISPR did not pass quality check'.format(len(rm_crispr)))
 
-    rm_crispr = set(rm_crispr)
-    logging.info('{} CRISPR did not pass quality check'.format(len(rm_crispr)))
-
-    for rc in rm_crispr:
-        crispr_dict.pop(rc, None)
+        for rc in rm_crispr:
+            crispr_dict.pop(rc, None)
+    else:
+        logging.info('no CRISPRs will be removed due to quality check')
 
     return crispr_dict
-
 #------------------------------------------------------------------------------
 def write_spacer_fasta(crispr_dict, spacer_fasta):
     """
@@ -210,7 +193,7 @@ def write_spacer_fasta(crispr_dict, spacer_fasta):
                 nspacers += len(spacers)
             else:
                 logging.error('ERROR: CRISPR dictionary does not contain nested feature dict')
-                logging.warning('Cannot write to output FASTA, exiting...')
+                logging.error('Cannot write to output FASTA, exiting...')
                 sys.exit(1)
 
         spacer_msg = '{} spacers written to {}'.format(nspacers, spacer_fasta)
@@ -227,29 +210,34 @@ def write_spacer_fasta(crispr_dict, spacer_fasta):
 #------------------------------------------------------------------------------
 def main():
 
-    logfile_default = 'spacer_extract_crt_{}.log'.format(str(datetime.now().strftime('%Y-%m-%d_%H-%M-%S')))
+    logfile_default = 'spacer_extract_crt_{}.log'.format(str(datetime.now().strftime('%d-%m-%Y_%H-%M-%S')))
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('-i','--crt_file', required=True, type=str, help='Input file in tsv format containing CRISPR Recognition Tool output')
-    parser.add_argument('-o', '--output_fasta', required=True, type=str, help='Output FASTA file containing CRISPR spacer sequences')
+    parser.add_argument('-i','--crt_file', required=True, type=str, help='Input file in tsv format containing CRISPR Recognition Tool output. Required.')
+    parser.add_argument('-o', '--output_fasta', required=True, type=str, help='Path to output FASTA file containing CRISPR spacer sequences. Required.')
     parser.add_argument('-s', '--min_spacer_length', required=False, type=int, default=23, help='minimum length for a CRISPR spacer. Default = 23')
     parser.add_argument('-r', '--min_repeat_length', required=False, type=int, default=11, help='minimum length for a CRISPR repeat. Default = 11')
     parser.add_argument('-m', '--min_repeats', required=False, type=int, default=3, help='minimum number of repeats required to retain CRISPR. Default = 3')
     parser.add_argument('-q', '--quality_off', required=False, action='store_true', help='use this option to skip quality control of CRISPRs')
-    parser.add_argument('-b', '--bin_map', required=True, action='store', type=str, help='bin-contig-sample map file')
-    parser.add_argument('-c', '--contig_map', required=True, action='store', type=str, help='IMG contig to GOLD map')
-    parser.add_argument('-g', '--gold_sample_map', required=True, help='Mapping file of GOLD IDs to Sample IDs')
+    parser.add_argument('-b', '--bin_map', required=False, action='store', type=str, help='bin-contig-sample map file')
+    parser.add_argument('-c', '--contig_map', required=False, action='store', type=str, help='IMG contig to GOLD map')
+    parser.add_argument('-g', '--gold_sample_map', required=False, help='Mapping file of GOLD IDs to Sample IDs')
     parser.add_argument('-l', '--logfile', required=False, action='store', default=logfile_default, help='path to logfile')
     args = parser.parse_args()
 
     logging_format = '%(name)s :: %(levelname)s :: %(message)s :: %(asctime)s'
 
-    print('Logfile written to: {}'.format(args.logfile))
-
     logging.basicConfig(filename = args.logfile,
         level = logging.DEBUG,
         format = logging_format)
 
+    print('Logfile written to: {}'.format(args.logfile))
+
+    logging.info('SCRIPT: {}'.format(os.path.basename(__file__)))
+
+    crispr_dict = dict()
+
+    #Bin mapping option - in progress
     if args.bin_map and args.contig_map and args.gold_sample_map:
         logging.info('reading in scaffold - bin - sample map')
         bin_map_df = map_gold(scaffold_map = args.contig_map,
@@ -263,10 +251,12 @@ def main():
 
     fasta_write_exception = 'could not write output spacer FASTA {}'.format(args.output_fasta)
 
-    if isinstance(crispr_dict, dict):
+
+    if crispr_dict:
         ncrispr = len(crispr_dict.keys())
         if not args.quality_off:
             try:
+                logging.info('CRISPR quality control')
                 crispr_dict_filter = crispr_quality(crispr_dict, min_spc = args.min_spacer_length,
                     min_rep = args.min_repeat_length, n_rep = args.min_repeats)
 
@@ -278,20 +268,22 @@ def main():
 
             #Write to output FASTA
             try:
-                logging.info('writing CRISPR spacers to output FASTA {}'.format(args.output_fasta))
+                logging.info('writing CRISPR spacers to output FASTA: {}'.format(args.output_fasta))
                 write_spacer_fasta(crispr_dict_filter, args.output_fasta)
             except:
                 logging.exception(fasta_write_exception)
 
         else:
+            logging.info('skipping CRISPR quality control')
             try:
                 write_spacer_fasta(crispr_dict, args.output_fasta)
             except:
                 logging.exception(fasta_write_exception)
+
         print('Finished!')
         logging.info('Finished')
     else:
-        logging.error('invalid CRISPR dictionary!')
+        logging.error('CRISPR dictionary is empty!')
         sys.exit(1)
 #------------------------------------------------------------------------------
 if __name__ == "__main__":

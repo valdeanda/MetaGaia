@@ -161,8 +161,6 @@ def main():
     parser.add_argument('-s', '--samples_to_id', required=False, action='store_true', help='Boolean. If selected, add sample IDs to the beginning of the IMG original scaffold IDs')
     args = parser.parse_args()
 
-    #field_default = ['ID', 'ko', 'pfam', 'ec_number', 'cog', 'locus_tag']
-
     #If --fields is selected but no options are specified, use the defaults
     key_fields = args.fields.split(',')
 
