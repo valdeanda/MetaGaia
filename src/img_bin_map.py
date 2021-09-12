@@ -3,11 +3,11 @@
 """
 Author: Ian Rambo - ian.rambo@utexas.edu
 Created: September 10, 2021
-Last updated: September 10, 2021
+Last updated: September 12, 2021
 License: GNU GENERAL PUBLIC LICENSE, Version 3, 29 June 2007
 
 Purpose:
-Create a map file for IMG, GOLD, MAG, and original Contig IDs for downstream use.
+Create a file mapping IMG, GOLD, original Contig IDs to Bin(s) for downstream use.
 """
 
 import argparse
@@ -19,11 +19,9 @@ import pandas as pd
 #------------------------------------------------------------------------------
 def map_gold(scaffold_map, sample_map, bin_map, scaffold_samples=False):
     """
-    Create a unified mapping dataframe from of IMG and GOLD scaffolds to bins.
+    Create a unified mapping dataframe.
     """
-    """
-    Create a unified mapping file for original IMG and Gold scaffolds.
-    """
+    #Read in the component dataframes
     try:
         logging.info('reading IMG --> GOLD scaffold map to Pandas DF')
         gold_scaffold_df = pd.read_csv(scaffold_map, sep = '\t',
@@ -49,29 +47,22 @@ def map_gold(scaffold_map, sample_map, bin_map, scaffold_samples=False):
     except IOError as e:
         logging.exception('could not open {}'.format(bin_map))
 
-    print(gold_sample_df.head())
-    print(gold_scaffold_df.head())
-    print(bin_map_df.head())
-
     ###MERGE START
     gold_scaffold_sample_df = pd.merge(gold_scaffold_df, gold_sample_df, on = 'GOLD_OID', how = 'left')
 
-
-    print('gold_scaffold_sample_df')
-    print(gold_scaffold_sample_df.head())
-
     if scaffold_samples:
-        gold_scaffold_sample_df['Original_Contig_Name'] = gold_scaffold_sample_df['Sampling_Site'].astype(str) + 'metaG_FD_' + gold_scaffold_sample_df['Original_Contig_Name'].astype(str)
+        #Add Sampling_Site IDs to Original_Contig_Name - used to map to Bin
+        og_name = gold_scaffold_sample_df['Sampling_Site'].astype(str) + '_' + gold_scaffold_sample_df['Original_Contig_Name'].astype(str)
+        gold_scaffold_sample_df['Original_Contig_Name'] = og_name
     else:
         pass
-    print('gold_scaffold_sample_df_renamed')
-    print(gold_scaffold_sample_df.head())
 
-
-    bin_gold_sample_df = pd.merge(gold_scaffold_sample_df, bin_map_df,
+    bin_gold_sample_df = pd.merge(gold_scaffold_sample_df,
+        bin_map_df[['Original_Contig_Name', 'Bin']],
         on = 'Original_Contig_Name', how = 'left')
-    print('bin_gold_sample_df')
-    print(bin_gold_sample_df.head())
+
+    bin_gold_sample_df = bin_gold_sample_df.dropna(subset=['Bin']).sort_values(by='Bin')
+
     ###MERGE END
 
     return bin_gold_sample_df
@@ -79,6 +70,7 @@ def map_gold(scaffold_map, sample_map, bin_map, scaffold_samples=False):
 def main():
 
     script_basename = os.path.basename(__file__)
+
     logfile_default = '{}_{}.log'.format(os.path.splitext(script_basename)[0],
         str(datetime.now().strftime('%d-%m-%Y_%H-%M-%S')))
 
@@ -109,10 +101,23 @@ def main():
             sample_map = args.gold_sample_map,
             bin_map = args.bin_map,
             scaffold_samples=True)
-
-        print(bin_map_df.head())
+        #Write the mapping dataframe to TSV file
+        try:
+            bin_map_df.to_csv(args.output, index=False, sep='\t', encoding='utf-8')
+            write_success = 'Writing to output tsv: {}'.format(args.output)
+            print(write_success)
+            logging.info(write_success)
+        except IOError as e:
+            write_error = 'Unable to write output tsv file {}'.format(args.output)
+            print('ERROR: {}'.format(write_error))
+            logging.error(write_error)
+        finally:
+            logging.info('dataframe write try/except block is finished')
     except:
         logging.error('Could not create bin map')
+    finally:
+        logging.info('read/write try/except block is finished')
+
 
 #------------------------------------------------------------------------------
 if __name__ == "__main__":
