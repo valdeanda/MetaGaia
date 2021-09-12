@@ -3,7 +3,7 @@
 """
 Author: Ian Rambo - ian.rambo@utexas.edu
 Created: August 17, 2021
-Last updated: August 30, 2021
+Last updated: September 10, 2021
 License: GNU GENERAL PUBLIC LICENSE, Version 3, 29 June 2007
 
 Purpose:
@@ -16,13 +16,12 @@ import os
 import sys
 import logging
 from datetime import datetime
-import pandas as pd
+#import pandas as pd
 #------------------------------------------------------------------------------
 def map_gold(scaffold_map, sample_map, bin_map, scaffold_samples=False):
     """
     Create a unified mapping dataframe from of IMG and GOLD scaffolds to bins.
     """
-    import pandas as pd
     """
     Create a unified mapping file for original IMG and Gold scaffolds.
     """
