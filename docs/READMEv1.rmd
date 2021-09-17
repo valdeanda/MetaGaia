@@ -343,7 +343,7 @@ tabl8 <- "
 cat(tabl8)
 ```
 
-Example of sample2site file - the Sample names should match the names in the Sample column of `reads_file.tsv`; the Site names are the physical location's name/code that each sample was taken from:
+Example of sample2site file - the Sample names should match the names in the Sample column of `reads_file.tsv` and `depth_file_renamed.tsv`; the Site names are the physical location's name/code that each sample was taken from; each Sample should contain a unique Site name:
 
 ```{bash, eval=FALSE}
 head sample2site.tsv
