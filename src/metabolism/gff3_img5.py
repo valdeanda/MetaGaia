@@ -1,16 +1,17 @@
 """
 Author: Ian Rambo - ian.rambo@utexas.edu
 Created: August 23, 2021
-Last updated: August 29, 2021
+Last updated: September 12, 2021
 
 Purpose: Parse IMG 5.0 GFF3 output for MetaGaia metabolic analysis.
 """
 
 import argparse
 import logging
-import re
 import pandas as pd
 import os
+import sys
+from datetime import datetime
 #------------------------------------------------------------------------------
 def gff3_to_df(gff_file, attribute_select, format='img5'):
     """
@@ -90,34 +91,34 @@ def gff3_to_df(gff_file, attribute_select, format='img5'):
 
     return gff_df
 #------------------------------------------------------------------------------
-def map_gold(scaffold_map, sample_map, scaffold_samples=False):
-    """
-    Create a unified mapping file for original IMG and Gold scaffolds.
-    """
-    try:
-        print('reading IMG --> GOLD scaffold map to Pandas DF')
-        gold_scaffold_map = pd.read_csv(scaffold_map, sep = '\t',
-            names = ['Original_Contig_Name', 'IMG_Contig_Name'])
-    except IOError as e:
-        print('ERROR: could not open {}'.format(scaffold_map))
-
-    try:
-        print('reading GOLD --> Sample ID map to Pandas DF')
-        gold_sample_map = pd.read_csv(sample_map, sep = '\t')
-    except IOError as e:
-        print('ERROR: could not open {}'.format(sample_map))
-
-    #Extract the IMG GOLD analysis ID
-    gold_scaffold_map['GOLD_OID'] = gold_scaffold_map['IMG_Contig_Name'].str.split('_').str[0].str.strip()
-
-    gold_scaffold_sample_df = pd.merge(gold_scaffold_map, gold_sample_map, on = 'GOLD_OID', how = 'right')
-
-    if scaffold_samples:
-        gold_scaffold_sample_df['Original_Contig_Name'] = gold_scaffold_sample_df['SAMPLE_ID'].astype(str) + '_' + gold_scaffold_sample_df['Original_Contig_Name'].astype(str)
-    else:
-        pass
-
-    return gold_scaffold_sample_df
+# def map_gold(scaffold_map, sample_map, scaffold_samples=False):
+#     """
+#     Create a unified mapping file for original IMG and Gold scaffolds.
+#     """
+#     try:
+#         print('reading IMG --> GOLD scaffold map to Pandas DF')
+#         gold_scaffold_map = pd.read_csv(scaffold_map, sep = '\t',
+#             names = ['Original_Contig_Name', 'IMG_Contig_Name'])
+#     except IOError as e:
+#         print('ERROR: could not open {}'.format(scaffold_map))
+#
+#     try:
+#         print('reading GOLD --> Sample ID map to Pandas DF')
+#         gold_sample_map = pd.read_csv(sample_map, sep = '\t')
+#     except IOError as e:
+#         print('ERROR: could not open {}'.format(sample_map))
+#
+#     #Extract the IMG GOLD analysis ID
+#     gold_scaffold_map['GOLD_OID'] = gold_scaffold_map['IMG_Contig_Name'].str.split('_').str[0].str.strip()
+#
+#     gold_scaffold_sample_df = pd.merge(gold_scaffold_map, gold_sample_map, on = 'GOLD_OID', how = 'right')
+#
+#     if scaffold_samples:
+#         gold_scaffold_sample_df['Original_Contig_Name'] = gold_scaffold_sample_df['SAMPLE_ID'].astype(str) + '_' + gold_scaffold_sample_df['Original_Contig_Name'].astype(str)
+#     else:
+#         pass
+#
+#     return gold_scaffold_sample_df
 #------------------------------------------------------------------------------
 def gff_pd_multiread(path_file, attr_sel, colsep = '\t', format = 'img5'):
     """
@@ -151,24 +152,47 @@ def gff_pd_multiread(path_file, attr_sel, colsep = '\t', format = 'img5'):
     return gff_df_concat
 #------------------------------------------------------------------------------
 def main():
+
+    script_basename = os.path.basename(__file__)
+
+    logfile_default = '{}_{}.log'.format(os.path.splitext(script_basename)[0],
+        str(datetime.now().strftime('%d-%m-%Y_%H-%M-%S')))
+
+    field_default = 'ID,ko,pfam,ec_number,cog,locus_tag'
+
     parser = argparse.ArgumentParser()
+
     parser.add_argument('-i','--input_gff', required=False, help='Path to input GFF3 file from IMG 5.0.')
-    parser.add_argument('-p','--path_file', required=False, help='File contaning paths to input GFF3 file(s) from IMG 5.0 for processing multiple files')
+    parser.add_argument('-p','--path_file', required=False, help='File contaning paths to input GFF3 file(s) from IMG 5.0 for processing multiple files.')
     parser.add_argument('-o', '--output', required=True, help='Output tsv file.')
-    parser.add_argument('-f', '--fields', required=False, type=str, default='ID,ko,pfam,ec_number,cog,locus_tag', help='GFF attributes to parse. Input as a comma-separated string. Default: ko,pfam,ec_number,cog')
-    parser.add_argument('-m', '--gold_scaffold_map', required=True, help='Scaffold mapping file from IMG GOLD, containing original IMG scaffold ID and GOLD scaffold ID')
-    parser.add_argument('-g', '--gold_sample_map', required=True, help='Mapping file of GOLD IDs to Sample IDs')
-    parser.add_argument('-s', '--samples_to_id', required=False, action='store_true', help='Boolean. If selected, add sample IDs to the beginning of the IMG original scaffold IDs')
+    parser.add_argument('-f', '--fields', required=False, type=str, default=field_default, help='GFF attributes to parse. Input as a comma-separated string. Default: {}'.format(field_default))
+    parser.add_argument('-m', '--img_map', required=False, help='Contig - IMG contig - GOLD OID - Sample - Bin map generated by img_bin_map.py.')
+    parser.add_argument('-l', '--logfile', required=False, action='store', default=logfile_default, help='path to logfile')
+
     args = parser.parse_args()
 
-    #If --fields is selected but no options are specified, use the defaults
-    key_fields = args.fields.split(',')
+    #Set up logger
+    logging_format = '%(name)s :: %(levelname)s :: %(message)s :: %(asctime)s'
 
-    if all([not k for k in key_fields]):
-        key_fields = field_default
-        print('Option --fields selected but empty. Using default values.')
+    logging.basicConfig(filename = args.logfile,
+        level = logging.DEBUG,
+        format = logging_format)
+
+    print('Logfile written to: {}'.format(args.logfile))
+
+    logging.info('SCRIPT: {}'.format(os.path.basename(__file__)))
+
+    key_fields = list()
+    #If --fields is selected but no options are specified, use the defaults
+    if args.fields:
+        key_fields = args.fields.split(',')
+        if all([not k for k in key_fields]):
+            key_fields = field_default
+            print('Option --fields selected but empty. Using default values.')
+        else:
+            pass
     else:
-        pass
+        key_fields = field_default.split(',')
 
     if args.input_gff and not args.path_file:
         try:
@@ -179,25 +203,36 @@ def main():
             print('could not parse GFF3 file {} - ensure this is not a path file'.format(args.input_gff))
 
     elif args.path_file and os.path.isfile(os.path.abspath(args.path_file)) and not args.input_gff:
-        print('Reading in multiple GFF3 files based on paths in {}'.format(args.path_file))
+        multi_gff_msg = 'Reading in multiple GFF3 files based on paths in {}'.format(args.path_file)
+        print(multi_gff_msg)
+        logging.info(multi_gff_msg)
         img_df = gff_pd_multiread(path_file = args.path_file, attr_sel = key_fields)
 
     elif args.path_file and args.input_gff:
-        print('Input Error - specify either a single GFF3 file, or a file containing multiple GFF3 paths for --input_gff')
+        input_error_msg = 'Specify either a single GFF3 file, or a file containing multiple GFF3 paths for --input_gff'
+        print('ERROR: {}'.format(input_error_msg))
+        logging.error(input_error_msg)
+        sys.exit(1)
     else:
         pass
 
+    if args.img_map:
+            try:
+                print('reading GOLD --> Sample ID map to Pandas DF')
+                img_map = pd.read_csv(args.img_map, sep = '\t')
+            except IOError as e:
+                img_map_error_msg = 'Could not open {}'.format(args.img_map)
+                print('ERROR: {}'.format(img_map_error_msg))
+                logging.error(img_map_error_msg)
+            try:
+                scaffold_anno_df = pd.merge(img_df, img_map,
+                    on = 'IMG_Contig_Name', how = 'left')
+            except:
+                logging.error('could not merge img/gff3 dataframe with img_map')
 
-    if args.samples_to_id:
-        gold_scaffold_sample_df = map_gold(scaffold_map = args.gold_scaffold_map,
-        sample_map = args.gold_sample_map, scaffold_samples=True)
-
+            print(scaffold_anno_df.head())
     else:
-        gold_scaffold_sample_df = map_gold(scaffold_map = args.gold_scaffold_map,
-        sample_map = args.gold_sample_map)
-
-    scaffold_anno_df = pd.merge(img_df, gold_scaffold_sample_df,
-        on='IMG_Contig_Name', how='left')
+        logging.info('No --img_map, ignoring merge...')
 
     #Column names for IMG Annotation output file for use with metabolic_profile.py
     accession_colname_dict = {'cog':'COG_ID', 'ko':'KO_Term',

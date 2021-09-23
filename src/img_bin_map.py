@@ -16,16 +16,20 @@ import os
 from datetime import datetime
 import numpy as np
 import pandas as pd
+
 #------------------------------------------------------------------------------
-def map_gold(scaffold_map, sample_map, bin_map, scaffold_samples=False):
+def map_gold(scaffold_map, sample_map, bin_map,
+    scaffold_samples=False, only_bin=False):
     """
     Create a unified mapping dataframe.
     """
+
     #Read in the component dataframes
     try:
         logging.info('reading IMG --> GOLD scaffold map to Pandas DF')
         gold_scaffold_df = pd.read_csv(scaffold_map, sep = '\t',
-            names = ['Original_Contig_Name', 'IMG_Contig_Name'])
+            names = ['Original_Contig_Name', 'IMG_Contig_Name'],
+            compression = 'infer')
 
     except IOError as e:
         logging.exception('could not open {}'.format(scaffold_map))
@@ -37,18 +41,19 @@ def map_gold(scaffold_map, sample_map, bin_map, scaffold_samples=False):
 
     try:
         logging.info('reading GOLD --> Sample ID map to Pandas DF')
-        gold_sample_df = pd.read_csv(sample_map, sep = '\t')
+        gold_sample_df = pd.read_csv(sample_map, sep = '\t', compression = 'infer')
     except IOError as e:
         logging.exception('could not open {}'.format(sample_map))
 
     try:
         logging.info('reading renamed contig --> Bin --> Sample ID map to Pandas DF')
-        bin_map_df = pd.read_csv(bin_map, sep = '\t')
+        bin_map_df = pd.read_csv(bin_map, sep = '\t', compression = 'infer')
     except IOError as e:
         logging.exception('could not open {}'.format(bin_map))
 
     ###MERGE START
-    gold_scaffold_sample_df = pd.merge(gold_scaffold_df, gold_sample_df, on = 'GOLD_OID', how = 'left')
+    gold_scaffold_sample_df = pd.merge(gold_scaffold_df, gold_sample_df,
+        on = 'GOLD_OID', how = 'left')
 
     if scaffold_samples:
         #Add Sampling_Site IDs to Original_Contig_Name - used to map to Bin
@@ -61,7 +66,10 @@ def map_gold(scaffold_map, sample_map, bin_map, scaffold_samples=False):
         bin_map_df[['Original_Contig_Name', 'Bin']],
         on = 'Original_Contig_Name', how = 'left')
 
-    bin_gold_sample_df = bin_gold_sample_df.dropna(subset=['Bin']).sort_values(by='Bin')
+    if only_bin:
+        bin_gold_sample_df = bin_gold_sample_df.dropna(subset=['Bin']).sort_values(by='Bin')
+    else:
+        pass
 
     ###MERGE END
 
@@ -75,11 +83,13 @@ def main():
         str(datetime.now().strftime('%d-%m-%Y_%H-%M-%S')))
 
     parser = argparse.ArgumentParser()
+
     parser.add_argument('-o', '--output', required=True, type=str, help='Path to output map file. Required.')
     parser.add_argument('-b', '--bin_map', required=True, action='store', type=str, help='bin-contig-sample map file')
     parser.add_argument('-c', '--contig_map', required=True, action='store', type=str, help='IMG contig to GOLD map')
     parser.add_argument('-g', '--gold_sample_map', required=True, help='Mapping file of GOLD IDs to Sample IDs')
     parser.add_argument('-l', '--logfile', required=False, action='store', default=logfile_default, help='path to logfile')
+
     args = parser.parse_args()
 
     logging_format = '%(name)s :: %(levelname)s :: %(message)s :: %(asctime)s'
@@ -100,7 +110,8 @@ def main():
         bin_map_df = map_gold(scaffold_map = args.contig_map,
             sample_map = args.gold_sample_map,
             bin_map = args.bin_map,
-            scaffold_samples=True)
+            scaffold_samples=True,
+            only_bin=True)
         #Write the mapping dataframe to TSV file
         try:
             bin_map_df.to_csv(args.output, index=False, sep='\t', encoding='utf-8')
