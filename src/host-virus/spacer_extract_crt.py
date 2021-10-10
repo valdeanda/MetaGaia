@@ -16,65 +16,65 @@ import os
 import sys
 import logging
 from datetime import datetime
-#import pandas as pd
+import pandas as pd
 #------------------------------------------------------------------------------
-def map_gold(scaffold_map, sample_map, bin_map, scaffold_samples=False):
-    """
-    Create a unified mapping dataframe from of IMG and GOLD scaffolds to bins.
-    """
-    """
-    Create a unified mapping file for original IMG and Gold scaffolds.
-    """
-    try:
-        logging.info('reading IMG --> GOLD scaffold map to Pandas DF')
-        gold_scaffold_df = pd.read_csv(scaffold_map, sep = '\t',
-            names = ['Original_Contig_Name', 'IMG_Contig_Name'])
-
-    except IOError as e:
-        logging.exception('could not open {}'.format(scaffold_map))
-    #Extract the IMG GOLD analysis ID
-    try:
-        gold_scaffold_df['GOLD_OID'] = gold_scaffold_df['IMG_Contig_Name'].str.split('_').str[0].str.strip()
-        print(gold_scaffold_df.head())
-    except:
-        logging.exception('could not parse GOLD_OID from IMG_Contig_Name')
-
-    try:
-        logging.info('reading GOLD --> Sample ID map to Pandas DF')
-        gold_sample_df = pd.read_csv(sample_map, sep = '\t')
-        print(gold_sample_df.head())
-    except IOError as e:
-        logging.exception('could not open {}'.format(sample_map))
-
-    try:
-        logging.info('reading renamed contig --> Bin --> Sample ID map to Pandas DF')
-        bin_map_df = pd.read_csv(bin_map, sep = '\t')
-    except IOError as e:
-        logging.exception('could not open {}'.format(bin_map))
-
-    #Extract the IMG GOLD analysis ID
-    #gold_scaffold_df['GOLD_OID'] = gold_scaffold_df['IMG_Contig_Name'].str.split('_').str[0].str.strip()
-
-    gold_scaffold_sample_df = pd.merge(gold_scaffold_df, gold_sample_df, on = 'GOLD_OID', how = 'left')
-
-    #gold_sample_bin_df = pd.merge(gold_sample_df, bin_map_df, on = 'SAMPLE_ID')
-    print('gold_scaffold_sample_df')
-    print(gold_scaffold_sample_df.head())
-
-    if scaffold_samples:
-        gold_scaffold_sample_df['Original_Contig_Name'] = gold_scaffold_sample_df['Sampling_Site'].astype(str) + '_' + gold_scaffold_sample_df['Original_Contig_Name'].astype(str)
-    else:
-        pass
-    print('gold_scaffold_sample_df_renamed')
-    print(gold_scaffold_sample_df.head())
-
-
-    bin_gold_sample_df = pd.merge(gold_scaffold_sample_df, bin_map_df,
-        on = 'Original_Contig_Name', how = 'left')
-    print('bin_gold_sample_df')
-    print(bin_gold_sample_df.head())
-
-    return bin_gold_sample_df
+# def map_gold(scaffold_map, sample_map, bin_map, scaffold_samples=False):
+#     """
+#     Create a unified mapping dataframe from of IMG and GOLD scaffolds to bins.
+#     """
+#     """
+#     Create a unified mapping file for original IMG and Gold scaffolds.
+#     """
+#     try:
+#         logging.info('reading IMG --> GOLD scaffold map to Pandas DF')
+#         gold_scaffold_df = pd.read_csv(scaffold_map, sep = '\t',
+#             names = ['Original_Contig_Name', 'IMG_Contig_Name'])
+#
+#     except IOError as e:
+#         logging.exception('could not open {}'.format(scaffold_map))
+#     #Extract the IMG GOLD analysis ID
+#     try:
+#         gold_scaffold_df['GOLD_OID'] = gold_scaffold_df['IMG_Contig_Name'].str.split('_').str[0].str.strip()
+#         print(gold_scaffold_df.head())
+#     except:
+#         logging.exception('could not parse GOLD_OID from IMG_Contig_Name')
+#
+#     try:
+#         logging.info('reading GOLD --> Sample ID map to Pandas DF')
+#         gold_sample_df = pd.read_csv(sample_map, sep = '\t')
+#         print(gold_sample_df.head())
+#     except IOError as e:
+#         logging.exception('could not open {}'.format(sample_map))
+#
+#     try:
+#         logging.info('reading renamed contig --> Bin --> Sample ID map to Pandas DF')
+#         bin_map_df = pd.read_csv(bin_map, sep = '\t')
+#     except IOError as e:
+#         logging.exception('could not open {}'.format(bin_map))
+#
+#     #Extract the IMG GOLD analysis ID
+#     #gold_scaffold_df['GOLD_OID'] = gold_scaffold_df['IMG_Contig_Name'].str.split('_').str[0].str.strip()
+#
+#     gold_scaffold_sample_df = pd.merge(gold_scaffold_df, gold_sample_df, on = 'GOLD_OID', how = 'left')
+#
+#     #gold_sample_bin_df = pd.merge(gold_sample_df, bin_map_df, on = 'SAMPLE_ID')
+#     print('gold_scaffold_sample_df')
+#     print(gold_scaffold_sample_df.head())
+#
+#     if scaffold_samples:
+#         gold_scaffold_sample_df['Original_Contig_Name'] = gold_scaffold_sample_df['Sampling_Site'].astype(str) + '_' + gold_scaffold_sample_df['Original_Contig_Name'].astype(str)
+#     else:
+#         pass
+#     print('gold_scaffold_sample_df_renamed')
+#     print(gold_scaffold_sample_df.head())
+#
+#
+#     bin_gold_sample_df = pd.merge(gold_scaffold_sample_df, bin_map_df,
+#         on = 'Original_Contig_Name', how = 'left')
+#     print('bin_gold_sample_df')
+#     print(bin_gold_sample_df.head())
+#
+#     return bin_gold_sample_df
 #------------------------------------------------------------------------------
 def read_crt(crt_file):
     """
@@ -174,15 +174,47 @@ def crispr_quality(crispr_dict, min_spc, min_rep, n_rep, min_rep_warn = 7, n_rep
 
     return crispr_dict
 #------------------------------------------------------------------------------
-def write_spacer_fasta(crispr_dict, spacer_fasta):
+def img_bin_map(img_map, crispr_contigs):
+    """
+    Return a dictionary of contig IDs mapped to a Bin/MAG
+    containing a CRISPR array.
+    """
+    try:
+        bm_df = pd.read_csv(img_map, sep = '\t', compression = 'infer')
+    except:
+        logging.error('could not read IMG bin map input file {}'.format(img_map))
+
+    bm_df['bin_contig'] = bm_df['Bin'] + '|' + bm_df['Original_Contig_Name']
+    bm_df = bm_df[bm_df['IMG_Contig_Name'].isin(crispr_contigs)]
+
+    bm_dict = bm_df[['bin_contig', 'IMG_Contig_Name']].set_index('IMG_Contig_Name').T.to_dict('list')
+
+    return bm_dict
+#------------------------------------------------------------------------------
+def write_spacer_fasta(crispr_dict, spacer_fasta, id_change=None):
     """
     Write an output FASTA file of CRISPR spacer sequences.
     """
+    if id_change:
+        changed = []
+    else:
+        pass
+
     try:
         fasta_handle = open(spacer_fasta, 'w')
         nspacers = 0
 
         for crispr, feature in crispr_dict.items():
+            if id_change:
+                gold_oid = crispr.split('|')[0]
+                if gold_oid in id_change.keys():
+                    crispr = '{}|{}'.format(id_change[gold_oid][0], crispr)
+                    changed.append(crispr)
+                else:
+                    pass
+            else:
+                pass
+
             if isinstance(feature, dict):
                 spacers = [s for s in feature.keys() if s.startswith('spacer')]
                 for spacer in spacers:
@@ -195,12 +227,20 @@ def write_spacer_fasta(crispr_dict, spacer_fasta):
                 logging.error('Cannot write to output FASTA, exiting...')
                 sys.exit(1)
 
-        spacer_msg = '{} spacers written to {}'.format(nspacers, spacer_fasta)
+        spacer_msg = '{} spacers written to: {}'.format(nspacers, spacer_fasta)
 
         print(spacer_msg)
         logging.info(spacer_msg)
+        
+        if changed:
+            logging.info('{} CRISPR IDs changed'.format(len(changed)))
+        else:
+            pass
+
+
 
         fasta_handle.close()
+
 
     except IOError:
         logging.error('ERROR: could not open output FASTA file {}'.format(spacer_fasta))
@@ -211,6 +251,7 @@ def main():
 
     logfile_default = 'spacer_extract_crt_{}.log'.format(str(datetime.now().strftime('%d-%m-%Y_%H-%M-%S')))
 
+    #epilog = 'spacer_extract_crt.py -i IMG CRT CRISPR file'
     parser = argparse.ArgumentParser()
     parser.add_argument('-i','--crt_file', required=True, type=str, help='Input file in tsv format containing CRISPR Recognition Tool output. Required.')
     parser.add_argument('-o', '--output_fasta', required=True, type=str, help='Path to output FASTA file containing CRISPR spacer sequences. Required.')
@@ -218,9 +259,7 @@ def main():
     parser.add_argument('-r', '--min_repeat_length', required=False, type=int, default=11, help='minimum length for a CRISPR repeat. Default = 11')
     parser.add_argument('-m', '--min_repeats', required=False, type=int, default=3, help='minimum number of repeats required to retain CRISPR. Default = 3')
     parser.add_argument('-q', '--quality_off', required=False, action='store_true', help='use this option to skip quality control of CRISPRs')
-    parser.add_argument('-b', '--bin_map', required=False, action='store', type=str, help='bin-contig-sample map file')
-    parser.add_argument('-c', '--contig_map', required=False, action='store', type=str, help='IMG contig to GOLD map')
-    parser.add_argument('-g', '--gold_sample_map', required=False, help='Mapping file of GOLD IDs to Sample IDs')
+    parser.add_argument('-c', '--img_bin_map', required=False, action='store', type=str, help='bin map output from img_bin_map.py')
     parser.add_argument('-l', '--logfile', required=False, action='store', default=logfile_default, help='path to logfile')
     args = parser.parse_args()
 
@@ -236,22 +275,28 @@ def main():
 
     crispr_dict = dict()
 
-    #Bin mapping option - in progress
-    if args.bin_map and args.contig_map and args.gold_sample_map:
-        logging.info('reading in scaffold - bin - sample map')
-        bin_map_df = map_gold(scaffold_map = args.contig_map,
-            sample_map = args.gold_sample_map,
-            bin_map = args.bin_map,
-            scaffold_samples=True)
 
-        crispr_dict = read_crt(args.crt_file, bin_map_df = bin_map_df)
-    else:
-        crispr_dict = read_crt(args.crt_file)
+    crispr_dict = read_crt(args.crt_file)
 
     fasta_write_exception = 'could not write output spacer FASTA {}'.format(args.output_fasta)
 
 
     if crispr_dict:
+        bcd = dict()
+        if args.img_bin_map:
+            try:
+                gold_contigs_crispr = list(set([crispr_dict[key]['gold_contig_id'] for key in crispr_dict.keys()]))
+                bcd = img_bin_map(args.img_bin_map, gold_contigs_crispr)
+
+            except:
+                logging.warning('could not get crispr bin ids')
+            finally:
+                logging.info('img bin-crispr try/except block is finished')
+
+        else:
+            pass
+
+
         ncrispr = len(crispr_dict.keys())
         if not args.quality_off:
             try:
@@ -268,14 +313,18 @@ def main():
             #Write to output FASTA
             try:
                 logging.info('writing CRISPR spacers to output FASTA: {}'.format(args.output_fasta))
-                write_spacer_fasta(crispr_dict_filter, args.output_fasta)
+                write_spacer_fasta(crispr_dict = crispr_dict_filter,
+                spacer_fasta = args.output_fasta,
+                id_change = bcd)
             except:
                 logging.exception(fasta_write_exception)
 
         else:
             logging.info('skipping CRISPR quality control')
             try:
-                write_spacer_fasta(crispr_dict, args.output_fasta)
+                write_spacer_fasta(crispr_dict = crispr_dict,
+                spacer_fasta = args.output_fasta,
+                id_change = bcd)
             except:
                 logging.exception(fasta_write_exception)
 
@@ -287,71 +336,3 @@ def main():
 #------------------------------------------------------------------------------
 if __name__ == "__main__":
     main()
-
-
-    # def read_bin_map(bin_map):
-    #     """
-    #     Read in the bin - scaffold - sample map file.
-    #     """
-    #     bin_map_dict = dict()
-    #     try:
-    #         bin_map_handle = open(bin_map, 'r')
-    #         bin_map_handle.readline()
-    #         for i in bin_map_handle:
-    #             i = i.strip()
-    #             i_list = i.split('\t')
-    #             original_contig_name = i_list[0]
-    #             bin = i_list[1]
-    #             sampling_site = i_list[2]
-    #
-    #             bin_map_dict[original_contig_name] = {'bin':bin,
-    #                 'sampling_site':sampling_site}
-    #
-    #         return bin_map_dict
-    #
-    #         bin_map_handle.close()
-    #     except:
-    #         logging.exception('could not open {}'.format(bin_map))
-    #         return None
-    #------------------------------------------------------------------------------
-    # def read_contig_map(contig_map):
-    #     contig_map_dict = dict()
-    #     try:
-    #         contig_map_handle = open(contig_map, 'r')
-    #         for i in contig_map_handle:
-    #             i = i.strip()
-    #             i_list = i.split('\t')
-    #             img_contig_id = i_list[0]
-    #             gold_contig_id = i_list[1]
-    #             gold_oid = gold_contig_id.split('_')[0]
-    #             contig_map_dict[gold_contig_id] = {'img_contig_id':img_contig_id,
-    #             'gold_oid':gold_oid}
-    #         return contig_map_dict
-    #         contig_map_handle.close()
-    #     except:
-    #         logging.exception('could not read {}'.format(contig_map))
-    #         return None
-    # #------------------------------------------------------------------------------
-    # def read_gold_map(gold_map):
-    #     gold_map_dict = dict()
-    #     try:
-    #         gold_map_handle = open(gold_map, 'r')
-    #         for i in gold_map_handle:
-    #             i = i.strip()
-    #             i_list = i.split('\t')
-    #             gold_oid = i_list[0]
-    #             sample_id = i_list[1]
-    #             gold_dict[gold_oid] = sample_id
-    #
-    #         return gold_map_dict
-    #         gold_map_handle.close()
-    #     except:
-    #         logging.exception('could not read {}'.format(gold_map))
-    #         return None
-    #------------------------------------------------------------------------------
-    # def unified_map(bin_map, contig_map, gold_map):
-    #     bin_contig_dict = dict()
-    #     for key, value in contig_map:
-    #         if key in
-    #
-    #         sample = bin_contig_dict[gold_oid]
