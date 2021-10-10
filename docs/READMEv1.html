@@ -185,6 +185,7 @@
             <li><a href="#about-metagaia">About MetaGaia</a></li>
             <li><a href="#metagaia-installation">MetaGaia installation</a></li>
             <li><a href="#python-installation-requirements-linux">Python installation requirements (Linux)</a></li>
+            <li><a href="#install-dependencies-with-conda-linux">Install dependencies with Conda (Linux)</a></li>
             <li><a href="#metagaia-requirements">MetaGaia requirements</a>
             <ul>
             <li><a href="#calculating-bin-abundances-abundance">Calculating bin abundances (abundance)</a></li>
@@ -251,6 +252,10 @@
 <h1>Python installation requirements (Linux)</h1>
 <p>To install python, run <code>sudo apt-get install python3</code>. To install pip, run <code>sudo apt install python3-pip</code>. To install pandas, run <code>pip install pandas</code>. To install numpy, run <code>pip install numpy</code>. To install seaborn, run <code>pip install seaborn</code>.</p>
 </div>
+<div id="install-dependencies-with-conda-linux" class="section level1">
+<h1>Install dependencies with Conda (Linux)</h1>
+<p>To install all of the above dependencies with Conda using the supplied .yml file, run <code>conda env create -f metagaia_conda_noarch.yml</code></p>
+</div>
 <div id="metagaia-requirements" class="section level1">
 <h1>MetaGaia requirements</h1>
 <p><em>NOTE: Please do NOT use symbolic links for fastq or fna files. Also, make sure headers are present and properly separated in input files.</em></p>
@@ -302,7 +307,7 @@
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-f</span> DEPTH_DIR, <span class="at">--depth_dir</span> DEPTH_DIR</span>
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> directory path containing all the depth txt files that must be concatenated. No other txt files should be present within the directory!</span>
 <span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-q</span> FASTQ_DIR, <span class="at">--fastq_dir</span> FASTQ_DIR</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> directory path containing all the fasta files.</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> directory path containing all the fastq files.</span>
 <span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-a</span> FNA_DIR, <span class="at">--fna_dir</span> FNA_DIR</span>
 <span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Input</span> directory path containing all the fna files.</span></code></pre></div>
 <p>Example of concatenated depth file (NOTE: Please make sure the scaffold names in the depth file(s) contain the unique identifier corresponding to the bin that the scaffold originates from. The Sample names in the depth file may need to be edited by the user to match the Sample names in the reads_file.tsv. Also, the “Original_Contig_Name” column in both the depth and mapping files must match by appending the respective “Sampling_Site” prefix to each scaffold in the depth file prior to running the script [See “Create initial depth files” for more information]. WARNING: Samples without depth values are removed if present.):</p>
@@ -545,7 +550,7 @@
 <span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Tabular</span> file containing Original_Contig_Name Bin Sample</span>
 <span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-d</span> DEPTH, <span class="at">--depth</span> DEPTH</span>
 <span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Tabular</span> file depth info Original_Contig_Name contigLen</span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Saple_Depth</span> Depth</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Sample_Depth</span> Depth</span>
 <span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-s</span> BINSIZE, <span class="at">--binsize</span> BINSIZE</span>
 <span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">Tabular</span> file with Bin and corresponding Genome size</span>
 <span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>                        <span class="kw">(</span><span class="ex">bp</span><span class="kw">)</span> <span class="fu">as</span> columns</span>
@@ -670,7 +675,7 @@
 </tr>
 </tbody>
 </table>
-<p>Example of sample2site file - the Sample names should match the names in the Sample column of <code>reads_file.tsv</code>; the Site names are the physical location’s name/code that each sample was taken from:</p>
+<p>Example of sample2site file - the Sample names should match the names in the Sample column of <code>reads_file.tsv</code> and <code>depth_file_renamed.tsv</code>; the Site names are the physical location’s name/code that each sample was taken from; each Sample should contain a unique Site name:</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> sample2site.tsv</span></code></pre></div>
 <table>
 <thead>
@@ -1287,7 +1292,7 @@ Table_9_-_3300033141.functional_diversity.txt</code></pre>
 </ol>
 <div class="sourceCode" id="cb39"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Copy fq files from yggshare to folder</span></span>
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> 4998_22_23_H2_S10_fastp_bb.fastq.gz /home/keappler/07_Lab_Protocols/Binning/Guaymas_2018_Samples/mapping_bwa/</span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="co">#Run mdsum</span></span>
 <span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="pp">*</span>.gz <span class="kw">;</span> <span class="cf">do</span> <span class="ex">md5sum</span> <span class="va">$i</span> <span class="op">&gt;</span> <span class="va">$i</span>.md5sum <span class="kw">;</span> <span class="cf">done</span></span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
@@ -1300,16 +1305,16 @@ Table_9_-_3300033141.functional_diversity.txt</code></pre>
 <span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="co">#Index contigs &gt;=2.5kb assembly subset created in previous steps</span></span>
 <span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a><span class="ex">bwa</span> index <span class="va">$assembly</span> </span>
-<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">&quot;Done index&quot;</span> </span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a><span class="ex">bwa</span> index <span class="va">$assembly</span></span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">&quot;Done index&quot;</span></span>
 <span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Align contigs &gt;=2.5kb against concatenated, interleaved, and trimmed R1 and R2</span></span>
 <span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a><span class="ex">bwa</span> mem <span class="at">-t</span> 70 <span class="va">$assembly</span> <span class="at">-p</span> <span class="va">$fq</span> <span class="op">&gt;</span> 4998_22_23_H2_S10.sam</span>
-<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">&quot;Done mapping&quot;</span> </span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">&quot;Done mapping&quot;</span></span>
 <span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a><span class="co">#samtools create bam files- needed for binning</span></span>
 <span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> view <span class="at">-bS</span> <span class="at">-F</span> 4 <span class="at">-@10</span> 4998_22_23_H2_S10.sam <span class="at">-o</span> 4998_22_23_H2_S10.bam</span>
-<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">&quot;Done bam&quot;</span> </span>
+<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">&quot;Done bam&quot;</span></span>
 <span id="cb40-18"><a href="#cb40-18" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb40-19"><a href="#cb40-19" aria-hidden="true" tabindex="-1"></a><span class="co">#samtools create sorted bam files- needed for jgi_summarize_bam_contig_depths</span></span>
 <span id="cb40-20"><a href="#cb40-20" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> sort <span class="at">-@10</span> 4998_22_23_H2_S10.bam <span class="at">-o</span> 4998_22_23_H2_S10_sorted.bam</span>
