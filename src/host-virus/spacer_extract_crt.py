@@ -16,65 +16,8 @@ import os
 import sys
 import logging
 from datetime import datetime
+import numpy as np
 import pandas as pd
-#------------------------------------------------------------------------------
-# def map_gold(scaffold_map, sample_map, bin_map, scaffold_samples=False):
-#     """
-#     Create a unified mapping dataframe from of IMG and GOLD scaffolds to bins.
-#     """
-#     """
-#     Create a unified mapping file for original IMG and Gold scaffolds.
-#     """
-#     try:
-#         logging.info('reading IMG --> GOLD scaffold map to Pandas DF')
-#         gold_scaffold_df = pd.read_csv(scaffold_map, sep = '\t',
-#             names = ['Original_Contig_Name', 'IMG_Contig_Name'])
-#
-#     except IOError as e:
-#         logging.exception('could not open {}'.format(scaffold_map))
-#     #Extract the IMG GOLD analysis ID
-#     try:
-#         gold_scaffold_df['GOLD_OID'] = gold_scaffold_df['IMG_Contig_Name'].str.split('_').str[0].str.strip()
-#         print(gold_scaffold_df.head())
-#     except:
-#         logging.exception('could not parse GOLD_OID from IMG_Contig_Name')
-#
-#     try:
-#         logging.info('reading GOLD --> Sample ID map to Pandas DF')
-#         gold_sample_df = pd.read_csv(sample_map, sep = '\t')
-#         print(gold_sample_df.head())
-#     except IOError as e:
-#         logging.exception('could not open {}'.format(sample_map))
-#
-#     try:
-#         logging.info('reading renamed contig --> Bin --> Sample ID map to Pandas DF')
-#         bin_map_df = pd.read_csv(bin_map, sep = '\t')
-#     except IOError as e:
-#         logging.exception('could not open {}'.format(bin_map))
-#
-#     #Extract the IMG GOLD analysis ID
-#     #gold_scaffold_df['GOLD_OID'] = gold_scaffold_df['IMG_Contig_Name'].str.split('_').str[0].str.strip()
-#
-#     gold_scaffold_sample_df = pd.merge(gold_scaffold_df, gold_sample_df, on = 'GOLD_OID', how = 'left')
-#
-#     #gold_sample_bin_df = pd.merge(gold_sample_df, bin_map_df, on = 'SAMPLE_ID')
-#     print('gold_scaffold_sample_df')
-#     print(gold_scaffold_sample_df.head())
-#
-#     if scaffold_samples:
-#         gold_scaffold_sample_df['Original_Contig_Name'] = gold_scaffold_sample_df['Sampling_Site'].astype(str) + '_' + gold_scaffold_sample_df['Original_Contig_Name'].astype(str)
-#     else:
-#         pass
-#     print('gold_scaffold_sample_df_renamed')
-#     print(gold_scaffold_sample_df.head())
-#
-#
-#     bin_gold_sample_df = pd.merge(gold_scaffold_sample_df, bin_map_df,
-#         on = 'Original_Contig_Name', how = 'left')
-#     print('bin_gold_sample_df')
-#     print(bin_gold_sample_df.head())
-#
-#     return bin_gold_sample_df
 #------------------------------------------------------------------------------
 def read_crt(crt_file):
     """
@@ -231,7 +174,7 @@ def write_spacer_fasta(crispr_dict, spacer_fasta, id_change=None):
 
         print(spacer_msg)
         logging.info(spacer_msg)
-        
+
         if changed:
             logging.info('{} CRISPR IDs changed'.format(len(changed)))
         else:
