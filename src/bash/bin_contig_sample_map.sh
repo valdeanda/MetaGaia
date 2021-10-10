@@ -4,7 +4,7 @@
 #https://github.com/cmks/DAS_Tool/blob/master/src/Fasta_to_Scaffolds2Bin.sh
 
 usage="
-$(basename "$0"): create the binsize file reqired for bin_abundance.py
+$(basename "$0"): create the contig to bin mapping file reqired for bin_abundance.py
 
 where:
 

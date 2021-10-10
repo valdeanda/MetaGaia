@@ -90,35 +90,7 @@ def gff3_to_df(gff_file, attribute_select, format='img5'):
     gff_df = pd.DataFrame.from_dict(gff_data)
 
     return gff_df
-#------------------------------------------------------------------------------
-# def map_gold(scaffold_map, sample_map, scaffold_samples=False):
-#     """
-#     Create a unified mapping file for original IMG and Gold scaffolds.
-#     """
-#     try:
-#         print('reading IMG --> GOLD scaffold map to Pandas DF')
-#         gold_scaffold_map = pd.read_csv(scaffold_map, sep = '\t',
-#             names = ['Original_Contig_Name', 'IMG_Contig_Name'])
-#     except IOError as e:
-#         print('ERROR: could not open {}'.format(scaffold_map))
-#
-#     try:
-#         print('reading GOLD --> Sample ID map to Pandas DF')
-#         gold_sample_map = pd.read_csv(sample_map, sep = '\t')
-#     except IOError as e:
-#         print('ERROR: could not open {}'.format(sample_map))
-#
-#     #Extract the IMG GOLD analysis ID
-#     gold_scaffold_map['GOLD_OID'] = gold_scaffold_map['IMG_Contig_Name'].str.split('_').str[0].str.strip()
-#
-#     gold_scaffold_sample_df = pd.merge(gold_scaffold_map, gold_sample_map, on = 'GOLD_OID', how = 'right')
-#
-#     if scaffold_samples:
-#         gold_scaffold_sample_df['Original_Contig_Name'] = gold_scaffold_sample_df['SAMPLE_ID'].astype(str) + '_' + gold_scaffold_sample_df['Original_Contig_Name'].astype(str)
-#     else:
-#         pass
-#
-#     return gold_scaffold_sample_df
+
 #------------------------------------------------------------------------------
 def gff_pd_multiread(path_file, attr_sel, colsep = '\t', format = 'img5'):
     """
